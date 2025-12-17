@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventotes | The Party OS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Inter"', 'sans-serif'],
+                    },
+                    colors: {
+                        party: {
+                            light: '#fdf4ff', 
+                            dark: '#0f0518',
+                        }
+                    },
+                    boxShadow: {
+                        'neon': '0 0 20px rgba(217, 70, 239, 0.5), 0 0 60px rgba(168, 85, 247, 0.3)',
+                        'card-dark': '0 0 0 1px rgba(255,255,255,0.1), 0 20px 50px -10px rgba(0,0,0,0.7)',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                        'pulse-glow': 'pulseGlow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: 1, transform: 'scale(1)' },
+                            '50%': { opacity: .8, transform: 'scale(1.05)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { transition: background-color 0.5s ease, color 0.5s ease; }
+        
+        /* --- MODO CLARO (Por defecto o cuando no tiene .dark) --- */
+        body {
+            background-color: #ffffff;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(240, 171, 252, 0.15) 0px, transparent 60%),
+                radial-gradient(at 100% 100%, rgba(192, 132, 252, 0.15) 0px, transparent 60%);
+            color: #0f172a; /* Slate 900 */
+        }
+        
+        /* --- MODO OSCURO (Cuando html tiene .dark) --- */
+        html.dark body {
+            background-color: #0f0518;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.2) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(217, 70, 239, 0.2) 0px, transparent 50%);
+            color: #ffffff;
+        }
+
+        /* Glassmorphism Adaptativo */
+        .glass-panel {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: background 0.3s, border 0.3s, box-shadow 0.3s;
+        }
+
+        /* Estilo Glass Claro */
+        body .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
+        }
+
+        /* Estilo Glass Oscuro */
+        html.dark body .glass-panel {
+            background: rgba(15, 5, 24, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: none;
+        }
+
+        /* Texto Vibrante */
+        .text-gradient {
+            background: linear-gradient(to right, #d946ef, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Partículas */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6; /* Más visible en claro */
+        }
+        html.dark .particle { opacity: 0.3; /* Más sutil en oscuro */ }
+    </style>
+</head>
+<body class="antialiased font-sans">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-white/80 dark:bg-[#0f0518]/80 backdrop-blur-xl border-b border-black/5 dark:border-white/10 transition-all duration-300">
+        <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer group">
+                <!-- Logo -->
+                <div class="w-9 h-9 bg-gradient-to-br from-purple-600 to-pink-500 rounded-lg flex items-center justify-center font-bold text-white text-lg shadow-lg transition-transform group-hover:scale-110 group-hover:rotate-3">E</div>
+                <span class="font-bold text-lg tracking-tight">Eventotes</span>
+            </div>
+            
+            <div class="hidden md:flex gap-8 text-[14px] font-medium text-slate-600 dark:text-white/60">
+                <a href="#overview" class="hover:text-purple-600 dark:hover:text-pink-400 transition-colors">La Experiencia</a>
+                <a href="#features" class="hover:text-purple-600 dark:hover:text-pink-400 transition-colors">Backstage</a>
+                <a href="#pricing" class="hover:text-purple-600 dark:hover:text-pink-400 transition-colors">VIP Access</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <!-- Theme Toggle -->
+                <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition text-slate-600 dark:text-white/80 group">
+                    <!-- Icono Sol (Mostrar si es oscuro para cambiar a claro) -->
+                    <svg id="sun-icon" class="w-5 h-5 hidden dark:block group-hover:text-yellow-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <!-- Icono Luna (Mostrar si es claro para cambiar a oscuro) -->
+                    <svg id="moon-icon" class="w-5 h-5 block dark:hidden group-hover:text-purple-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                </button>
+
+                <a href="dashboard.html" class="bg-slate-900 dark:bg-white text-white dark:text-black text-[13px] font-bold px-5 py-2 rounded-full hover:bg-purple-600 dark:hover:bg-pink-50 transition-all hover:shadow-lg transform hover:-translate-y-0.5">
+                    Únete a la lista
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="overview" class="relative pt-44 pb-32 px-6 flex flex-col items-center justify-center text-center overflow-hidden min-h-screen">
+        
+        <!-- Background Effects -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <!-- Blobs -->
+            <div class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-purple-500/10 dark:bg-purple-600/20 blur-[120px] rounded-full mix-blend-multiply dark:mix-blend-screen"></div>
+            <div class="absolute bottom-[10%] right-[20%] w-[400px] h-[400px] bg-pink-500/10 dark:bg-pink-600/20 blur-[100px] rounded-full mix-blend-multiply dark:mix-blend-screen"></div>
+            
+            <!-- Confetti Particles -->
+            <div class="particle top-[20%] left-[10%] bg-pink-500 animate-float w-2 h-2"></div>
+            <div class="particle top-[30%] right-[15%] bg-purple-500 animate-float-delayed w-1.5 h-1.5"></div>
+            <div class="particle bottom-[40%] left-[25%] bg-blue-500 animate-float w-2 h-2"></div>
+        </div>
+
+        <div class="max-w-5xl mx-auto z-10 relative">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-600 dark:text-pink-400 text-xs font-bold uppercase tracking-wider mb-8 animate-float shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
+                La nueva era de los eventos
+            </div>
+            
+            <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[1.1]">
+                Gestiona.<br>
+                <span class="text-gradient">Celebra. Repite.</span>
+            </h1>
+            
+            <p class="text-xl md:text-2xl text-slate-600 dark:text-white/60 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+                Tu salón no es una oficina, es una fiesta. Usa el software que entiende el ritmo, la adrenalina y el glamour de tu negocio.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-24">
+                <a href="dashboard.html" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-neon dark:hover:shadow-neon transition-all hover:scale-105">
+                    Empezar la Fiesta
+                </a>
+                <a href="#" class="text-slate-600 dark:text-white/80 font-medium text-lg hover:text-purple-600 dark:hover:text-white flex items-center gap-2 group transition-colors">
+                    <span class="w-10 h-10 rounded-full border border-slate-200 dark:border-white/20 flex items-center justify-center bg-white/50 dark:bg-white/5 group-hover:bg-purple-100 dark:group-hover:bg-white/10 transition">▶</span>
+                    Ver el Aftermovie
+                </a>
+            </div>
+
+            <!-- UI Mockup: Dashboard -->
+            <div class="relative w-full perspective-1000">
+                <div class="relative glass-panel rounded-3xl overflow-hidden shadow-2xl dark:shadow-card-dark aspect-[16/9]">
+                    <!-- Header -->
+                    <div class="h-14 border-b border-black/5 dark:border-white/10 flex items-center px-6 gap-4 bg-white/40 dark:bg-white/5">
+                        <div class="flex gap-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                        </div>
+                        <div class="ml-auto">
+                            <span class="px-3 py-1 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-300 text-[10px] font-bold border border-purple-500/20">● EN VIVO</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Body -->
+                    <div class="p-8 flex gap-8 h-full bg-white/20 dark:bg-[#1a0b2e]/40">
+                        <!-- Sidebar -->
+                        <div class="w-64 hidden md:flex flex-col gap-4">
+                            <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/10 dark:border-white/10">
+                                <p class="text-xs text-purple-600 dark:text-purple-300 font-bold uppercase mb-1">Ventas Totales</p>
+                                <p class="text-2xl font-bold text-slate-800 dark:text-white">$124,500</p>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="h-10 w-full bg-black/5 dark:bg-white/5 rounded-xl flex items-center px-4 text-sm text-slate-600 dark:text-white/70">📅 Calendario</div>
+                                <div class="h-10 w-full bg-black/5 dark:bg-white/5 rounded-xl flex items-center px-4 text-sm text-slate-600 dark:text-white/70">🥂 Catering</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="flex-1 flex flex-col gap-6">
+                            <!-- Hero Card -->
+                            <div class="h-40 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 p-6 flex items-center justify-between relative overflow-hidden text-white shadow-lg">
+                                <div class="relative z-10">
+                                    <span class="px-2 py-1 bg-white/20 rounded text-[10px] font-bold uppercase mb-2 inline-block backdrop-blur-sm">Próximo Evento</span>
+                                    <h3 class="text-2xl font-bold">Gala de Año Nuevo ✨</h3>
+                                    <p class="opacity-80 text-sm">31 Dic • 450 Invitados</p>
+                                </div>
+                                <div class="relative z-10 w-16 h-16 rounded-full border-4 border-white/30 flex items-center justify-center bg-black/20 backdrop-blur">
+                                    <span class="font-bold text-sm">98%</span>
+                                </div>
+                            </div>
+                            
+                            <!-- List -->
+                            <div class="flex-1 rounded-2xl bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/10 p-6">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-lg">💍</div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800 dark:text-white">Boda Gutierrez</p>
+                                        <p class="text-xs text-slate-500 dark:text-white/50">Contrato Firmado</p>
+                                    </div>
+                                    <div class="ml-auto text-green-600 dark:text-green-400 text-xs font-bold">+$45k</div>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-pink-100 dark:bg-pink-500/20 flex items-center justify-center text-lg">🍾</div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800 dark:text-white">XV Años Sofia</p>
+                                        <p class="text-xs text-slate-500 dark:text-white/50">Menú Premium</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Floating Badges -->
+                <div class="absolute -right-6 top-16 glass-panel p-4 rounded-2xl shadow-xl dark:shadow-neon animate-float z-20 flex items-center gap-4 max-w-[240px] bg-white/90 dark:bg-[#1a0b2e]/90">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-2xl text-white shadow-lg">
+                        🥂
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-purple-600 dark:text-pink-300 uppercase font-bold">Nuevo Pago</p>
+                        <p class="text-lg font-bold text-slate-900 dark:text-white">$45,000</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Bento Grid -->
+    <section id="features" class="py-32 px-6 relative overflow-hidden">
+        <div class="max-w-[1080px] mx-auto relative z-10">
+            <h2 class="text-5xl md:text-7xl font-bold mb-20 text-center text-slate-900 dark:text-white">
+                Domina la Pista.<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 dark:from-white/60 dark:to-white/20">Sin sudar.</span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[450px]">
+                
+                <!-- Card 1 -->
+                <div class="md:col-span-2 glass-panel rounded-[2rem] p-10 relative overflow-hidden group hover:border-purple-500/30 transition-all duration-500">
+                    <div class="relative z-10 h-full flex flex-col justify-between">
+                        <div>
+                            <span class="px-2 py-0.5 rounded bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 text-[10px] font-bold uppercase mb-3 inline-block">Cash Flow</span>
+                            <h3 class="text-3xl font-bold text-slate-900 dark:text-white mb-4">Dinero en mano.</h3>
+                            <p class="text-slate-600 dark:text-white/60 text-lg">Visualiza tus ganancias como un headliner. Gráficas claras, sin ruido.</p>
+                        </div>
+                        <div class="mt-8 flex items-end gap-3 h-48 opacity-90">
+                             <div class="w-14 bg-slate-200 dark:bg-white/5 h-[40%] rounded-t-xl"></div>
+                             <div class="w-14 bg-slate-200 dark:bg-white/5 h-[60%] rounded-t-xl"></div>
+                             <div class="w-14 bg-purple-500 dark:bg-gradient-to-t dark:from-purple-600 dark:to-pink-500 h-[85%] rounded-t-xl shadow-lg relative overflow-hidden">
+                                 <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+                             </div>
+                             <div class="w-14 bg-slate-200 dark:bg-white/5 h-[55%] rounded-t-xl"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="glass-panel rounded-[2rem] p-10 flex flex-col justify-center items-center text-center hover:border-blue-500/30 transition-all group">
+                    <div class="w-24 h-24 bg-blue-500 rounded-[2rem] flex items-center justify-center shadow-xl mb-8 group-hover:scale-110 transition-transform">
+                        <span class="text-4xl text-white">🌐</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">Sitios Web</h3>
+                    <p class="text-slate-600 dark:text-white/50">Cada evento genera su propia web automáticamente.</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="glass-panel rounded-[2rem] p-10 flex flex-col justify-between md:col-span-1">
+                    <div>
+                        <span class="px-2 py-0.5 rounded bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 text-[10px] font-bold uppercase mb-3 inline-block">Sold Out</span>
+                        <h3 class="text-3xl font-bold text-slate-900 dark:text-white">Agenda Full.</h3>
+                    </div>
+                    <div class="relative mt-6 space-y-3">
+                        <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5">
+                            <div class="w-2 h-10 bg-red-500 rounded-full"></div>
+                            <div class="flex-1 space-y-2">
+                                <div class="h-2 w-24 bg-slate-300 dark:bg-white/20 rounded"></div>
+                                <div class="h-1.5 w-12 bg-slate-200 dark:bg-white/10 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="md:col-span-2 bg-slate-900 dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:to-[#312e81] rounded-[2rem] p-10 flex flex-col md:flex-row items-center justify-between relative overflow-hidden group">
+                     <div class="relative z-10 max-w-md">
+                        <h3 class="text-3xl font-bold text-white mb-4">Seguridad VIP.</h3>
+                        <p class="text-slate-400 dark:text-indigo-200 font-medium text-lg">Contratos blindados, firmas biométricas y encriptación. Solo entra quien está en la lista.</p>
+                     </div>
+                     <div class="relative z-10 bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-2xl mt-8 md:mt-0 transform group-hover:rotate-6 transition">
+                        <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                     </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-32 px-6">
+        <div class="max-w-[1080px] mx-auto">
+            <h2 class="text-4xl md:text-6xl font-bold mb-6 text-center text-slate-900 dark:text-white">Tu Cover.</h2>
+            <p class="text-center text-slate-600 dark:text-white/50 mb-20">Inversión transparente. Sin cargos ocultos.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                
+                <!-- Plan 1 -->
+                <div class="p-8 rounded-[2rem] bg-white dark:bg-white/[0.03] border border-black/5 dark:border-white/10 shadow-xl dark:shadow-none">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Guest List</h3>
+                    <p class="text-slate-500 dark:text-white/50 text-sm mb-8">Para empezar la fiesta.</p>
+                    <div class="text-4xl font-bold text-slate-900 dark:text-white mb-2">$49<span class="text-base font-normal opacity-50">/mes</span></div>
+                    <a href="#" class="block w-full py-4 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold text-center hover:bg-slate-200 dark:hover:bg-white/20 transition my-8">Entrar</a>
+                    <ul class="space-y-4 text-sm text-slate-600 dark:text-white/60">
+                        <li class="flex gap-3">✓ 1 Salón</li>
+                        <li class="flex gap-3">✓ Calendario Básico</li>
+                    </ul>
+                </div>
+
+                <!-- Plan 2 (VIP) -->
+                <div class="p-10 rounded-[2rem] bg-slate-900 dark:bg-[#1a0b2e] border border-purple-500/50 relative overflow-hidden shadow-2xl transform md:-translate-y-6 z-10">
+                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                    <div class="absolute top-5 right-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">VIP Access</div>
+                    
+                    <h3 class="text-2xl font-bold text-white mb-2">Pro All-Access</h3>
+                    <p class="text-purple-200 text-sm mb-8">La experiencia completa.</p>
+                    <div class="text-6xl font-bold text-white mb-2">$99<span class="text-lg font-normal opacity-50">/mes</span></div>
+                    <a href="#" class="block w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-center hover:shadow-neon transition my-8">Comprar Pase</a>
+                    <ul class="space-y-4 text-sm text-white font-medium">
+                        <li class="flex gap-3 text-pink-500">✓ <span class="text-white">Salones Ilimitados</span></li>
+                        <li class="flex gap-3 text-pink-500">✓ <span class="text-white">Micrositios IA</span></li>
+                    </ul>
+                </div>
+
+                <!-- Plan 3 -->
+                <div class="p-8 rounded-[2rem] bg-white dark:bg-white/[0.03] border border-black/5 dark:border-white/10 shadow-xl dark:shadow-none">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Backstage Pass</h3>
+                    <p class="text-slate-500 dark:text-white/50 text-sm mb-8">Para franquicias.</p>
+                    <div class="text-4xl font-bold text-slate-900 dark:text-white mb-2">Custom</div>
+                    <a href="#" class="block w-full py-4 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold text-center hover:bg-slate-200 dark:hover:bg-white/20 transition my-8">Contactar</a>
+                    <ul class="space-y-4 text-sm text-slate-600 dark:text-white/60">
+                        <li class="flex gap-3">✓ API Access</li>
+                        <li class="flex gap-3">✓ Soporte 24/7</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-100 dark:bg-[#05020a] border-t border-black/5 dark:border-white/10 py-16 text-xs text-slate-500 dark:text-white/40">
+        <div class="max-w-[1080px] mx-auto px-6 text-center">
+            <div class="w-12 h-12 bg-white dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-8 text-slate-900 dark:text-white font-bold shadow-sm">E</div>
+            <p>Copyright © 2025 Eventotes Inc. Que siga la fiesta.</p>
+            <p class="mt-4 opacity-50 flex items-center justify-center gap-2">
+                Powered By 
+                <a href="https://jfabrizzio5.github.io/CometaX/" target="_blank" class="hover:opacity-80 transition-opacity">
+                    <img src="https://raw.githubusercontent.com/JFabrizzio5/CometaX/bbeb654b90e817236d9d64009b33618065fbba91/image_2025-12-16_083018257-removebg-preview%20(1).png" alt="CometaX" class="h-20 inline-block dark:invert transition-all duration-300">
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Logic for toggle theme
+        const html = document.documentElement;
+
+        function toggleTheme() {
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+            } else {
+                html.classList.add('dark');
+            }
+        }
+    </script>
+</body>
+</html>
