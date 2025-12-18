@@ -5,105 +5,139 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventotes | Admin Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['"Inter"', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['"Inter"', 'sans-serif'],
+                    },
                     colors: {
-                        party: { bg: '#0b0412', card: '#150a22', light: '#f8fafc' }
+                        party: {
+                            light: '#fdf4ff', 
+                            dark: '#05020a', 
+                            accent: '#d946ef'
+                        }
                     },
                     boxShadow: {
-                        'neon': '0 0 15px rgba(217, 70, 239, 0.4), 0 0 30px rgba(168, 85, 247, 0.2)',
+                        'neon': '0 0 25px rgba(217, 70, 239, 0.4), 0 0 70px rgba(168, 85, 247, 0.2)',
+                        'card-float': '0 20px 40px -10px rgba(0,0,0,0.5)',
                     }
                 }
             }
         }
     </script>
     <style>
-        body { transition: background-color 0.3s ease, color 0.3s ease; }
+        body { transition: background-color 0.5s ease, color 0.5s ease; }
         
-        /* Modos */
-        body { background-color: #f8fafc; background-image: radial-gradient(at 0% 0%, rgba(240, 171, 252, 0.1) 0px, transparent 50%); color: #1e293b; }
-        html.dark body { background-color: #0b0412; background-image: radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.1) 0px, transparent 40%); color: #f1f5f9; }
+        /* --- BACKGROUNDS --- */
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(at 0% 0%, rgba(217, 70, 239, 0.05) 0px, transparent 50%);
+            color: #0f172a;
+        }
+        
+        html.dark body {
+            background-color: #05020a;
+            background-image: 
+                radial-gradient(at 50% 0%, rgba(147, 51, 234, 0.25) 0px, transparent 60%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
+            color: #ffffff;
+        }
 
         /* Glassmorphism */
-        .glass-card { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); transition: all 0.3s ease; }
-        body .glass-card { background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(226, 232, 240, 0.8); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
-        html.dark body .glass-card { background: rgba(21, 10, 34, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html.dark .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 10px; }
-        
-        /* Utilidades para ocultar/mostrar secciones */
+        /* Sidebar Glass */
+        .sidebar-glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            border-right: 1px solid rgba(0,0,0,0.05);
+        }
+        html.dark .sidebar-glass {
+            background: rgba(5, 2, 10, 0.6);
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
         .view-section { display: none; animation: fadeIn 0.4s ease; }
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Nav Active State */
-        .nav-item.active { background-color: rgba(168, 85, 247, 0.15); color: #9333ea; }
-        html.dark .nav-item.active { background-color: rgba(168, 85, 247, 0.2); color: #d8b4fe; }
+        .nav-item.active { background-color: rgba(217, 70, 239, 0.1); color: #d946ef; }
+        html.dark .nav-item.active { background-color: rgba(217, 70, 239, 0.15); color: #e879f9; text-shadow: 0 0 10px rgba(217, 70, 239, 0.4); }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 10px; }
     </style>
 </head>
-<body class="antialiased font-sans h-screen flex overflow-hidden">
+<body class="antialiased font-sans h-screen flex overflow-hidden selection:bg-purple-500 selection:text-white">
 
     <!-- Sidebar -->
-    <aside class="w-20 lg:w-64 flex flex-col border-r border-slate-200 dark:border-white/10 bg-white/80 dark:bg-[#0b0412]/95 backdrop-blur-xl z-20">
-        <div class="h-20 flex items-center justify-center lg:justify-start lg:px-6 border-b border-slate-200 dark:border-white/10">
-            <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-500 rounded-xl flex items-center justify-center font-bold text-white text-xl shadow-lg shrink-0">E</div>
-            <span class="ml-3 font-bold text-lg hidden lg:block text-slate-800 dark:text-white tracking-tight">Eventotes</span>
+    <aside class="w-20 lg:w-64 flex flex-col sidebar-glass z-20 transition-all duration-300">
+        <div class="h-20 flex items-center justify-center lg:justify-start lg:px-6 border-b border-transparent">
+            <img src="https://raw.githubusercontent.com/JFabrizzio5/TusSalonesEventos/08ed7cb29c0879549e8dad035f85f6ef5ccdfed0/BrandingImages/LogoFinal.svg" 
+                 alt="Eventotes Logo" 
+                 class="h-10 w-auto dark:invert transition-transform hover:scale-110">
+            <span class="ml-3 font-bold text-lg hidden lg:block text-slate-900 dark:text-white tracking-tight">Eventotes</span>
         </div>
 
         <nav class="flex-1 py-6 flex flex-col gap-2 px-3 overflow-y-auto">
-            <!-- Dashboard -->
-            <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-item active flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-                <span class="font-medium hidden lg:block">Dashboard</span>
+            <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-item active flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full group">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform"></i>
+                <span class="font-medium hidden lg:block text-sm" data-i18n="nav_dashboard">Dashboard</span>
             </button>
 
-            <!-- Historial (NUEVO) -->
-            <button onclick="switchView('historial')" id="nav-historial" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span class="font-medium hidden lg:block">Historial Eventos</span>
+            <button onclick="switchView('historial')" id="nav-historial" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full group">
+                <i data-lucide="calendar-days" class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform"></i>
+                <span class="font-medium hidden lg:block text-sm" data-i18n="nav_history">Historial Eventos</span>
             </button>
 
-            <!-- Finanzas -->
-            <button onclick="switchView('finanzas')" id="nav-finanzas" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span class="font-medium hidden lg:block">Finanzas</span>
+            <button onclick="switchView('finanzas')" id="nav-finanzas" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full group">
+                <i data-lucide="dollar-sign" class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform"></i>
+                <span class="font-medium hidden lg:block text-sm" data-i18n="nav_finance">Finanzas</span>
             </button>
 
-            <!-- Inventario -->
-            <button onclick="switchView('inventario')" id="nav-inventario" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                <span class="font-medium hidden lg:block">Inventario</span>
+            <button onclick="switchView('inventario')" id="nav-inventario" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full group">
+                <i data-lucide="package" class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform"></i>
+                <span class="font-medium hidden lg:block text-sm" data-i18n="nav_inventory">Inventario</span>
             </button>
 
-             <!-- Comprobantes (Entradas/Salidas) -->
-             <button onclick="switchView('comprobantes')" id="nav-comprobantes" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                <span class="font-medium hidden lg:block">Comprobantes</span>
+             <button onclick="switchView('comprobantes')" id="nav-comprobantes" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full group">
+                <i data-lucide="receipt" class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform"></i>
+                <span class="font-medium hidden lg:block text-sm" data-i18n="nav_invoices">Comprobantes</span>
             </button>
 
-            <!-- Chat -->
-            <button onclick="switchView('chat')" id="nav-chat" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full">
-                <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                <span class="font-medium hidden lg:block">Chat / Dudas</span>
+            <button onclick="switchView('chat')" id="nav-chat" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full group">
+                <i data-lucide="message-square" class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform"></i>
+                <span class="font-medium hidden lg:block text-sm" data-i18n="nav_chat">Mensajes</span>
             </button>
         </nav>
 
-        <div class="p-4 border-t border-slate-200 dark:border-white/10">
-            <div class="flex items-center gap-3 p-2 rounded-xl">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold shrink-0 shadow-md">JD</div>
+        <div class="p-4 border-t border-transparent">
+            <div class="glass-card flex items-center gap-3 p-2 rounded-xl border-0 bg-white/50 dark:bg-white/5">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold shrink-0 shadow-lg text-xs">JD</div>
                 <div class="hidden lg:block">
-                    <p class="text-sm font-bold text-slate-900 dark:text-white">John Doe</p>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Admin</p>
+                    <p class="text-sm font-bold text-slate-900 dark:text-white">Juan Pérez</p>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider" data-i18n="role_admin">Admin</p>
                 </div>
             </div>
         </div>
@@ -112,67 +146,82 @@
     <!-- Main Content Area -->
     <main class="flex-1 flex flex-col min-w-0 overflow-hidden relative">
         
-        <!-- Header -->
-        <header class="h-20 flex items-center justify-between px-8 border-b border-slate-200 dark:border-white/10 bg-white/80 dark:bg-[#0b0412]/80 backdrop-blur-md z-10 sticky top-0">
+        <!-- Header with Language Switcher -->
+        <header class="h-20 flex items-center justify-between px-8 border-b border-transparent bg-white/50 dark:bg-[#05020a]/50 backdrop-blur-md z-10 sticky top-0">
             <div>
-                <h1 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight" id="page-title">Dashboard</h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400">Estado del sistema: <span class="text-green-500 font-semibold">En línea</span></p>
+                <h1 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight" id="page-title">Dashboard</h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium"><span data-i18n="sys_status">Estado del Sistema:</span> <span class="text-green-500 font-bold tracking-wider uppercase" data-i18n="status_online">En Línea</span></p>
             </div>
-            <div class="flex items-center gap-4">
-                <button onclick="toggleTheme()" class="p-2.5 rounded-full bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10 transition">
-                    <svg id="sun-icon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                    <svg id="moon-icon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            <div class="flex items-center gap-3">
+                <!-- LANGUAGE BUTTON -->
+                <button onclick="toggleLanguage()" id="lang-btn" class="px-3 py-1.5 rounded-full text-xs font-bold border border-slate-300 dark:border-white/10 text-slate-600 dark:text-white hover:border-purple-500 hover:text-purple-500 transition-colors">
+                    ES
+                </button>
+                <button onclick="toggleTheme()" class="p-2.5 rounded-full hover:bg-slate-200 dark:hover:bg-white/10 transition text-slate-600 dark:text-white">
+                    <i id="sun-icon" data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                    <i id="moon-icon" data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
                 </button>
             </div>
         </header>
 
         <!-- Dynamic Content Views -->
         <div class="flex-1 overflow-y-auto p-6 lg:p-8 relative">
+            
+            <div class="fixed top-20 right-20 w-[400px] h-[400px] bg-purple-600/10 dark:bg-purple-600/20 blur-[100px] rounded-full pointer-events-none -z-10"></div>
+            <div class="fixed bottom-0 left-20 w-[300px] h-[300px] bg-cyan-500/10 blur-[80px] rounded-full pointer-events-none -z-10"></div>
 
-            <!-- 1. VIEW: DASHBOARD (Original) -->
+            <!-- 1. VISTA: DASHBOARD -->
             <div id="view-dashboard" class="view-section active">
-                <!-- Stats Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
-                        <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase mb-1">Ventas Mensuales</p>
-                        <h3 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">$145,200</h3>
-                        <div class="flex items-center gap-1 text-xs font-semibold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-500/10 px-2 py-0.5 rounded-full w-fit">↑ 12%</div>
+                        <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition"><i data-lucide="dollar-sign" class="w-16 h-16 text-purple-500"></i></div>
+                        <p class="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1" data-i18n="stats_revenue">Ingresos Mensuales</p>
+                        <h3 class="text-3xl font-black text-slate-900 dark:text-white mb-2">$145,200</h3>
+                        <div class="flex items-center gap-1 text-[10px] font-bold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-500/10 px-2 py-0.5 rounded-full w-fit" data-i18n="stats_rev_growth">↑ 12% vs mes pasado</div>
                     </div>
                     <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
-                        <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase mb-1">Eventos Activos</p>
-                        <h3 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">8</h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">3 eventos esta semana</p>
+                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition"><i data-lucide="party-popper" class="w-16 h-16 text-blue-500"></i></div>
+                        <p class="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1" data-i18n="stats_events">Eventos Activos</p>
+                        <h3 class="text-3xl font-black text-slate-900 dark:text-white mb-2">8</h3>
+                        <p class="text-[10px] font-bold text-slate-400" data-i18n="stats_events_desc">3 eventos esta semana</p>
                     </div>
                     <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
-                        <p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase mb-1">Visitas Agendadas</p>
-                        <h3 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">14</h3>
-                        <div class="flex items-center gap-1 text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/10 px-2 py-0.5 rounded-full w-fit">5 Hoy</div>
+                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition"><i data-lucide="calendar" class="w-16 h-16 text-pink-500"></i></div>
+                        <p class="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1" data-i18n="stats_visits">Visitas Agendadas</p>
+                        <h3 class="text-3xl font-black text-slate-900 dark:text-white mb-2">14</h3>
+                        <div class="flex items-center gap-1 text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/10 px-2 py-0.5 rounded-full w-fit" data-i18n="stats_visits_desc">5 Para Hoy</div>
                     </div>
-                    <div class="bg-gradient-to-br from-purple-600 to-pink-500 p-6 rounded-2xl flex flex-col justify-center items-center text-center text-white shadow-lg cursor-pointer hover:shadow-neon transition transform hover:-translate-y-1">
-                        <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                        <h3 class="text-lg font-bold">Nuevo Evento</h3>
+                    <div class="bg-gradient-to-br from-purple-600 to-pink-600 p-6 rounded-2xl flex flex-col justify-center items-center text-center text-white shadow-neon cursor-pointer hover:scale-[1.02] transition-transform group">
+                        <i data-lucide="plus-circle" class="w-8 h-8 mb-2 group-hover:rotate-90 transition-transform"></i>
+                        <h3 class="text-sm font-bold uppercase tracking-wider" data-i18n="btn_new_event">Nuevo Evento</h3>
                     </div>
                 </div>
 
-                <!-- Main Chart & Feed -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-                    <div class="lg:col-span-2 glass-card rounded-2xl p-6 border border-slate-200 dark:border-white/10">
-                        <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-6">Resumen General</h2>
+                    <div class="lg:col-span-2 glass-card rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="chart_title">Resumen de Ingresos</h2>
+                            <select class="bg-transparent text-xs font-bold text-slate-500 focus:outline-none"><option data-i18n="opt_6months">Últimos 6 Meses</option><option data-i18n="opt_year">Último Año</option></select>
+                        </div>
                         <div class="h-64 w-full"><canvas id="revenueChart"></canvas></div>
                     </div>
-                    <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-white/10">
-                        <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Próximos 7 días</h2>
+                    <div class="glass-card rounded-2xl p-6">
+                        <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4" data-i18n="upcoming_title">Próximos (7 Días)</h2>
                         <div class="space-y-3">
-                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-transparent hover:border-purple-500/30 transition cursor-pointer">
                                 <div class="flex items-center gap-3">
-                                    <div class="text-center w-8"><div class="text-[10px] text-red-500 font-bold uppercase">Dic</div><div class="text-lg font-bold text-slate-900 dark:text-white">20</div></div>
-                                    <div><p class="text-sm font-bold text-slate-900 dark:text-white">Boda G&L</p><p class="text-xs text-slate-500 dark:text-slate-400">Salón A</p></div>
+                                    <div class="text-center w-10 py-1 bg-white dark:bg-white/5 rounded-lg border border-slate-200 dark:border-white/10">
+                                        <div class="text-[9px] text-red-500 font-bold uppercase">Dic</div><div class="text-sm font-black text-slate-900 dark:text-white">20</div>
+                                    </div>
+                                    <div><p class="text-sm font-bold text-slate-900 dark:text-white">Boda G&L</p><p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase" data-i18n="hall_main">Salón Principal</p></div>
                                 </div>
                             </div>
-                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-transparent hover:border-purple-500/30 transition cursor-pointer">
                                 <div class="flex items-center gap-3">
-                                    <div class="text-center w-8"><div class="text-[10px] text-red-500 font-bold uppercase">Dic</div><div class="text-lg font-bold text-slate-900 dark:text-white">22</div></div>
-                                    <div><p class="text-sm font-bold text-slate-900 dark:text-white">XV Sofia</p><p class="text-xs text-slate-500 dark:text-slate-400">Jardín</p></div>
+                                    <div class="text-center w-10 py-1 bg-white dark:bg-white/5 rounded-lg border border-slate-200 dark:border-white/10">
+                                        <div class="text-[9px] text-red-500 font-bold uppercase">Dic</div><div class="text-sm font-black text-slate-900 dark:text-white">22</div>
+                                    </div>
+                                    <div><p class="text-sm font-bold text-slate-900 dark:text-white">XV Años Sofia</p><p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase" data-i18n="hall_garden">Jardín</p></div>
                                 </div>
                             </div>
                         </div>
@@ -180,380 +229,245 @@
                 </div>
             </div>
 
-            <!-- 2. VIEW: HISTORIAL & ESTADOS (NUEVO) -->
+            <!-- 2. VISTA: HISTORIAL -->
             <div id="view-historial" class="view-section">
-                <!-- Filters -->
                 <div class="flex flex-wrap gap-3 mb-6">
-                    <button class="px-4 py-2 rounded-xl bg-purple-600 text-white text-sm font-bold shadow-lg shadow-purple-500/20">Todos</button>
-                    <button class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-white/5 text-slate-600 dark:text-slate-400 text-sm font-medium hover:bg-slate-300 dark:hover:bg-white/10 transition">En Progreso</button>
-                    <button class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-white/5 text-slate-600 dark:text-slate-400 text-sm font-medium hover:bg-slate-300 dark:hover:bg-white/10 transition">Completados</button>
-                    <button class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-white/5 text-slate-600 dark:text-slate-400 text-sm font-medium hover:bg-slate-300 dark:hover:bg-white/10 transition">Cancelados</button>
+                    <button class="px-4 py-2 rounded-full bg-purple-600 text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-purple-500/20" data-i18n="filter_all">Todos</button>
+                    <button class="px-4 py-2 rounded-full bg-slate-200 dark:bg-white/5 text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wider hover:bg-slate-300 dark:hover:bg-white/10 transition" data-i18n="filter_progress">En Progreso</button>
+                    <button class="px-4 py-2 rounded-full bg-slate-200 dark:bg-white/5 text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wider hover:bg-slate-300 dark:hover:bg-white/10 transition" data-i18n="filter_completed">Completados</button>
+                    <button class="px-4 py-2 rounded-full bg-slate-200 dark:bg-white/5 text-slate-600 dark:text-slate-400 text-xs font-bold uppercase tracking-wider hover:bg-slate-300 dark:hover:bg-white/10 transition" data-i18n="filter_cancelled">Cancelados</button>
                 </div>
 
-                <!-- History Table -->
-                <div class="glass-card rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden">
+                <div class="glass-card rounded-2xl overflow-hidden">
                     <table class="w-full text-left text-sm">
-                        <thead class="bg-slate-50 dark:bg-white/5 text-xs text-slate-500 dark:text-slate-400 uppercase">
+                        <thead class="bg-slate-50/50 dark:bg-white/5 text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">
                             <tr>
-                                <th class="px-6 py-4">Evento</th>
-                                <th class="px-6 py-4">Cliente</th>
-                                <th class="px-6 py-4">Fecha</th>
-                                <th class="px-6 py-4 text-center">Estado</th>
-                                <th class="px-6 py-4 text-right">Monto Total</th>
-                                <th class="px-6 py-4 text-right">Acción</th>
+                                <th class="px-6 py-4" data-i18n="th_event">Evento</th>
+                                <th class="px-6 py-4" data-i18n="th_client">Cliente</th>
+                                <th class="px-6 py-4" data-i18n="th_date">Fecha</th>
+                                <th class="px-6 py-4 text-center" data-i18n="th_status">Estado</th>
+                                <th class="px-6 py-4 text-right" data-i18n="th_amount">Monto Total</th>
+                                <th class="px-6 py-4 text-right" data-i18n="th_action">Acción</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-white/5">
-                            <!-- Completed Event -->
-                            <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition">
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-white/5 transition">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400 text-xs font-bold">BD</div>
-                                        <div>
-                                            <p class="font-bold text-slate-900 dark:text-white">Boda Perez</p>
-                                            <p class="text-xs text-slate-500">Salón Principal</p>
-                                        </div>
+                                        <div class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400 text-xs font-bold">W</div>
+                                        <div><p class="font-bold text-slate-900 dark:text-white">Boda Pérez</p><p class="text-[10px] font-bold uppercase text-slate-500" data-i18n="hall_main">Salón Principal</p></div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Juan Perez</td>
-                                <td class="px-6 py-4 text-slate-600 dark:text-slate-300">10 Nov, 2025</td>
+                                <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Juan Pérez</td>
+                                <td class="px-6 py-4 text-slate-600 dark:text-slate-300 font-mono text-xs">10 Nov, 2025</td>
                                 <td class="px-6 py-4 text-center">
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-500/20">Completado</span>
+                                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-500/20" data-i18n="status_finished">Finalizado</span>
                                 </td>
-                                <td class="px-6 py-4 text-right font-bold text-slate-900 dark:text-white">$120,000</td>
-                                <td class="px-6 py-4 text-right"><button class="text-slate-400 hover:text-white">Ver Detalles</button></td>
-                            </tr>
-
-                            <!-- Upcoming Event -->
-                            <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition">
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 text-xs font-bold">XV</div>
-                                        <div>
-                                            <p class="font-bold text-slate-900 dark:text-white">XV Años Sofia</p>
-                                            <p class="text-xs text-slate-500">Jardín</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Roberto Mendez</td>
-                                <td class="px-6 py-4 text-slate-600 dark:text-slate-300">22 Dic, 2025</td>
-                                <td class="px-6 py-4 text-center">
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20">En Progreso</span>
-                                </td>
-                                <td class="px-6 py-4 text-right font-bold text-slate-900 dark:text-white">$85,000</td>
-                                <td class="px-6 py-4 text-right"><button class="text-purple-500 hover:text-purple-400 font-medium">Gestionar</button></td>
-                            </tr>
-
-                            <!-- Cancelled Event -->
-                            <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition opacity-60">
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-500/20 flex items-center justify-center text-red-600 dark:text-red-400 text-xs font-bold">CP</div>
-                                        <div>
-                                            <p class="font-bold text-slate-900 dark:text-white line-through">Cena Corporativa</p>
-                                            <p class="text-xs text-slate-500">Salón B</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Tech Solutions</td>
-                                <td class="px-6 py-4 text-slate-600 dark:text-slate-300">05 Dic, 2025</td>
-                                <td class="px-6 py-4 text-center">
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20">Cancelado</span>
-                                </td>
-                                <td class="px-6 py-4 text-right font-bold text-slate-900 dark:text-white">$0.00</td>
-                                <td class="px-6 py-4 text-right"><button class="text-slate-400 hover:text-white">Ver Nota</button></td>
+                                <td class="px-6 py-4 text-right font-black text-slate-900 dark:text-white">$120,000</td>
+                                <td class="px-6 py-4 text-right"><button class="text-slate-400 hover:text-white hover:scale-110 transition"><i data-lucide="eye" class="w-4 h-4"></i></button></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 3. VIEW: FINANZAS -->
+            <!-- 3. VISTA: FINANZAS -->
             <div id="view-finanzas" class="view-section">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-                    <!-- Balance Card -->
                     <div class="lg:col-span-3 bg-gradient-to-r from-emerald-600 to-teal-500 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
-                        <div class="absolute right-0 top-0 opacity-10 transform translate-x-10 -translate-y-10"><svg class="w-64 h-64" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.15-1.46-3.27-3.23h1.96c.1.92.98 1.64 2.53 1.64 1.52 0 2.45-.81 2.45-2.01 0-1.42-1.22-1.99-3.41-2.52-2.39-.56-3.95-1.55-3.95-3.64 0-1.88 1.4-3.25 3.09-3.59V3h2.67v1.88c1.71.37 3.03 1.45 3.23 3.16h-1.92c-.11-.79-.76-1.5-2.37-1.5-1.52 0-2.3.93-2.3 1.95 0 1.29 1.25 1.83 3.51 2.38 2.37.56 3.84 1.63 3.84 3.73 0 1.96-1.51 3.33-3.19 3.59z"/></svg></div>
-                        <p class="text-emerald-100 font-medium mb-1">Balance Total Disponible</p>
-                        <h2 class="text-5xl font-bold mb-6">$342,150.00 <span class="text-lg font-normal opacity-70">MXN</span></h2>
-                        <div class="flex gap-8">
-                            <div>
-                                <p class="text-emerald-200 text-xs uppercase font-bold">Ingresos (Mes)</p>
-                                <p class="text-xl font-bold">+$145,200</p>
-                            </div>
-                            <div>
-                                <p class="text-emerald-200 text-xs uppercase font-bold">Gastos (Mes)</p>
-                                <p class="text-xl font-bold text-red-200">-$24,500</p>
-                            </div>
+                        <div class="absolute right-0 top-0 opacity-10 transform translate-x-10 -translate-y-10"><i data-lucide="wallet" class="w-64 h-64"></i></div>
+                        <p class="text-emerald-100 font-bold uppercase tracking-widest text-xs mb-1" data-i18n="bal_total">Balance Total Disponible</p>
+                        <h2 class="text-5xl font-black mb-6 tracking-tight">$342,150.00 <span class="text-lg font-bold opacity-70">MXN</span></h2>
+                        <div class="flex gap-8 border-t border-white/10 pt-4">
+                            <div><p class="text-emerald-200 text-[10px] uppercase font-bold tracking-wider" data-i18n="bal_income">Ingresos (Mes)</p><p class="text-xl font-black">+$145,200</p></div>
+                            <div><p class="text-emerald-200 text-[10px] uppercase font-bold tracking-wider" data-i18n="bal_expenses">Gastos (Mes)</p><p class="text-xl font-black text-red-200">-$24,500</p></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Movements Table -->
-                    <div class="glass-card rounded-2xl p-6 border border-slate-200 dark:border-white/10 col-span-2">
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Últimos Movimientos</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm">
-                                <thead class="text-xs text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/10">
-                                    <tr>
-                                        <th class="px-4 py-2">Concepto</th>
-                                        <th class="px-4 py-2">Categoría</th>
-                                        <th class="px-4 py-2 text-right">Monto</th>
-                                        <th class="px-4 py-2 text-right">Estado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="border-b border-slate-100 dark:border-white/5">
-                                        <td class="px-4 py-3 font-medium text-slate-900 dark:text-white">Anticipo Boda G&L</td>
-                                        <td class="px-4 py-3 text-slate-500">Ingreso</td>
-                                        <td class="px-4 py-3 text-right text-green-500 font-bold">+$25,000</td>
-                                        <td class="px-4 py-3 text-right"><span class="bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 text-xs px-2 py-1 rounded">Confirmado</span></td>
-                                    </tr>
-                                    <tr class="border-b border-slate-100 dark:border-white/5">
-                                        <td class="px-4 py-3 font-medium text-slate-900 dark:text-white">Compra Bebidas</td>
-                                        <td class="px-4 py-3 text-slate-500">Gasto / Inventario</td>
-                                        <td class="px-4 py-3 text-right text-red-400 font-bold">-$8,400</td>
-                                        <td class="px-4 py-3 text-right"><span class="bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400 text-xs px-2 py-1 rounded">Procesado</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                <div class="glass-card rounded-2xl p-6 col-span-2">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4" data-i18n="trans_title">Últimas Transacciones</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/10">
+                                <tr>
+                                    <th class="px-4 py-2" data-i18n="th_concept">Concepto</th>
+                                    <th class="px-4 py-2" data-i18n="th_cat">Categoría</th>
+                                    <th class="px-4 py-2 text-right" data-i18n="th_amount">Monto</th>
+                                    <th class="px-4 py-2 text-right" data-i18n="th_status">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-slate-100 dark:border-white/5">
+                                    <td class="px-4 py-3 font-bold text-slate-900 dark:text-white">Anticipo Boda G&L</td>
+                                    <td class="px-4 py-3 text-slate-500 text-xs uppercase font-bold" data-i18n="cat_income">Ingreso</td>
+                                    <td class="px-4 py-3 text-right text-green-500 font-black">+$25,000</td>
+                                    <td class="px-4 py-3 text-right"><span class="bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 text-[10px] font-bold uppercase px-2 py-0.5 rounded" data-i18n="status_verified">Verificado</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <!-- 4. VIEW: INVENTARIO -->
+            <!-- 4. VISTA: INVENTARIO -->
             <div id="view-inventario" class="view-section">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Inventario de Bebidas & Equipo</h2>
-                    <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">+ Agregar Item</button>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white" data-i18n="inv_title">Inventario</h2>
+                    <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition shadow-neon-blue" data-i18n="btn_add_item">+ Agregar Item</button>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div class="glass-card p-4 rounded-xl border-l-4 border-red-500">
-                        <p class="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold">Alerta Stock Bajo</p>
-                        <p class="text-2xl font-bold text-slate-900 dark:text-white">3 Items</p>
-                        <p class="text-xs text-red-500 font-medium">Requieren reorden</p>
-                    </div>
-                    <div class="glass-card p-4 rounded-xl border-l-4 border-blue-500">
-                        <p class="text-xs text-slate-500 dark:text-slate-400 uppercase font-bold">Valor Inventario</p>
-                        <p class="text-2xl font-bold text-slate-900 dark:text-white">$45,800</p>
-                    </div>
-                </div>
-
-                <div class="glass-card rounded-2xl border border-slate-200 dark:border-white/10 overflow-hidden">
+                <div class="glass-card rounded-2xl overflow-hidden">
                     <table class="w-full text-left text-sm">
-                        <thead class="bg-slate-50 dark:bg-white/5 text-xs text-slate-500 dark:text-slate-400 uppercase">
-                            <tr>
-                                <th class="px-6 py-4">Item</th>
-                                <th class="px-6 py-4">Categoría</th>
-                                <th class="px-6 py-4 text-center">Stock</th>
-                                <th class="px-6 py-4 text-center">Estado</th>
-                                <th class="px-6 py-4 text-right">Acción</th>
-                            </tr>
+                         <thead class="bg-slate-50/50 dark:bg-white/5 text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">
+                            <tr><th class="px-6 py-4" data-i18n="th_item">Item</th><th class="px-6 py-4" data-i18n="th_cat">Categoría</th><th class="px-6 py-4 text-center" data-i18n="th_stock">Stock</th><th class="px-6 py-4 text-center" data-i18n="th_status">Estado</th><th class="px-6 py-4 text-right" data-i18n="th_action">Acción</th></tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-white/5">
-                            <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition">
-                                <td class="px-6 py-4 font-medium text-slate-900 dark:text-white">Whisky Black Label</td>
-                                <td class="px-6 py-4 text-slate-500">Bebidas / Alcohol</td>
-                                <td class="px-6 py-4 text-center text-red-500 font-bold">2 Botellas</td>
-                                <td class="px-6 py-4 text-center"><span class="px-2 py-1 rounded bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 text-xs font-bold">Bajo</span></td>
-                                <td class="px-6 py-4 text-right"><button class="text-purple-500 hover:text-purple-400 font-medium">Reordenar</button></td>
-                            </tr>
-                            <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition">
-                                <td class="px-6 py-4 font-medium text-slate-900 dark:text-white">Sillas Tiffany Doradas</td>
-                                <td class="px-6 py-4 text-slate-500">Mobiliario</td>
-                                <td class="px-6 py-4 text-center font-bold text-slate-900 dark:text-white">150</td>
-                                <td class="px-6 py-4 text-center"><span class="px-2 py-1 rounded bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 text-xs font-bold">OK</span></td>
-                                <td class="px-6 py-4 text-right"><button class="text-slate-400 hover:text-white">Editar</button></td>
-                            </tr>
-                            <tr class="hover:bg-slate-50 dark:hover:bg-white/5 transition">
-                                <td class="px-6 py-4 font-medium text-slate-900 dark:text-white">Mantelería Blanca</td>
-                                <td class="px-6 py-4 text-slate-500">Blancos</td>
-                                <td class="px-6 py-4 text-center font-bold text-slate-900 dark:text-white">45</td>
-                                <td class="px-6 py-4 text-center"><span class="px-2 py-1 rounded bg-yellow-100 dark:bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 text-xs font-bold">En Uso</span></td>
-                                <td class="px-6 py-4 text-right"><button class="text-slate-400 hover:text-white">Editar</button></td>
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-white/5 transition">
+                                <td class="px-6 py-4 font-bold text-slate-900 dark:text-white">Whisky Etiqueta Negra</td>
+                                <td class="px-6 py-4 text-slate-500 text-xs uppercase font-bold" data-i18n="cat_bar">Barra / Alcohol</td>
+                                <td class="px-6 py-4 text-center text-red-500 font-black">2 Units</td>
+                                <td class="px-6 py-4 text-center"><span class="px-2 py-1 rounded-full bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 text-[10px] font-bold uppercase" data-i18n="status_low">Bajo</span></td>
+                                <td class="px-6 py-4 text-right"><button class="text-purple-500 hover:text-purple-400 font-bold text-xs uppercase" data-i18n="btn_reorder">Reordenar</button></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 5. VIEW: CHAT / SOPORTE -->
+            <!-- 5. VISTA: MENSAJES -->
             <div id="view-chat" class="view-section h-[calc(100vh-140px)]">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
-                    <!-- Chat Sidebar -->
-                    <div class="glass-card rounded-2xl border border-slate-200 dark:border-white/10 flex flex-col h-full overflow-hidden">
-                        <div class="p-4 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5">
-                            <h3 class="font-bold text-slate-900 dark:text-white">Mensajes</h3>
+                    <div class="glass-card rounded-2xl flex flex-col h-full overflow-hidden">
+                        <div class="p-4 border-b border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/5">
+                            <h3 class="font-bold text-slate-900 dark:text-white" data-i18n="chat_inbox">Bandeja de Entrada</h3>
                         </div>
                         <div class="flex-1 overflow-y-auto p-2 space-y-1">
-                            <!-- User Item -->
                             <div class="p-3 rounded-xl bg-purple-500/10 border border-purple-500/20 cursor-pointer">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">AG</div>
+                                    <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xs">AG</div>
                                     <div class="flex-1 min-w-0">
-                                        <div class="flex justify-between">
-                                            <p class="font-bold text-sm text-slate-900 dark:text-white truncate">Ana Gutierrez</p>
-                                            <span class="text-[10px] text-slate-500">12:30</span>
-                                        </div>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400 truncate">¿Tienen disponibilidad para el...</p>
-                                    </div>
-                                </div>
-                            </div>
-                             <!-- User Item -->
-                             <div class="p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer transition">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-bold">RM</div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex justify-between">
-                                            <p class="font-bold text-sm text-slate-900 dark:text-white truncate">Roberto Mendez</p>
-                                            <span class="text-[10px] text-slate-500">Ayer</span>
-                                        </div>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400 truncate">Confirmado el menú infantil.</p>
+                                        <div class="flex justify-between"><p class="font-bold text-sm text-slate-900 dark:text-white truncate">Ana Gutierrez</p><span class="text-[10px] text-slate-500">12:30</span></div>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 truncate">Pregunta sobre horario...</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Chat Area -->
-                    <div class="md:col-span-2 glass-card rounded-2xl border border-slate-200 dark:border-white/10 flex flex-col h-full overflow-hidden">
+                    <div class="md:col-span-2 glass-card rounded-2xl flex flex-col h-full overflow-hidden">
                         <div class="p-4 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xs">AG</div>
-                                <span class="font-bold text-slate-900 dark:text-white">Ana Gutierrez - Boda</span>
-                            </div>
-                            <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                            <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xs">AG</div><span class="font-bold text-slate-900 dark:text-white">Ana Gutierrez - Boda</span></div>
+                            <span class="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"></span>
                         </div>
-                        
-                        <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50 dark:bg-[#0f0518]/50">
-                            <!-- Msg Received -->
+                        <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/30 dark:bg-[#0f0518]/30">
                             <div class="flex gap-3">
-                                <div class="w-8 h-8 rounded-full bg-blue-500 flex-shrink-0"></div>
                                 <div class="bg-white dark:bg-white/10 p-3 rounded-2xl rounded-tl-none border border-slate-200 dark:border-white/5 max-w-[80%]">
-                                    <p class="text-sm text-slate-800 dark:text-slate-200">Hola, tengo una duda sobre el horario de montaje para el día 20.</p>
-                                    <span class="text-[10px] text-slate-400 block mt-1">12:30 PM</span>
+                                    <p class="text-sm text-slate-800 dark:text-slate-200" data-i18n="chat_msg_1">Hola, ¿a qué hora pueden entrar los proveedores?</p>
                                 </div>
                             </div>
-                            <!-- Msg Sent -->
                             <div class="flex gap-3 justify-end">
-                                <div class="bg-purple-600 text-white p-3 rounded-2xl rounded-tr-none max-w-[80%]">
-                                    <p class="text-sm">¡Hola Ana! Claro, los proveedores pueden entrar desde las 9:00 AM.</p>
-                                    <span class="text-[10px] text-purple-200 block mt-1">12:32 PM</span>
+                                <div class="bg-purple-600 text-white p-3 rounded-2xl rounded-tr-none max-w-[80%] shadow-neon">
+                                    <p class="text-sm" data-i18n="chat_msg_2">¡Hola Ana! Desde las 9:00 AM en adelante.</p>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="p-4 bg-white dark:bg-white/5 border-t border-slate-200 dark:border-white/10">
+                        <div class="p-4 bg-white/50 dark:bg-white/5 border-t border-slate-200 dark:border-white/10">
                             <div class="flex gap-2">
-                                <input type="text" placeholder="Escribe un mensaje..." class="flex-1 bg-slate-100 dark:bg-[#0b0412] border border-slate-200 dark:border-white/10 rounded-full px-4 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 transition">
-                                <button class="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full transition">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-                                </button>
+                                <input type="text" data-placeholder-es="Escribe un mensaje..." data-placeholder-en="Type a message..." placeholder="Escribe un mensaje..." class="flex-1 bg-slate-100 dark:bg-[#0b0412] border border-slate-200 dark:border-white/10 rounded-full px-4 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 transition i18n-placeholder">
+                                <button class="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full transition shadow-lg"><i data-lucide="send" class="w-4 h-4"></i></button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 6. VIEW: COMPROBANTES (Entradas / Salidas) -->
+            <!-- 6. VISTA: COMPROBANTES -->
             <div id="view-comprobantes" class="view-section">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    
-                    <!-- Upload Form -->
-                    <div class="glass-card rounded-2xl p-8 border border-slate-200 dark:border-white/10">
-                        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">Registrar Movimiento</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 glass-card rounded-2xl p-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-slate-900 dark:text-white" data-i18n="inv_reg_title">Registrar Nuevo Movimiento</h2>
+                            <div class="flex bg-slate-100 dark:bg-white/10 rounded-lg p-1">
+                                <button class="px-4 py-1.5 rounded-md text-xs font-bold bg-white dark:bg-white/20 shadow text-slate-900 dark:text-white" data-i18n="type_expense">Gasto</button>
+                                <button class="px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white" data-i18n="type_income">Ingreso</button>
+                            </div>
+                        </div>
                         
-                        <div class="space-y-4">
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2" data-i18n="label_amount">Monto ($)</label>
+                                    <input type="number" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 transition" placeholder="0.00">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2" data-i18n="label_cat">Categoría</label>
+                                    <select class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 transition">
+                                        <option>Proveedores</option>
+                                        <option>Mantenimiento</option>
+                                        <option>Nómina</option>
+                                        <option>Insumos</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
                             <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">Tipo de Movimiento</label>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <label class="cursor-pointer">
-                                        <input type="radio" name="type" class="peer sr-only" checked>
-                                        <div class="rounded-xl border border-slate-200 dark:border-white/10 p-3 text-center peer-checked:bg-red-500/20 peer-checked:border-red-500 peer-checked:text-red-500 transition hover:bg-slate-50 dark:hover:bg-white/5">
-                                            📤 Gasto / Compra
-                                        </div>
-                                    </label>
-                                    <label class="cursor-pointer">
-                                        <input type="radio" name="type" class="peer sr-only">
-                                        <div class="rounded-xl border border-slate-200 dark:border-white/10 p-3 text-center peer-checked:bg-green-500/20 peer-checked:border-green-500 peer-checked:text-green-500 transition hover:bg-slate-50 dark:hover:bg-white/5">
-                                            📥 Ingreso / Venta
-                                        </div>
-                                    </label>
+                                <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2" data-i18n="label_file">Comprobante (Factura/Recibo)</label>
+                                <div class="border-2 border-dashed border-purple-500/30 hover:border-purple-500 rounded-2xl p-8 text-center cursor-pointer transition group bg-purple-500/5 hover:bg-purple-500/10">
+                                    <div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-500/20 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                                        <i data-lucide="cloud-upload" class="w-6 h-6 text-purple-600 dark:text-purple-400"></i>
+                                    </div>
+                                    <p class="text-sm font-bold text-slate-900 dark:text-white" data-i18n="dropzone_text">Haz clic o arrastra tu archivo aquí</p>
+                                    <p class="text-xs text-slate-500 mt-1" data-i18n="dropzone_sub">Soporta PDF, JPG, PNG (Max 5MB)</p>
                                 </div>
                             </div>
 
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">Monto</label>
-                                <div class="relative">
-                                    <span class="absolute left-3 top-2.5 text-slate-500">$</span>
-                                    <input type="number" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-2.5 pl-8 pr-4 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 transition" placeholder="0.00">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase mb-2">Descripción</label>
-                                <input type="text" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl py-2.5 px-4 text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 transition" placeholder="Ej. Compra de Hielo">
-                            </div>
-
-                            <!-- File Drop Zone -->
-                            <div class="border-2 border-dashed border-slate-300 dark:border-white/20 rounded-2xl p-6 text-center hover:border-purple-500 transition cursor-pointer bg-slate-50/50 dark:bg-white/[0.02]">
-                                <svg class="w-10 h-10 mx-auto text-slate-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                                <p class="text-sm font-medium text-slate-900 dark:text-white">Sube tu comprobante</p>
-                                <p class="text-xs text-slate-500">PNG, JPG o PDF (Max 5MB)</p>
-                            </div>
-
-                            <button class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-purple-500/20">Registrar</button>
+                            <button class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 rounded-xl transition shadow-neon uppercase tracking-wider text-xs flex items-center justify-center gap-2">
+                                <i data-lucide="save" class="w-4 h-4"></i> <span data-i18n="btn_save">Guardar Registro</span>
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Recent Uploads Log -->
-                    <div class="glass-card rounded-2xl p-8 border border-slate-200 dark:border-white/10">
-                        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6">Historial de Comprobantes</h2>
-                        <div class="space-y-4">
-                            <!-- Item -->
-                            <div class="flex items-center gap-4 p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
-                                <div class="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-500/20 flex items-center justify-center text-red-500 font-bold shrink-0">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                    <div class="glass-card rounded-2xl p-6 flex flex-col h-full">
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-4 border-b border-slate-200 dark:border-white/10 pb-4" data-i18n="recent_files_title">Archivos Recientes</h3>
+                        <div class="space-y-3 flex-1 overflow-y-auto">
+                            <!-- Item 1 -->
+                            <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-transparent hover:border-purple-500/30 transition group cursor-pointer">
+                                <div class="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-500/20 flex items-center justify-center shrink-0">
+                                    <i data-lucide="file-text" class="w-5 h-5 text-red-500"></i>
                                 </div>
-                                <div class="flex-1">
-                                    <p class="text-sm font-bold text-slate-900 dark:text-white">Factura Bebidas</p>
-                                    <p class="text-xs text-slate-500">Prov. Licores del Norte</p>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-bold text-slate-900 dark:text-white truncate">Factura_Licores.pdf</p>
+                                    <p class="text-[10px] text-slate-500 uppercase font-bold" data-i18n="time_2h">Hace 2 horas</p>
                                 </div>
                                 <div class="text-right">
-                                    <p class="text-sm font-bold text-slate-900 dark:text-white">-$8,400</p>
-                                    <a href="#" class="text-[10px] text-purple-500 hover:underline">Ver PDF</a>
+                                    <span class="block text-xs font-black text-slate-900 dark:text-white">$8,500</span>
+                                    <span class="text-[9px] font-bold text-green-500 uppercase" data-i18n="status_approved">Aprobado</span>
                                 </div>
                             </div>
-
-                            <!-- Item -->
-                            <div class="flex items-center gap-4 p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
-                                <div class="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-500/20 flex items-center justify-center text-green-500 font-bold shrink-0">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+                             <!-- Item 2 -->
+                             <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-transparent hover:border-purple-500/30 transition group cursor-pointer">
+                                <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center shrink-0">
+                                    <i data-lucide="image" class="w-5 h-5 text-blue-500"></i>
                                 </div>
-                                <div class="flex-1">
-                                    <p class="text-sm font-bold text-slate-900 dark:text-white">Comprobante Transferencia</p>
-                                    <p class="text-xs text-slate-500">Anticipo Boda G&L</p>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-bold text-slate-900 dark:text-white truncate">Ticket_Hielo.jpg</p>
+                                    <p class="text-[10px] text-slate-500 uppercase font-bold" data-i18n="time_yesterday">Ayer</p>
                                 </div>
                                 <div class="text-right">
-                                    <p class="text-sm font-bold text-slate-900 dark:text-white">+$25,000</p>
-                                    <a href="#" class="text-[10px] text-purple-500 hover:underline">Ver Img</a>
+                                    <span class="block text-xs font-black text-slate-900 dark:text-white">$450</span>
+                                    <span class="text-[9px] font-bold text-orange-500 uppercase" data-i18n="status_review">Revisión</span>
                                 </div>
                             </div>
                         </div>
+                        <button class="w-full mt-4 text-xs font-bold text-purple-500 hover:text-purple-400 uppercase tracking-wider py-2" data-i18n="btn_view_all">Ver Todo el Historial</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Footer del Dashboard -->
+            <!-- Footer -->
             <footer class="mt-12 py-6 text-center border-t border-slate-200 dark:border-white/5">
-                <div class="flex items-center justify-center gap-2 text-xs text-slate-400 dark:text-slate-600">
-                    <span>&copy; 2025 Eventotes System. Powered By</span>
-                    <a href="https://jfabrizzio5.github.io/CometaX/" target="_blank" class="hover:opacity-80 transition-opacity">
-                        <img src="https://raw.githubusercontent.com/JFabrizzio5/CometaX/bbeb654b90e817236d9d64009b33618065fbba91/image_2025-12-16_083018257-removebg-preview%20(1).png" alt="CometaX" class="h-6 inline-block align-middle dark:invert transition-all duration-300">
-                    </a>
+                <div class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-600">
+                    <span data-i18n="powered_by">Powered By</span>
+                    <img src="https://raw.githubusercontent.com/JFabrizzio5/CometaX/bbeb654b90e817236d9d64009b33618065fbba91/image_2025-12-16_083018257-removebg-preview%20(1).png" alt="CometaX" class="h-5 inline-block align-middle dark:invert transition-all hover:scale-110">
                 </div>
             </footer>
 
@@ -562,42 +476,203 @@
 
     <!-- Scripts -->
     <script>
-        // --- Navigation Logic ---
+        lucide.createIcons();
+        
         function switchView(viewName) {
-            // Hide all sections
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            // Remove active class from all nav items
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-
-            // Show selected section
             document.getElementById('view-' + viewName).classList.add('active');
-            // Activate selected nav item
             document.getElementById('nav-' + viewName).classList.add('active');
-            
-            // Update Title
-            const titles = {
-                'dashboard': 'Dashboard',
-                'historial': 'Historial & Estado de Eventos',
-                'finanzas': 'Finanzas & Balance',
-                'inventario': 'Inventario',
-                'chat': 'Centro de Mensajes',
-                'comprobantes': 'Registro de Movimientos'
-            };
-            document.getElementById('page-title').innerText = titles[viewName];
+            updateTitle(viewName);
         }
 
-        // --- Dark Mode Logic ---
+        function updateTitle(viewName) {
+            const keys = {
+                'dashboard': 'nav_dashboard',
+                'historial': 'nav_history',
+                'finanzas': 'nav_finance',
+                'inventario': 'nav_inventory',
+                'chat': 'nav_chat',
+                'comprobantes': 'nav_invoices'
+            };
+            const key = keys[viewName];
+            if(translations[currentLang][key]) {
+                document.getElementById('page-title').innerText = translations[currentLang][key];
+            }
+        }
+
         const html = document.documentElement;
         function toggleTheme() {
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-            } else {
-                html.classList.add('dark');
-            }
+            if (html.classList.contains('dark')) { html.classList.remove('dark'); } else { html.classList.add('dark'); }
             updateChartTheme();
         }
 
-        // --- Chart Config ---
+        // --- LANGUAGE LOGIC ---
+        let currentLang = 'es';
+        const translations = {
+            es: {
+                nav_dashboard: "Dashboard",
+                nav_history: "Historial Eventos",
+                nav_finance: "Finanzas",
+                nav_inventory: "Inventario",
+                nav_invoices: "Comprobantes",
+                nav_chat: "Mensajes",
+                role_admin: "Admin",
+                sys_status: "Estado del Sistema:",
+                status_online: "En Línea",
+                stats_revenue: "Ingresos Mensuales",
+                stats_rev_growth: "↑ 12% vs mes pasado",
+                stats_events: "Eventos Activos",
+                stats_events_desc: "3 eventos esta semana",
+                stats_visits: "Visitas Agendadas",
+                stats_visits_desc: "5 Para Hoy",
+                btn_new_event: "Nuevo Evento",
+                chart_title: "Resumen de Ingresos",
+                opt_6months: "Últimos 6 Meses",
+                opt_year: "Último Año",
+                upcoming_title: "Próximos (7 Días)",
+                hall_main: "Salón Principal",
+                hall_garden: "Jardín",
+                filter_all: "Todos",
+                filter_progress: "En Progreso",
+                filter_completed: "Completados",
+                filter_cancelled: "Cancelados",
+                th_event: "Evento",
+                th_client: "Cliente",
+                th_date: "Fecha",
+                th_status: "Estado",
+                th_amount: "Monto Total",
+                th_action: "Acción",
+                status_finished: "Finalizado",
+                bal_total: "Balance Total Disponible",
+                bal_income: "Ingresos (Mes)",
+                bal_expenses: "Gastos (Mes)",
+                trans_title: "Últimas Transacciones",
+                th_concept: "Concepto",
+                th_cat: "Categoría",
+                cat_income: "Ingreso",
+                status_verified: "Verificado",
+                inv_title: "Inventario",
+                btn_add_item: "+ Agregar Item",
+                th_item: "Item",
+                th_stock: "Stock",
+                cat_bar: "Barra / Alcohol",
+                status_low: "Bajo",
+                btn_reorder: "Reordenar",
+                chat_inbox: "Bandeja de Entrada",
+                chat_msg_1: "Hola, ¿a qué hora pueden entrar los proveedores?",
+                chat_msg_2: "¡Hola Ana! Desde las 9:00 AM en adelante.",
+                inv_reg_title: "Registrar Nuevo Movimiento",
+                type_expense: "Gasto",
+                type_income: "Ingreso",
+                label_amount: "Monto ($)",
+                label_cat: "Categoría",
+                label_file: "Comprobante (Factura/Recibo)",
+                dropzone_text: "Haz clic o arrastra tu archivo aquí",
+                dropzone_sub: "Soporta PDF, JPG, PNG (Max 5MB)",
+                btn_save: "Guardar Registro",
+                recent_files_title: "Archivos Recientes",
+                time_2h: "Hace 2 horas",
+                status_approved: "Aprobado",
+                time_yesterday: "Ayer",
+                status_review: "Revisión",
+                btn_view_all: "Ver Todo el Historial",
+                powered_by: "Powered By"
+            },
+            en: {
+                nav_dashboard: "Dashboard",
+                nav_history: "Event History",
+                nav_finance: "Finance",
+                nav_inventory: "Inventory",
+                nav_invoices: "Receipts & Invoices",
+                nav_chat: "Messages",
+                role_admin: "Admin",
+                sys_status: "System Status:",
+                status_online: "Online",
+                stats_revenue: "Monthly Revenue",
+                stats_rev_growth: "↑ 12% vs last mo",
+                stats_events: "Active Events",
+                stats_events_desc: "3 events this week",
+                stats_visits: "Scheduled Visits",
+                stats_visits_desc: "5 Today",
+                btn_new_event: "New Event",
+                chart_title: "Revenue Overview",
+                opt_6months: "Last 6 Months",
+                opt_year: "Last Year",
+                upcoming_title: "Upcoming (7 Days)",
+                hall_main: "Main Hall",
+                hall_garden: "Garden",
+                filter_all: "All",
+                filter_progress: "In Progress",
+                filter_completed: "Completed",
+                filter_cancelled: "Cancelled",
+                th_event: "Event",
+                th_client: "Client",
+                th_date: "Date",
+                th_status: "Status",
+                th_amount: "Total Amount",
+                th_action: "Action",
+                status_finished: "Finished",
+                bal_total: "Total Available Balance",
+                bal_income: "Income (Mo)",
+                bal_expenses: "Expenses (Mo)",
+                trans_title: "Latest Transactions",
+                th_concept: "Concept",
+                th_cat: "Category",
+                cat_income: "Income",
+                status_verified: "Verified",
+                inv_title: "Inventory",
+                btn_add_item: "+ Add Item",
+                th_item: "Item",
+                th_stock: "Stock",
+                cat_bar: "Bar / Alcohol",
+                status_low: "Low",
+                btn_reorder: "Reorder",
+                chat_inbox: "Inbox",
+                chat_msg_1: "Hi, when can vendors arrive?",
+                chat_msg_2: "Hi Ana! From 9:00 AM onwards.",
+                inv_reg_title: "Register New Transaction",
+                type_expense: "Expense",
+                type_income: "Income",
+                label_amount: "Amount ($)",
+                label_cat: "Category",
+                label_file: "Receipt (Invoice/Bill)",
+                dropzone_text: "Click or drop your file here",
+                dropzone_sub: "Supports PDF, JPG, PNG (Max 5MB)",
+                btn_save: "Save Record",
+                recent_files_title: "Recent Files",
+                time_2h: "2 hours ago",
+                status_approved: "Approved",
+                time_yesterday: "Yesterday",
+                status_review: "In Review",
+                btn_view_all: "View Full History",
+                powered_by: "Powered By"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'es' ? 'en' : 'es';
+            document.getElementById('lang-btn').textContent = currentLang.toUpperCase();
+            
+            // Update text content
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(translations[currentLang][key]) {
+                    el.innerText = translations[currentLang][key];
+                }
+            });
+
+            // Update placeholders
+            document.querySelectorAll('.i18n-placeholder').forEach(el => {
+                el.placeholder = el.getAttribute(`data-placeholder-${currentLang}`);
+            });
+
+            // Update current page title explicitly
+            const activeView = document.querySelector('.view-section.active').id.replace('view-', '');
+            updateTitle(activeView);
+        }
+
+        // --- Configuración Gráfica ---
         const ctx = document.getElementById('revenueChart').getContext('2d');
         let gradient = ctx.createLinearGradient(0, 0, 0, 400);
         gradient.addColorStop(0, 'rgba(217, 70, 239, 0.5)');
