@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventotes | The Party OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <script>
@@ -100,6 +102,12 @@
             opacity: 0.6; /* Más visible en claro */
         }
         html.dark .particle { opacity: 0.3; /* Más sutil en oscuro */ }
+        
+        /* Toggle Switch Styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #9333ea;
+        }
     </style>
 </head>
 <body class="antialiased font-sans">
@@ -107,28 +115,38 @@
     <!-- Navbar -->
     <nav class="fixed w-full z-50 bg-white/80 dark:bg-[#0f0518]/80 backdrop-blur-xl border-b border-black/5 dark:border-white/10 transition-all duration-300">
         <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer group">
-                <!-- Logo -->
-                <div class="w-9 h-9 bg-gradient-to-br from-purple-600 to-pink-500 rounded-lg flex items-center justify-center font-bold text-white text-lg shadow-lg transition-transform group-hover:scale-110 group-hover:rotate-3">E</div>
-                <span class="font-bold text-lg tracking-tight">Eventotes</span>
+            
+            <!-- Logo Header (Ajustado Hacia Arriba) -->
+            <!-- Agregué '-mt-2' al contenedor y aumenté el margen negativo inferior de la imagen -->
+            <div class="flex flex-col items-center justify-center cursor-pointer group leading-none h-full -mt-2">
+                <img src="https://github.com/JFabrizzio5/TusSalonesEventos/blob/main/BrandingImages/Logo.png?raw=true" 
+                     alt="Eventotes Logo" 
+                     class="h-14 w-auto group-hover:scale-110 transition-transform dark:invert mb-[-8px] object-contain">
+                <span class="font-bold text-[10px] uppercase tracking-[0.2em] text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors relative z-10">
+                    Eventotes
+                </span>
             </div>
             
             <div class="hidden md:flex gap-8 text-[14px] font-medium text-slate-600 dark:text-white/60">
-                <a href="#overview" class="hover:text-purple-600 dark:hover:text-pink-400 transition-colors">La Experiencia</a>
-                <a href="#features" class="hover:text-purple-600 dark:hover:text-pink-400 transition-colors">Backstage</a>
-                <a href="#pricing" class="hover:text-purple-600 dark:hover:text-pink-400 transition-colors">VIP Access</a>
+                <a href="#overview" class="hover:text-purple-600 dark:hover:text-pink-400 transition-colors" id="nav-exp">La Experiencia</a>
+                <a href="#features" class="hover:text-purple-600 dark:hover:text-pink-400 transition-colors" id="nav-back">Backstage</a>
+                <a href="#pricing" class="hover:text-purple-600 dark:hover:text-pink-400 transition-colors" id="nav-vip">VIP Access</a>
             </div>
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
+                <!-- Language/Currency Toggle -->
+                <div class="flex bg-slate-100 dark:bg-white/10 rounded-full p-1 border border-slate-200 dark:border-white/10">
+                    <button onclick="setLang('es')" id="btn-es" class="px-3 py-1 rounded-full text-xs font-bold transition-all bg-white dark:bg-white/20 text-slate-900 dark:text-white shadow-sm">MXN</button>
+                    <button onclick="setLang('en')" id="btn-en" class="px-3 py-1 rounded-full text-xs font-bold transition-all text-slate-400 hover:text-slate-600 dark:hover:text-white">USD</button>
+                </div>
+
                 <!-- Theme Toggle -->
                 <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition text-slate-600 dark:text-white/80 group">
-                    <!-- Icono Sol (Mostrar si es oscuro para cambiar a claro) -->
                     <svg id="sun-icon" class="w-5 h-5 hidden dark:block group-hover:text-yellow-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                    <!-- Icono Luna (Mostrar si es claro para cambiar a oscuro) -->
                     <svg id="moon-icon" class="w-5 h-5 block dark:hidden group-hover:text-purple-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
                 </button>
 
-                <a href="dashboard.html" class="bg-slate-900 dark:bg-white text-white dark:text-black text-[13px] font-bold px-5 py-2 rounded-full hover:bg-purple-600 dark:hover:bg-pink-50 transition-all hover:shadow-lg transform hover:-translate-y-0.5">
+                <a href="dashboard.html" class="bg-slate-900 dark:bg-white text-white dark:text-black text-[13px] font-bold px-5 py-2 rounded-full hover:bg-purple-600 dark:hover:bg-pink-50 transition-all hover:shadow-lg transform hover:-translate-y-0.5" id="nav-cta">
                     Únete a la lista
                 </a>
             </div>
@@ -153,29 +171,29 @@
         <div class="max-w-5xl mx-auto z-10 relative">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-600 dark:text-pink-400 text-xs font-bold uppercase tracking-wider mb-8 animate-float shadow-sm">
                 <span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
-                La nueva era de los eventos
+                <span id="hero-badge">La nueva era de los eventos</span>
             </div>
             
             <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[1.1]">
-                Gestiona.<br>
-                <span class="text-gradient">Celebra. Repite.</span>
+                <span id="hero-title-1">Gestiona.</span><br>
+                <span class="text-gradient" id="hero-title-2">Celebra. Repite.</span>
             </h1>
             
-            <p class="text-xl md:text-2xl text-slate-600 dark:text-white/60 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+            <p id="hero-desc" class="text-xl md:text-2xl text-slate-600 dark:text-white/60 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
                 Tu salón no es una oficina, es una fiesta. Usa el software que entiende el ritmo, la adrenalina y el glamour de tu negocio.
             </p>
             
             <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-24">
-                <a href="dashboard.html" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-neon dark:hover:shadow-neon transition-all hover:scale-105">
+                <a href="dashboard.html" id="hero-cta-primary" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-neon dark:hover:shadow-neon transition-all hover:scale-105">
                     Empezar la Fiesta
                 </a>
-                <a href="#" class="text-slate-600 dark:text-white/80 font-medium text-lg hover:text-purple-600 dark:hover:text-white flex items-center gap-2 group transition-colors">
+                <a href="#" id="hero-cta-secondary" class="text-slate-600 dark:text-white/80 font-medium text-lg hover:text-purple-600 dark:hover:text-white flex items-center gap-2 group transition-colors">
                     <span class="w-10 h-10 rounded-full border border-slate-200 dark:border-white/20 flex items-center justify-center bg-white/50 dark:bg-white/5 group-hover:bg-purple-100 dark:group-hover:bg-white/10 transition">▶</span>
                     Ver el Aftermovie
                 </a>
             </div>
 
-            <!-- UI Mockup: Dashboard -->
+            <!-- UI Mockup: Dashboard (Sin Cambios) -->
             <div class="relative w-full perspective-1000">
                 <div class="relative glass-panel rounded-3xl overflow-hidden shadow-2xl dark:shadow-card-dark aspect-[16/9]">
                     <!-- Header -->
@@ -186,13 +204,11 @@
                             <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
                         </div>
                         <div class="ml-auto">
-                            <span class="px-3 py-1 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-300 text-[10px] font-bold border border-purple-500/20">● EN VIVO</span>
+                            <span class="px-3 py-1 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-300 text-[10px] font-bold border border-purple-500/20">● LIVE</span>
                         </div>
                     </div>
-                    
                     <!-- Body -->
                     <div class="p-8 flex gap-8 h-full bg-white/20 dark:bg-[#1a0b2e]/40">
-                        <!-- Sidebar -->
                         <div class="w-64 hidden md:flex flex-col gap-4">
                             <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/10 dark:border-white/10">
                                 <p class="text-xs text-purple-600 dark:text-purple-300 font-bold uppercase mb-1">Ventas Totales</p>
@@ -203,51 +219,28 @@
                                 <div class="h-10 w-full bg-black/5 dark:bg-white/5 rounded-xl flex items-center px-4 text-sm text-slate-600 dark:text-white/70">🥂 Catering</div>
                             </div>
                         </div>
-                        
-                        <!-- Content -->
                         <div class="flex-1 flex flex-col gap-6">
-                            <!-- Hero Card -->
                             <div class="h-40 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 p-6 flex items-center justify-between relative overflow-hidden text-white shadow-lg">
                                 <div class="relative z-10">
-                                    <span class="px-2 py-1 bg-white/20 rounded text-[10px] font-bold uppercase mb-2 inline-block backdrop-blur-sm">Próximo Evento</span>
+                                    <span class="px-2 py-1 bg-white/20 rounded text-[10px] font-bold uppercase mb-2 inline-block backdrop-blur-sm">Next Event</span>
                                     <h3 class="text-2xl font-bold">Gala de Año Nuevo ✨</h3>
-                                    <p class="opacity-80 text-sm">31 Dic • 450 Invitados</p>
+                                    <p class="opacity-80 text-sm">31 Dic • 450 Pax</p>
                                 </div>
                                 <div class="relative z-10 w-16 h-16 rounded-full border-4 border-white/30 flex items-center justify-center bg-black/20 backdrop-blur">
                                     <span class="font-bold text-sm">98%</span>
                                 </div>
                             </div>
-                            
-                            <!-- List -->
                             <div class="flex-1 rounded-2xl bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/10 p-6">
                                 <div class="flex items-center gap-4 mb-4">
                                     <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-lg">💍</div>
                                     <div>
                                         <p class="text-sm font-bold text-slate-800 dark:text-white">Boda Gutierrez</p>
-                                        <p class="text-xs text-slate-500 dark:text-white/50">Contrato Firmado</p>
+                                        <p class="text-xs text-slate-500 dark:text-white/50">Firmado</p>
                                     </div>
                                     <div class="ml-auto text-green-600 dark:text-green-400 text-xs font-bold">+$45k</div>
                                 </div>
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-full bg-pink-100 dark:bg-pink-500/20 flex items-center justify-center text-lg">🍾</div>
-                                    <div>
-                                        <p class="text-sm font-bold text-slate-800 dark:text-white">XV Años Sofia</p>
-                                        <p class="text-xs text-slate-500 dark:text-white/50">Menú Premium</p>
-                                    </div>
-                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Floating Badges -->
-                <div class="absolute -right-6 top-16 glass-panel p-4 rounded-2xl shadow-xl dark:shadow-neon animate-float z-20 flex items-center gap-4 max-w-[240px] bg-white/90 dark:bg-[#1a0b2e]/90">
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-2xl text-white shadow-lg">
-                        🥂
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-purple-600 dark:text-pink-300 uppercase font-bold">Nuevo Pago</p>
-                        <p class="text-lg font-bold text-slate-900 dark:text-white">$45,000</p>
                     </div>
                 </div>
             </div>
@@ -258,8 +251,8 @@
     <section id="features" class="py-32 px-6 relative overflow-hidden">
         <div class="max-w-[1080px] mx-auto relative z-10">
             <h2 class="text-5xl md:text-7xl font-bold mb-20 text-center text-slate-900 dark:text-white">
-                Domina la Pista.<br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 dark:from-white/60 dark:to-white/20">Sin sudar.</span>
+                <span id="feat-title-1">Domina la Pista.</span><br>
+                <span id="feat-title-2" class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 dark:from-white/60 dark:to-white/20">Sin sudar.</span>
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[450px]">
@@ -269,8 +262,8 @@
                     <div class="relative z-10 h-full flex flex-col justify-between">
                         <div>
                             <span class="px-2 py-0.5 rounded bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 text-[10px] font-bold uppercase mb-3 inline-block">Cash Flow</span>
-                            <h3 class="text-3xl font-bold text-slate-900 dark:text-white mb-4">Dinero en mano.</h3>
-                            <p class="text-slate-600 dark:text-white/60 text-lg">Visualiza tus ganancias como un headliner. Gráficas claras, sin ruido.</p>
+                            <h3 id="card-1-title" class="text-3xl font-bold text-slate-900 dark:text-white mb-4">Dinero en mano.</h3>
+                            <p id="card-1-desc" class="text-slate-600 dark:text-white/60 text-lg">Visualiza tus ganancias como un headliner. Gráficas claras, sin ruido.</p>
                         </div>
                         <div class="mt-8 flex items-end gap-3 h-48 opacity-90">
                              <div class="w-14 bg-slate-200 dark:bg-white/5 h-[40%] rounded-t-xl"></div>
@@ -288,15 +281,15 @@
                     <div class="w-24 h-24 bg-blue-500 rounded-[2rem] flex items-center justify-center shadow-xl mb-8 group-hover:scale-110 transition-transform">
                         <span class="text-4xl text-white">🌐</span>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">Sitios Web</h3>
-                    <p class="text-slate-600 dark:text-white/50">Cada evento genera su propia web automáticamente.</p>
+                    <h3 id="card-2-title" class="text-2xl font-bold text-slate-900 dark:text-white mb-3">Sitios Web</h3>
+                    <p id="card-2-desc" class="text-slate-600 dark:text-white/50">Cada evento genera su propia web automáticamente.</p>
                 </div>
 
                 <!-- Card 3 -->
                 <div class="glass-panel rounded-[2rem] p-10 flex flex-col justify-between md:col-span-1">
                     <div>
                         <span class="px-2 py-0.5 rounded bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 text-[10px] font-bold uppercase mb-3 inline-block">Sold Out</span>
-                        <h3 class="text-3xl font-bold text-slate-900 dark:text-white">Agenda Full.</h3>
+                        <h3 id="card-3-title" class="text-3xl font-bold text-slate-900 dark:text-white">Agenda Full.</h3>
                     </div>
                     <div class="relative mt-6 space-y-3">
                         <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5">
@@ -312,11 +305,11 @@
                 <!-- Card 4 -->
                 <div class="md:col-span-2 bg-slate-900 dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:to-[#312e81] rounded-[2rem] p-10 flex flex-col md:flex-row items-center justify-between relative overflow-hidden group">
                      <div class="relative z-10 max-w-md">
-                        <h3 class="text-3xl font-bold text-white mb-4">Seguridad VIP.</h3>
-                        <p class="text-slate-400 dark:text-indigo-200 font-medium text-lg">Contratos blindados, firmas biométricas y encriptación. Solo entra quien está en la lista.</p>
+                        <h3 id="card-4-title" class="text-3xl font-bold text-white mb-4">Seguridad VIP.</h3>
+                        <p id="card-4-desc" class="text-slate-400 dark:text-indigo-200 font-medium text-lg">Contratos blindados, firmas biométricas y encriptación. Solo entra quien está en la lista.</p>
                      </div>
                      <div class="relative z-10 bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-2xl mt-8 md:mt-0 transform group-hover:rotate-6 transition">
-                        <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                        <i data-lucide="shield-check" class="w-16 h-16 text-white"></i>
                      </div>
                 </div>
 
@@ -324,51 +317,131 @@
         </div>
     </section>
 
-    <!-- Pricing -->
-    <section id="pricing" class="py-32 px-6">
-        <div class="max-w-[1080px] mx-auto">
-            <h2 class="text-4xl md:text-6xl font-bold mb-6 text-center text-slate-900 dark:text-white">Tu Cover.</h2>
-            <p class="text-center text-slate-600 dark:text-white/50 mb-20">Inversión transparente. Sin cargos ocultos.</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+    <!-- Pricing Section (RENOVADO) -->
+    <section id="pricing" class="py-32 px-6 bg-slate-50 dark:bg-black/20">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <h2 id="pricing-title" class="text-4xl md:text-6xl font-bold mb-6 text-slate-900 dark:text-white">Arquitectura de Alta Velocidad.</h2>
+                <p id="pricing-subtitle" class="text-xl text-slate-600 dark:text-white/50 max-w-2xl mx-auto">Elige la potencia que necesitas. Cancela la burocracia.</p>
                 
-                <!-- Plan 1 -->
-                <div class="p-8 rounded-[2rem] bg-white dark:bg-white/[0.03] border border-black/5 dark:border-white/10 shadow-xl dark:shadow-none">
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Guest List</h3>
-                    <p class="text-slate-500 dark:text-white/50 text-sm mb-8">Para empezar la fiesta.</p>
-                    <div class="text-4xl font-bold text-slate-900 dark:text-white mb-2">$49<span class="text-base font-normal opacity-50">/mes</span></div>
-                    <a href="#" class="block w-full py-4 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold text-center hover:bg-slate-200 dark:hover:bg-white/20 transition my-8">Entrar</a>
-                    <ul class="space-y-4 text-sm text-slate-600 dark:text-white/60">
-                        <li class="flex gap-3">✓ 1 Salón</li>
-                        <li class="flex gap-3">✓ Calendario Básico</li>
-                    </ul>
-                </div>
-
-                <!-- Plan 2 (VIP) -->
-                <div class="p-10 rounded-[2rem] bg-slate-900 dark:bg-[#1a0b2e] border border-purple-500/50 relative overflow-hidden shadow-2xl transform md:-translate-y-6 z-10">
-                    <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
-                    <div class="absolute top-5 right-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">VIP Access</div>
+                <!-- Pricing Controls -->
+                <div class="flex flex-col items-center gap-6 mt-10">
                     
-                    <h3 class="text-2xl font-bold text-white mb-2">Pro All-Access</h3>
-                    <p class="text-purple-200 text-sm mb-8">La experiencia completa.</p>
-                    <div class="text-6xl font-bold text-white mb-2">$99<span class="text-lg font-normal opacity-50">/mes</span></div>
-                    <a href="#" class="block w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-center hover:shadow-neon transition my-8">Comprar Pase</a>
-                    <ul class="space-y-4 text-sm text-white font-medium">
-                        <li class="flex gap-3 text-pink-500">✓ <span class="text-white">Salones Ilimitados</span></li>
-                        <li class="flex gap-3 text-pink-500">✓ <span class="text-white">Micrositios IA</span></li>
-                    </ul>
+                    <!-- Billing Toggle -->
+                    <div class="flex items-center gap-4 bg-white dark:bg-white/5 p-2 pr-6 rounded-full border border-black/5 dark:border-white/10 shadow-sm cursor-pointer hover:border-purple-500/50 transition" onclick="toggleBilling()">
+                        <div class="flex items-center gap-3">
+                            <span id="label-monthly" class="text-sm font-bold text-slate-400 dark:text-white/40 pl-4">Mensual</span>
+                            
+                            <!-- Switch -->
+                            <div class="relative w-14 h-8 rounded-full transition-colors duration-300" id="billing-track" style="background-color: #9333ea;">
+                                <div id="billing-knob" class="absolute top-1 left-1 bg-white w-6 h-6 rounded-full transition-transform duration-300 shadow-md translate-x-6"></div>
+                            </div>
+
+                            <span id="label-annual" class="text-sm font-bold text-slate-900 dark:text-white">
+                                Anual 
+                            </span>
+                        </div>
+                        <span id="badge-save" class="text-[10px] bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full font-bold border border-green-500/20">AHORRA 15%</span>
+                    </div>
+
+                    <!-- Priority Support Toggle -->
+                    <div onclick="toggleSupport()" id="support-container" class="cursor-pointer group flex items-center gap-4 px-6 py-3 rounded-2xl border border-dashed border-slate-300 dark:border-white/20 bg-transparent hover:bg-slate-100 dark:hover:bg-white/5 transition-all duration-300 select-none">
+                        <div id="support-icon-bg" class="p-2 rounded-lg bg-slate-200 dark:bg-white/10 text-slate-500 dark:text-white/50 transition-colors">
+                            <i data-lucide="life-buoy" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-left">
+                            <div id="support-text-title" class="font-bold text-sm text-slate-700 dark:text-slate-300">Soporte Mission-Critical 24/7</div>
+                            <div id="support-text-desc" class="text-xs text-slate-500 dark:text-white/40">Ingenieros dedicados + Capacitación VIP (+30%)</div>
+                        </div>
+                        <div id="support-check" class="w-6 h-6 rounded-full border border-slate-400 dark:border-white/30 flex items-center justify-center transition-colors">
+                            <i data-lucide="check" class="w-3.5 h-3.5 text-white opacity-0 transition-opacity" id="check-icon"></i>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                
+                <!-- Plan START -->
+                <div class="p-8 rounded-[2rem] bg-white dark:bg-[#0f0518] border border-black/5 dark:border-white/10 shadow-xl dark:shadow-none hover:border-purple-500/30 transition-all duration-300 group">
+                    <div class="mb-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="rocket" class="text-slate-400 w-5 h-5"></i>
+                            <h3 id="plan-1-name" class="text-xl font-bold text-slate-900 dark:text-white">START</h3>
+                        </div>
+                        <p id="plan-1-tagline" class="text-slate-500 dark:text-white/50 text-sm">Digitaliza el caos.</p>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <div class="flex items-baseline gap-1">
+                            <span id="price-start" class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">$5,500</span>
+                            <span id="period-start" class="text-slate-500 dark:text-white/40 font-medium">/mes</span>
+                        </div>
+                        <div id="tax-start" class="text-xs text-orange-500 font-bold mt-2 hidden">+15% vs Anual</div>
+                    </div>
+
+                    <a href="#" id="cta-start" class="block w-full py-4 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold text-center hover:bg-slate-200 dark:hover:bg-white/20 transition mb-8">Comenzar</a>
+                    
+                    <div id="features-start" class="space-y-4">
+                        <!-- JS injected -->
+                    </div>
                 </div>
 
-                <!-- Plan 3 -->
-                <div class="p-8 rounded-[2rem] bg-white dark:bg-white/[0.03] border border-black/5 dark:border-white/10 shadow-xl dark:shadow-none">
-                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Backstage Pass</h3>
-                    <p class="text-slate-500 dark:text-white/50 text-sm mb-8">Para franquicias.</p>
-                    <div class="text-4xl font-bold text-slate-900 dark:text-white mb-2">Custom</div>
-                    <a href="#" class="block w-full py-4 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold text-center hover:bg-slate-200 dark:hover:bg-white/20 transition my-8">Contactar</a>
-                    <ul class="space-y-4 text-sm text-slate-600 dark:text-white/60">
-                        <li class="flex gap-3">✓ API Access</li>
-                        <li class="flex gap-3">✓ Soporte 24/7</li>
-                    </ul>
+                <!-- Plan SCALE (VIP) -->
+                <div class="p-8 rounded-[2rem] bg-slate-900 dark:bg-[#1a0b2e] border border-purple-500 relative overflow-hidden shadow-2xl transform md:-translate-y-6 z-10">
+                    <div id="badge-scale" class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                    <div id="badge-rec" class="absolute top-5 right-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase shadow-neon">Recomendado</div>
+                    
+                    <div class="mb-6 mt-2">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="zap" class="text-purple-400 w-5 h-5 fill-purple-400/20"></i>
+                            <h3 id="plan-2-name" class="text-2xl font-bold text-white">SCALE</h3>
+                        </div>
+                        <p id="plan-2-tagline" class="text-purple-200/60 text-sm">La opción inteligente.</p>
+                    </div>
+
+                    <div class="mb-8">
+                        <div class="flex items-baseline gap-1">
+                            <span id="price-scale" class="text-5xl font-extrabold text-white tracking-tight">$8,000</span>
+                            <span id="period-scale" class="text-purple-200/40 font-medium">/mes</span>
+                        </div>
+                        <div id="tax-scale" class="text-xs text-orange-400 font-bold mt-2 hidden">+15% vs Anual</div>
+                    </div>
+
+                    <a href="#" id="cta-scale" class="block w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-center hover:shadow-neon transition mb-8 group flex items-center justify-center gap-2">
+                        <span>Empezar Ahora</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+
+                    <div id="features-scale" class="space-y-4">
+                         <!-- JS injected -->
+                    </div>
+                </div>
+
+                <!-- Plan DOMINATE -->
+                <div class="p-8 rounded-[2rem] bg-white dark:bg-[#0f0518] border border-black/5 dark:border-white/10 shadow-xl dark:shadow-none hover:border-purple-500/30 transition-all duration-300 group">
+                    <div class="mb-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="crown" class="text-yellow-500 w-5 h-5"></i>
+                            <h3 id="plan-3-name" class="text-xl font-bold text-slate-900 dark:text-white">DOMINATE</h3>
+                        </div>
+                        <p id="plan-3-tagline" class="text-slate-500 dark:text-white/50 text-sm">Control total.</p>
+                    </div>
+                    
+                    <div class="mb-8">
+                        <div class="flex items-baseline gap-1">
+                            <span id="price-dominate" class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">$11,000</span>
+                            <span id="period-dominate" class="text-slate-500 dark:text-white/40 font-medium">/mes</span>
+                        </div>
+                        <div id="tax-dominate" class="text-xs text-orange-500 font-bold mt-2 hidden">+15% vs Anual</div>
+                    </div>
+
+                    <a href="#" id="cta-dominate" class="block w-full py-4 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold text-center hover:bg-slate-200 dark:hover:bg-white/20 transition mb-8">Contactar</a>
+                    
+                    <div id="features-dominate" class="space-y-4">
+                        <!-- JS injected -->
+                    </div>
                 </div>
 
             </div>
@@ -378,21 +451,34 @@
     <!-- Footer -->
     <footer class="bg-slate-100 dark:bg-[#05020a] border-t border-black/5 dark:border-white/10 py-16 text-xs text-slate-500 dark:text-white/40">
         <div class="max-w-[1080px] mx-auto px-6 text-center">
-            <div class="w-12 h-12 bg-white dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-8 text-slate-900 dark:text-white font-bold shadow-sm">E</div>
-            <p>Copyright © 2025 Eventotes Inc. Que siga la fiesta.</p>
-            <p class="mt-4 opacity-50 flex items-center justify-center gap-2">
-                Powered By 
-                <a href="https://jfabrizzio5.github.io/CometaX/" target="_blank" class="hover:opacity-80 transition-opacity">
-                    <img src="https://raw.githubusercontent.com/JFabrizzio5/CometaX/bbeb654b90e817236d9d64009b33618065fbba91/image_2025-12-16_083018257-removebg-preview%20(1).png" alt="CometaX" class="h-20 inline-block dark:invert transition-all duration-300">
-                </a>
-            </p>
+            
+            <p class="mb-12 font-medium opacity-60">Copyright © 2025 Eventotes Inc. Que siga la fiesta.</p>
+            
+            <!-- Logo Footer (Restaurado y Limpio) -->
+            <div class="flex flex-col items-center justify-center gap-2 group cursor-pointer hover:opacity-100 transition-opacity">
+                
+                <span class="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40">Powered By</span>
+
+                <!-- Logo CometaX Sin Recortes Extraños -->
+                <img src="https://raw.githubusercontent.com/JFabrizzio5/CometaX/bbeb654b90e817236d9d64009b33618065fbba91/image_2025-12-16_083018257-removebg-preview%20(1).png" 
+                     alt="CometaX Logo" 
+                     class="h-24 w-auto dark:invert transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+                
+                <span class="text-xl font-bold text-slate-800 dark:text-white tracking-tight transition-colors group-hover:text-purple-600">
+                    CometaX
+                </span>
+
+            </div>
+
         </div>
     </footer>
 
     <script>
-        // Logic for toggle theme
-        const html = document.documentElement;
+        // Init Icons
+        lucide.createIcons();
 
+        // Theme Toggle Logic
+        const html = document.documentElement;
         function toggleTheme() {
             if (html.classList.contains('dark')) {
                 html.classList.remove('dark');
@@ -400,6 +486,240 @@
                 html.classList.add('dark');
             }
         }
+
+        /* ------------------------------------------------
+           LOGICA DE PRECIOS & IDIOMA (Dynamic Pricing)
+           ------------------------------------------------ */
+        
+        // Estado
+        let state = {
+            isAnnual: true,
+            currency: 'MXN', // 'MXN' or 'USD'
+            lang: 'es', // 'es' or 'en'
+            prioritySupport: false
+        };
+
+        // Data Store
+        const data = {
+            basePrices: {
+                MXN: { start: 5500, scale: 8000, dominate: 11000 },
+                USD: { start: 300, scale: 450, dominate: 600 }
+            },
+            content: {
+                es: {
+                    nav: { exp: "La Experiencia", back: "Backstage", vip: "VIP Access", cta: "Únete a la lista" },
+                    hero: { badge: "La nueva era de los eventos", t1: "Gestiona.", t2: "Celebra. Repite.", desc: "Tu salón no es una oficina, es una fiesta. Usa el software que entiende el ritmo, la adrenalina y el glamour de tu negocio.", cta1: "Empezar la Fiesta", cta2: "Ver el Aftermovie" },
+                    features: { t1: "Domina la Pista.", t2: "Sin sudar.", c1t: "Dinero en mano.", c1d: "Visualiza tus ganancias como un headliner. Gráficas claras, sin ruido.", c2t: "Sitios Web", c2d: "Cada evento genera su propia web automáticamente.", c3t: "Agenda Full.", c4t: "Seguridad VIP.", c4d: "Contratos blindados, firmas biométricas y encriptación." },
+                    pricing: {
+                        title: "Arquitectura de Alta Velocidad.",
+                        subtitle: "Elige la potencia que necesitas. Cancela la burocracia.",
+                        billing: { month: "Mensual", annual: "Anual", save: "AHORRA 15%" },
+                        support: { title: "Soporte Mission-Critical 24/7", desc: "Ingenieros dedicados + Capacitación VIP (+30%)" },
+                        plans: {
+                            start: { name: "START", tagline: "Digitaliza el caos.", cta: "Comenzar", features: ["Dashboard Administrativo", "5 Eventos Simultáneos", "Calendario Inteligente", "Micrositio Genérico", "Soporte Email"] },
+                            scale: { name: "SCALE", tagline: "La opción inteligente.", badge: "RECOMENDADO", cta: "Empezar Ahora", features: ["<b>Todo lo de Start +</b>", "<b>Micrositios por Evento</b>", "<b>Chatbot IA Invitados</b>", "Usuarios Staff Ilimitados", "Reportes Financieros"] },
+                            dominate: { name: "DOMINATE", tagline: "Control total.", cta: "Contactar", features: ["Todo lo de Scale +", "Micrositios Whitelabel", "Multi-Venue Management", "API Access", "Auditoría de Logs"] }
+                        },
+                        tax: "+15% vs Anual"
+                    }
+                },
+                en: {
+                    nav: { exp: "The Experience", back: "Backstage", vip: "VIP Access", cta: "Join the list" },
+                    hero: { badge: "The new era of events", t1: "Manage.", t2: "Celebrate. Repeat.", desc: "Your venue is not an office, it's a party. Use software that understands the rhythm, adrenaline, and glamour of your business.", cta1: "Start the Party", cta2: "Watch Aftermovie" },
+                    features: { t1: "Own the Floor.", t2: "Don't sweat it.", c1t: "Cash in Hand.", c1d: "Visualize profits like a headliner. Clear charts, no noise.", c2t: "Websites", c2d: "Each event generates its own website automatically.", c3t: "Full House.", c4t: "VIP Security.", c4d: "Armored contracts, biometric signatures, and encryption." },
+                    pricing: {
+                        title: "High-Velocity Architecture.",
+                        subtitle: "Choose the power you need. Cancel the bureaucracy.",
+                        billing: { month: "Monthly", annual: "Annual", save: "SAVE 15%" },
+                        support: { title: "Mission-Critical Support 24/7", desc: "Dedicated engineers + VIP Training (+30%)" },
+                        plans: {
+                            start: { name: "START", tagline: "Digitize the chaos.", cta: "Start Now", features: ["Admin Dashboard", "5 Simultaneous Events", "Smart Calendar", "Generic Microsite", "Email Support"] },
+                            scale: { name: "SCALE", tagline: "The smart choice.", badge: "RECOMMENDED", cta: "Get Started", features: ["<b>Everything in Start +</b>", "<b>Per-Event Microsites</b>", "<b>AI Guest Chatbot</b>", "Unlimited Staff Users", "Financial Reports"] },
+                            dominate: { name: "DOMINATE", tagline: "Total control.", cta: "Contact Us", features: ["Everything in Scale +", "Whitelabel Microsites", "Multi-Venue Management", "API Access", "Log Auditing"] }
+                        },
+                        tax: "+15% vs Annual"
+                    }
+                }
+            }
+        };
+
+        // Actions
+        function toggleBilling() {
+            state.isAnnual = !state.isAnnual;
+            updateUI();
+        }
+
+        function toggleSupport() {
+            state.prioritySupport = !state.prioritySupport;
+            updateUI();
+        }
+
+        function setLang(lang) {
+            state.lang = lang;
+            state.currency = lang === 'es' ? 'MXN' : 'USD';
+            updateUI();
+        }
+
+        function calculatePrice(planKey) {
+            let price = data.basePrices[state.currency][planKey];
+            if (!state.isAnnual) price = price * 1.15; // +15% Monthly
+            if (state.prioritySupport) price = price * 1.30; // +30% Support
+            // Round to nice numbers
+            return Math.round(price / 10) * 10;
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat(state.lang === 'es' ? 'es-MX' : 'en-US', {
+                style: 'currency',
+                currency: state.currency,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function renderFeatures(planKey, featuresArray) {
+            const container = document.getElementById(`features-${planKey}`);
+            container.innerHTML = '';
+            const t = data.content[state.lang];
+            
+            featuresArray.forEach(feat => {
+                const isHighlight = feat.includes('<b>');
+                const cleanFeat = feat.replace(/<b>/g, '').replace(/<\/b>/g, '');
+                
+                // Colors differ based on plan and theme (handled by CSS classes mainly)
+                let iconColor = 'text-slate-400 dark:text-slate-500';
+                let textColor = 'text-slate-600 dark:text-white/60';
+                
+                if (planKey === 'scale') {
+                    iconColor = 'text-purple-400';
+                    textColor = 'text-purple-100/80';
+                    if(isHighlight) textColor = 'text-white';
+                }
+
+                const html = `
+                <div class="flex items-start gap-3 text-sm ${textColor}">
+                    <i data-lucide="check" class="${iconColor} w-4 h-4 mt-0.5 shrink-0"></i>
+                    <span class="${isHighlight ? 'font-bold' : ''}">${cleanFeat}</span>
+                </div>`;
+                container.innerHTML += html;
+            });
+            lucide.createIcons();
+        }
+
+        function updateUI() {
+            const t = data.content[state.lang];
+            
+            // 1. Language Buttons State
+            document.getElementById('btn-es').className = state.lang === 'es' ? 'px-3 py-1 rounded-full text-xs font-bold transition-all bg-white dark:bg-white/20 text-slate-900 dark:text-white shadow-sm' : 'px-3 py-1 rounded-full text-xs font-bold transition-all text-slate-400 hover:text-slate-600 dark:hover:text-white';
+            document.getElementById('btn-en').className = state.lang === 'en' ? 'px-3 py-1 rounded-full text-xs font-bold transition-all bg-white dark:bg-white/20 text-slate-900 dark:text-white shadow-sm' : 'px-3 py-1 rounded-full text-xs font-bold transition-all text-slate-400 hover:text-slate-600 dark:hover:text-white';
+
+            // 2. Translate Nav & Hero & Features
+            document.getElementById('nav-exp').textContent = t.nav.exp;
+            document.getElementById('nav-back').textContent = t.nav.back;
+            document.getElementById('nav-vip').textContent = t.nav.vip;
+            document.getElementById('nav-cta').textContent = t.nav.cta;
+            
+            document.getElementById('hero-badge').textContent = t.hero.badge;
+            document.getElementById('hero-title-1').textContent = t.hero.t1;
+            document.getElementById('hero-title-2').textContent = t.hero.t2;
+            document.getElementById('hero-desc').textContent = t.hero.desc;
+            document.getElementById('hero-cta-primary').textContent = t.hero.cta1;
+            // HTML for secondary to keep icon
+            document.getElementById('hero-cta-secondary').innerHTML = `<span class="w-10 h-10 rounded-full border border-slate-200 dark:border-white/20 flex items-center justify-center bg-white/50 dark:bg-white/5 group-hover:bg-purple-100 dark:group-hover:bg-white/10 transition">▶</span> ${t.hero.cta2}`;
+            
+            document.getElementById('feat-title-1').textContent = t.features.t1;
+            document.getElementById('feat-title-2').textContent = t.features.t2;
+            document.getElementById('card-1-title').textContent = t.features.c1t;
+            document.getElementById('card-1-desc').textContent = t.features.c1d;
+            document.getElementById('card-2-title').textContent = t.features.c2t;
+            document.getElementById('card-2-desc').textContent = t.features.c2d;
+            document.getElementById('card-3-title').textContent = t.features.c3t;
+            document.getElementById('card-4-title').textContent = t.features.c4t;
+            document.getElementById('card-4-desc').textContent = t.features.c4d;
+
+            // 3. Pricing Text Updates
+            document.getElementById('pricing-title').textContent = t.pricing.title;
+            document.getElementById('pricing-subtitle').textContent = t.pricing.subtitle;
+            document.getElementById('label-monthly').textContent = t.pricing.billing.month;
+            document.getElementById('label-annual').textContent = t.pricing.billing.annual;
+            document.getElementById('badge-save').textContent = t.pricing.billing.save;
+
+            document.getElementById('support-text-title').textContent = t.pricing.support.title;
+            document.getElementById('support-text-desc').textContent = t.pricing.support.desc;
+
+            // 4. Toggles Visual State
+            const track = document.getElementById('billing-track');
+            const knob = document.getElementById('billing-knob');
+            if(state.isAnnual) {
+                track.style.backgroundColor = '#9333ea';
+                knob.style.transform = 'translateX(24px)';
+                document.getElementById('label-annual').classList.remove('text-slate-400', 'dark:text-white/40');
+                document.getElementById('label-annual').classList.add('text-slate-900', 'dark:text-white');
+                document.getElementById('label-monthly').classList.add('text-slate-400', 'dark:text-white/40');
+            } else {
+                track.style.backgroundColor = '#64748b';
+                knob.style.transform = 'translateX(0px)';
+                document.getElementById('label-annual').classList.add('text-slate-400', 'dark:text-white/40');
+                document.getElementById('label-monthly').classList.remove('text-slate-400', 'dark:text-white/40');
+                document.getElementById('label-monthly').classList.add('text-slate-900', 'dark:text-white');
+            }
+
+            const supCont = document.getElementById('support-container');
+            const supIconBg = document.getElementById('support-icon-bg');
+            const supCheck = document.getElementById('support-check');
+            const checkIcon = document.getElementById('check-icon');
+
+            if(state.prioritySupport) {
+                supCont.className = "cursor-pointer group flex items-center gap-4 px-6 py-3 rounded-2xl border border-indigo-500 bg-indigo-500/10 transition-all duration-300 select-none shadow-[0_0_15px_rgba(99,102,241,0.2)]";
+                supIconBg.className = "p-2 rounded-lg bg-indigo-500 text-white transition-colors";
+                supCheck.className = "w-6 h-6 rounded-full border border-indigo-500 bg-indigo-500 flex items-center justify-center transition-colors";
+                checkIcon.style.opacity = '1';
+                document.getElementById('support-text-title').className = "font-bold text-sm text-indigo-600 dark:text-indigo-300";
+            } else {
+                supCont.className = "cursor-pointer group flex items-center gap-4 px-6 py-3 rounded-2xl border border-dashed border-slate-300 dark:border-white/20 bg-transparent hover:bg-slate-100 dark:hover:bg-white/5 transition-all duration-300 select-none";
+                supIconBg.className = "p-2 rounded-lg bg-slate-200 dark:bg-white/10 text-slate-500 dark:text-white/50 transition-colors";
+                supCheck.className = "w-6 h-6 rounded-full border border-slate-400 dark:border-white/30 flex items-center justify-center transition-colors";
+                checkIcon.style.opacity = '0';
+                document.getElementById('support-text-title').className = "font-bold text-sm text-slate-700 dark:text-slate-300";
+            }
+
+            // 5. Render Plans
+            ['start', 'scale', 'dominate'].forEach(plan => {
+                const pData = t.pricing.plans[plan];
+                
+                // Header
+                document.getElementById(`plan-${plan === 'start' ? 1 : plan === 'scale' ? 2 : 3}-name`).textContent = pData.name;
+                document.getElementById(`plan-${plan === 'start' ? 1 : plan === 'scale' ? 2 : 3}-tagline`).textContent = pData.tagline;
+                
+                // Price
+                document.getElementById(`price-${plan}`).textContent = formatMoney(calculatePrice(plan));
+                
+                // Tax Warning
+                const taxEl = document.getElementById(`tax-${plan}`);
+                if (!state.isAnnual) {
+                    taxEl.classList.remove('hidden');
+                    taxEl.textContent = t.pricing.tax;
+                } else {
+                    taxEl.classList.add('hidden');
+                }
+
+                // CTA
+                const ctaBtn = document.getElementById(`cta-${plan}`);
+                // Scale has specific innerHTML with arrow
+                if(plan === 'scale') {
+                    ctaBtn.innerHTML = `<span>${pData.cta}</span><i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>`;
+                    document.getElementById('badge-rec').textContent = pData.badge;
+                } else {
+                    ctaBtn.textContent = pData.cta;
+                }
+
+                // Features
+                renderFeatures(plan, pData.features);
+            });
+        }
+
+        // Initial Load
+        updateUI();
+
     </script>
 </body>
 </html>
