@@ -271,39 +271,65 @@
                 </div>
             </div>
 
-            <!-- 3. VISTA: FINANZAS -->
+            <!-- 3. VISTA: FINANZAS (MEJORADA) -->
             <div id="view-finanzas" class="view-section">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                    <!-- Balance Card -->
                     <div class="lg:col-span-3 bg-gradient-to-r from-emerald-600 to-teal-500 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
                         <div class="absolute right-0 top-0 opacity-10 transform translate-x-10 -translate-y-10"><i data-lucide="wallet" class="w-64 h-64"></i></div>
                         <p class="text-emerald-100 font-bold uppercase tracking-widest text-xs mb-1" data-i18n="bal_total">Balance Total Disponible</p>
                         <h2 class="text-5xl font-black mb-6 tracking-tight">$342,150.00 <span class="text-lg font-bold opacity-70">MXN</span></h2>
                         <div class="flex gap-8 border-t border-white/10 pt-4">
-                            <div><p class="text-emerald-200 text-[10px] uppercase font-bold tracking-wider" data-i18n="bal_income">Ingresos (Mes)</p><p class="text-xl font-black">+$145,200</p></div>
-                            <div><p class="text-emerald-200 text-[10px] uppercase font-bold tracking-wider" data-i18n="bal_expenses">Gastos (Mes)</p><p class="text-xl font-black text-red-200">-$24,500</p></div>
+                            <!-- Datos Actualizables -->
+                            <div>
+                                <p class="text-emerald-200 text-[10px] uppercase font-bold tracking-wider" data-i18n="bal_income">Ingresos (Mes)</p>
+                                <p id="fin-income-display" class="text-xl font-black">+$0.00</p>
+                            </div>
+                            <div>
+                                <p class="text-emerald-200 text-[10px] uppercase font-bold tracking-wider" data-i18n="bal_expenses">Gastos (Mes)</p>
+                                <p id="fin-expense-display" class="text-xl font-black text-red-200">-$0.00</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="glass-card rounded-2xl p-6 col-span-2">
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4" data-i18n="trans_title">Últimas Transacciones</h3>
-                    <div class="overflow-x-auto">
+                    <div class="flex flex-wrap items-center justify-between mb-6 gap-4">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="trans_history">Historial de Pagos</h3>
+                        <!-- Filtro de Mes -->
+                        <div class="flex items-center gap-2">
+                            <label class="text-xs font-bold text-slate-500 dark:text-slate-400" data-i18n="filter_month">Filtrar por Mes:</label>
+                            <select id="month-filter" class="bg-slate-50 dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-700 dark:text-white focus:outline-none focus:border-purple-500 transition" onchange="filterFinance()">
+                                <option value="all" data-i18n="opt_all">Todo el Año</option>
+                                <option value="0" data-i18n="month_jan">Enero</option>
+                                <option value="1" data-i18n="month_feb">Febrero</option>
+                                <option value="2" data-i18n="month_mar">Marzo</option>
+                                <option value="3" data-i18n="month_apr">Abril</option>
+                                <option value="4" data-i18n="month_may">Mayo</option>
+                                <option value="5" data-i18n="month_jun">Junio</option>
+                                <option value="6" data-i18n="month_jul">Julio</option>
+                                <option value="7" data-i18n="month_aug">Agosto</option>
+                                <option value="8" data-i18n="month_sep">Septiembre</option>
+                                <option value="9" data-i18n="month_oct">Octubre</option>
+                                <option value="10" data-i18n="month_nov">Noviembre</option>
+                                <option value="11" selected data-i18n="month_dec">Diciembre</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto max-h-[400px] overflow-y-auto">
                         <table class="w-full text-left text-sm">
-                            <thead class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/10">
+                            <thead class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/10 sticky top-0 bg-slate-50 dark:bg-[#150a22] z-10">
                                 <tr>
-                                    <th class="px-4 py-2" data-i18n="th_concept">Concepto</th>
-                                    <th class="px-4 py-2" data-i18n="th_cat">Categoría</th>
-                                    <th class="px-4 py-2 text-right" data-i18n="th_amount">Monto</th>
-                                    <th class="px-4 py-2 text-right" data-i18n="th_status">Estado</th>
+                                    <th class="px-4 py-3" data-i18n="th_date">Fecha</th>
+                                    <th class="px-4 py-3" data-i18n="th_concept">Concepto</th>
+                                    <th class="px-4 py-3" data-i18n="th_cat">Categoría</th>
+                                    <th class="px-4 py-3 text-right" data-i18n="th_amount">Monto</th>
+                                    <th class="px-4 py-3 text-right" data-i18n="th_type">Tipo</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr class="border-b border-slate-100 dark:border-white/5">
-                                    <td class="px-4 py-3 font-bold text-slate-900 dark:text-white">Anticipo Boda G&L</td>
-                                    <td class="px-4 py-3 text-slate-500 text-xs uppercase font-bold" data-i18n="cat_income">Ingreso</td>
-                                    <td class="px-4 py-3 text-right text-green-500 font-black">+$25,000</td>
-                                    <td class="px-4 py-3 text-right"><span class="bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 text-[10px] font-bold uppercase px-2 py-0.5 rounded" data-i18n="status_verified">Verificado</span></td>
-                                </tr>
+                            <tbody id="finance-table-body">
+                                <!-- Llenado por JS -->
                             </tbody>
                         </table>
                     </div>
@@ -577,7 +603,14 @@
                 time_yesterday: "Ayer",
                 status_review: "Revisión",
                 btn_view_all: "Ver Todo el Historial",
-                powered_by: "Powered By"
+                powered_by: "Powered By",
+                trans_history: "Historial de Pagos",
+                filter_month: "Filtrar por Mes:",
+                opt_all: "Todo el Año",
+                month_jan: "Enero", month_feb: "Febrero", month_mar: "Marzo", month_apr: "Abril",
+                month_may: "Mayo", month_jun: "Junio", month_jul: "Julio", month_aug: "Agosto",
+                month_sep: "Septiembre", month_oct: "Octubre", month_nov: "Noviembre", month_dec: "Diciembre",
+                th_type: "Tipo", type_in: "Ingreso", type_out: "Gasto"
             },
             en: {
                 nav_dashboard: "Dashboard",
@@ -646,7 +679,14 @@
                 time_yesterday: "Yesterday",
                 status_review: "In Review",
                 btn_view_all: "View Full History",
-                powered_by: "Powered By"
+                powered_by: "Powered By",
+                trans_history: "Payment History",
+                filter_month: "Filter by Month:",
+                opt_all: "All Year",
+                month_jan: "January", month_feb: "February", month_mar: "March", month_apr: "April",
+                month_may: "May", month_jun: "June", month_jul: "July", month_aug: "August",
+                month_sep: "September", month_oct: "October", month_nov: "November", month_dec: "December",
+                th_type: "Type", type_in: "Income", type_out: "Expense"
             }
         };
 
@@ -654,7 +694,6 @@
             currentLang = currentLang === 'es' ? 'en' : 'es';
             document.getElementById('lang-btn').textContent = currentLang.toUpperCase();
             
-            // Update text content
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if(translations[currentLang][key]) {
@@ -662,14 +701,13 @@
                 }
             });
 
-            // Update placeholders
             document.querySelectorAll('.i18n-placeholder').forEach(el => {
                 el.placeholder = el.getAttribute(`data-placeholder-${currentLang}`);
             });
 
-            // Update current page title explicitly
             const activeView = document.querySelector('.view-section.active').id.replace('view-', '');
             updateTitle(activeView);
+            filterFinance(); // Re-render table with new language
         }
 
         // --- Configuración Gráfica ---
@@ -717,6 +755,68 @@
             revenueChart.update();
         }
         updateChartTheme();
+
+        // --- LÓGICA DE FINANZAS / HISTORIAL DE PAGOS ---
+        const transactions = [
+            { id: 1, date: "2025-12-20", month: 11, concept: "Anticipo Boda G&L", category: "Venta", amount: 25000, type: "income" },
+            { id: 2, date: "2025-12-18", month: 11, concept: "Pago Proveedor Flores", category: "Decoración", amount: 8500, type: "expense" },
+            { id: 3, date: "2025-12-15", month: 11, concept: "Pago Restante XV Sofia", category: "Venta", amount: 45000, type: "income" },
+            { id: 4, date: "2025-12-10", month: 11, concept: "Compra Bebidas", category: "Insumos", amount: 3200, type: "expense" },
+            { id: 5, date: "2025-11-28", month: 10, concept: "Liquidación Evento Corp", category: "Venta", amount: 110000, type: "income" },
+            { id: 6, date: "2025-11-15", month: 10, concept: "Mantenimiento Aire Acond", category: "Mantenimiento", amount: 4500, type: "expense" },
+            { id: 7, date: "2025-11-05", month: 10, concept: "Nómina Extra", category: "Personal", amount: 12000, type: "expense" },
+            { id: 8, date: "2025-10-30", month: 9, concept: "Anticipo Posada", category: "Venta", amount: 15000, type: "income" },
+        ];
+
+        function filterFinance() {
+            const selectedMonth = document.getElementById('month-filter').value;
+            const tableBody = document.getElementById('finance-table-body');
+            const incomeDisplay = document.getElementById('fin-income-display');
+            const expenseDisplay = document.getElementById('fin-expense-display');
+            
+            tableBody.innerHTML = '';
+            
+            let filtered = transactions;
+            if(selectedMonth !== 'all') {
+                filtered = transactions.filter(t => t.month == selectedMonth);
+            }
+
+            let totalIncome = 0;
+            let totalExpense = 0;
+
+            filtered.forEach(t => {
+                if(t.type === 'income') totalIncome += t.amount;
+                else totalExpense += t.amount;
+
+                const amountClass = t.type === 'income' ? 'text-green-500' : 'text-red-500';
+                const sign = t.type === 'income' ? '+' : '-';
+                const typeLabel = t.type === 'income' 
+                    ? (currentLang === 'es' ? 'Ingreso' : 'Income') 
+                    : (currentLang === 'es' ? 'Gasto' : 'Expense');
+                
+                const typeBadgeClass = t.type === 'income' 
+                    ? 'bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400' 
+                    : 'bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400';
+
+                const row = `
+                    <tr class="border-b border-slate-100 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/5 transition">
+                        <td class="px-4 py-3 font-mono text-xs text-slate-500">${t.date}</td>
+                        <td class="px-4 py-3 font-bold text-slate-900 dark:text-white">${t.concept}</td>
+                        <td class="px-4 py-3 text-xs text-slate-500 uppercase font-bold">${t.category}</td>
+                        <td class="px-4 py-3 text-right ${amountClass} font-black">${sign}$${t.amount.toLocaleString()}</td>
+                        <td class="px-4 py-3 text-right"><span class="${typeBadgeClass} text-[10px] font-bold uppercase px-2 py-0.5 rounded">${typeLabel}</span></td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+
+            incomeDisplay.innerText = `+$${totalIncome.toLocaleString()}`;
+            expenseDisplay.innerText = `-$${totalExpense.toLocaleString()}`;
+        }
+
+        // Init finance view
+        filterFinance();
+
     </script>
 </body>
 </html>
