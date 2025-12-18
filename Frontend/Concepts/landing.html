@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -20,17 +20,21 @@
                     colors: {
                         party: {
                             light: '#fdf4ff', 
-                            dark: '#0f0518',
+                            dark: '#05020a', // Ultra dark purple/black
+                            accent: '#d946ef'
                         }
                     },
                     boxShadow: {
-                        'neon': '0 0 20px rgba(217, 70, 239, 0.5), 0 0 60px rgba(168, 85, 247, 0.3)',
-                        'card-dark': '0 0 0 1px rgba(255,255,255,0.1), 0 20px 50px -10px rgba(0,0,0,0.7)',
+                        'neon': '0 0 25px rgba(217, 70, 239, 0.4), 0 0 70px rgba(168, 85, 247, 0.2)',
+                        'neon-blue': '0 0 25px rgba(6, 182, 212, 0.4), 0 0 70px rgba(59, 130, 246, 0.2)',
+                        'card-float': '0 20px 40px -10px rgba(0,0,0,0.5)',
                     },
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
                         'float-delayed': 'float 6s ease-in-out 3s infinite',
                         'pulse-glow': 'pulseGlow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'shimmer': 'shimmer 2.5s linear infinite',
                     },
                     keyframes: {
                         float: {
@@ -40,6 +44,13 @@
                         pulseGlow: {
                             '0%, 100%': { opacity: 1, transform: 'scale(1)' },
                             '50%': { opacity: .8, transform: 'scale(1.05)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: 0, transform: 'translateY(20px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' }
+                        },
+                        shimmer: {
+                            '100%': { transform: 'translateX(100%)' }
                         }
                     }
                 }
@@ -49,195 +60,213 @@
     <style>
         body { transition: background-color 0.5s ease, color 0.5s ease; }
         
-        /* --- MODO CLARO (Por defecto o cuando no tiene .dark) --- */
+        /* --- MODO CLARO --- */
         body {
             background-color: #ffffff;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(240, 171, 252, 0.15) 0px, transparent 60%),
-                radial-gradient(at 100% 100%, rgba(192, 132, 252, 0.15) 0px, transparent 60%);
-            color: #0f172a; /* Slate 900 */
+            background-image: radial-gradient(at 0% 0%, rgba(217, 70, 239, 0.1) 0px, transparent 50%);
+            color: #0f172a;
         }
         
-        /* --- MODO OSCURO (Cuando html tiene .dark) --- */
+        /* --- MODO OSCURO (Party Mode) --- */
         html.dark body {
-            background-color: #0f0518;
+            background-color: #05020a;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.2) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(217, 70, 239, 0.2) 0px, transparent 50%);
+                radial-gradient(at 50% 0%, rgba(147, 51, 234, 0.25) 0px, transparent 60%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
             color: #ffffff;
         }
 
-        /* Glassmorphism Adaptativo */
+        /* Glassmorphism Premium */
         .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            transition: background 0.3s, border 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .glass-panel:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(217, 70, 239, 0.3);
+            box-shadow: 0 0 30px rgba(217, 70, 239, 0.15);
+            transform: translateY(-5px);
         }
 
-        /* Estilo Glass Claro */
-        body .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1);
-        }
-
-        /* Estilo Glass Oscuro */
-        html.dark body .glass-panel {
-            background: rgba(15, 5, 24, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: none;
-        }
-
-        /* Texto Vibrante */
+        /* Text Gradients */
         .text-gradient {
             background: linear-gradient(to right, #d946ef, #8b5cf6, #06b6d4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* Partículas */
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.6; /* Más visible en claro */
-        }
-        html.dark .particle { opacity: 0.3; /* Más sutil en oscuro */ }
+        /* Toggle Switch */
+        .toggle-checkbox:checked { right: 0; border-color: #d946ef; }
         
-        /* Toggle Switch Styles */
-        .toggle-checkbox:checked {
-            right: 0;
-            border-color: #9333ea;
+        /* Grid Background pattern */
+        .grid-bg { 
+            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), 
+                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px); 
+            background-size: 40px 40px; 
         }
     </style>
 </head>
-<body class="antialiased font-sans">
+<body class="antialiased font-sans selection:bg-purple-500 selection:text-white">
 
     <!-- Navbar -->
-    <nav class="fixed w-full z-50 bg-white/80 dark:bg-[#0f0518]/80 backdrop-blur-xl border-b border-black/5 dark:border-white/10 transition-all duration-300">
-        <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
+    <nav class="fixed w-full z-50 bg-white/80 dark:bg-[#05020a]/80 backdrop-blur-xl border-b border-black/5 dark:border-white/10 transition-all duration-300">
+        <div class="max-w-[1280px] mx-auto px-6 h-16 flex items-center justify-between">
             
-            <!-- Logo Header (Ajustado Hacia Arriba) -->
-            <!-- Agregué '-mt-2' al contenedor y aumenté el margen negativo inferior de la imagen -->
-            <div class="flex flex-col items-center justify-center cursor-pointer group leading-none h-full -mt-2">
+            <!-- Logo Header (Visible y Ajustado) -->
+            <div class="flex items-center gap-2 cursor-pointer group">
                 <img src="https://github.com/JFabrizzio5/TusSalonesEventos/blob/main/BrandingImages/Logo.png?raw=true" 
                      alt="Eventotes Logo" 
-                     class="h-14 w-auto group-hover:scale-110 transition-transform dark:invert mb-[-8px] object-contain">
-                <span class="font-bold text-[10px] uppercase tracking-[0.2em] text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors relative z-10">
-                    Eventotes
-                </span>
+                     class="h-8 w-auto group-hover:scale-110 transition-transform dark:invert object-contain">
+                <span class="font-bold text-lg tracking-wide text-slate-900 dark:text-white group-hover:text-purple-500 transition-colors">Eventotes</span>
             </div>
             
-            <div class="hidden md:flex gap-8 text-[14px] font-medium text-slate-600 dark:text-white/60">
-                <a href="#overview" class="hover:text-purple-600 dark:hover:text-pink-400 transition-colors" id="nav-exp">La Experiencia</a>
-                <a href="#features" class="hover:text-purple-600 dark:hover:text-pink-400 transition-colors" id="nav-back">Backstage</a>
-                <a href="#pricing" class="hover:text-purple-600 dark:hover:text-pink-400 transition-colors" id="nav-vip">VIP Access</a>
+            <div class="hidden md:flex gap-8 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-white/60">
+                <a href="#overview" class="hover:text-purple-600 dark:hover:text-white transition-colors">La Fiesta</a>
+                <a href="#features" class="hover:text-purple-600 dark:hover:text-white transition-colors">El Control</a>
+                <a href="#pricing" class="hover:text-purple-600 dark:hover:text-white transition-colors">Entradas</a>
             </div>
 
-            <div class="flex items-center gap-3">
-                <!-- Language/Currency Toggle -->
-                <div class="flex bg-slate-100 dark:bg-white/10 rounded-full p-1 border border-slate-200 dark:border-white/10">
-                    <button onclick="setLang('es')" id="btn-es" class="px-3 py-1 rounded-full text-xs font-bold transition-all bg-white dark:bg-white/20 text-slate-900 dark:text-white shadow-sm">MXN</button>
-                    <button onclick="setLang('en')" id="btn-en" class="px-3 py-1 rounded-full text-xs font-bold transition-all text-slate-400 hover:text-slate-600 dark:hover:text-white">USD</button>
+            <div class="flex items-center gap-4">
+                <!-- Lang/Currency -->
+                <div class="hidden sm:flex bg-slate-100 dark:bg-white/10 rounded-full p-1 border border-slate-200 dark:border-white/10">
+                    <button onclick="setLang('es')" id="btn-es" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all bg-white dark:bg-white/20 text-slate-900 dark:text-white shadow-sm">MXN</button>
+                    <button onclick="setLang('en')" id="btn-en" class="px-3 py-1 rounded-full text-[10px] font-bold transition-all text-slate-400 hover:text-slate-600 dark:hover:text-white">USD</button>
                 </div>
 
                 <!-- Theme Toggle -->
-                <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition text-slate-600 dark:text-white/80 group">
-                    <svg id="sun-icon" class="w-5 h-5 hidden dark:block group-hover:text-yellow-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                    <svg id="moon-icon" class="w-5 h-5 block dark:hidden group-hover:text-purple-600 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition text-slate-600 dark:text-white/80">
+                    <svg id="sun-icon" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg id="moon-icon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
                 </button>
 
-                <a href="dashboard.html" class="bg-slate-900 dark:bg-white text-white dark:text-black text-[13px] font-bold px-5 py-2 rounded-full hover:bg-purple-600 dark:hover:bg-pink-50 transition-all hover:shadow-lg transform hover:-translate-y-0.5" id="nav-cta">
-                    Únete a la lista
+                <!-- CTA Principal -->
+                <a href="#pricing" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-bold uppercase tracking-wider px-5 py-2.5 rounded-full hover:shadow-neon transition-all hover:scale-105">
+                    Ver Oferta
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="overview" class="relative pt-44 pb-32 px-6 flex flex-col items-center justify-center text-center overflow-hidden min-h-screen">
+    <!-- Hero Section (Mejor Distribuido) -->
+    <section id="overview" class="relative pt-32 pb-20 px-6 flex flex-col items-center justify-center text-center overflow-hidden min-h-screen">
         
         <!-- Background Effects -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none grid-bg opacity-30"></div>
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <!-- Blobs -->
-            <div class="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-purple-500/10 dark:bg-purple-600/20 blur-[120px] rounded-full mix-blend-multiply dark:mix-blend-screen"></div>
-            <div class="absolute bottom-[10%] right-[20%] w-[400px] h-[400px] bg-pink-500/10 dark:bg-pink-600/20 blur-[100px] rounded-full mix-blend-multiply dark:mix-blend-screen"></div>
-            
-            <!-- Confetti Particles -->
-            <div class="particle top-[20%] left-[10%] bg-pink-500 animate-float w-2 h-2"></div>
-            <div class="particle top-[30%] right-[15%] bg-purple-500 animate-float-delayed w-1.5 h-1.5"></div>
-            <div class="particle bottom-[40%] left-[25%] bg-blue-500 animate-float w-2 h-2"></div>
+            <div class="absolute top-[20%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-purple-600/20 blur-[120px] rounded-full animate-pulse"></div>
+            <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-500/10 blur-[100px] rounded-full"></div>
         </div>
 
-        <div class="max-w-5xl mx-auto z-10 relative">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-pink-500/30 bg-pink-500/10 text-pink-600 dark:text-pink-400 text-xs font-bold uppercase tracking-wider mb-8 animate-float shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></span>
-                <span id="hero-badge">La nueva era de los eventos</span>
+        <div class="max-w-6xl mx-auto z-10 relative flex flex-col items-center w-full">
+            
+            <!-- CometaX Label (Discreto) -->
+            <div class="flex items-center justify-center gap-2 mb-4 opacity-50 hover:opacity-100 transition-opacity">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Powered By</span>
+                <img src="https://raw.githubusercontent.com/JFabrizzio5/CometaX/bbeb654b90e817236d9d64009b33618065fbba91/image_2025-12-16_083018257-removebg-preview%20(1).png" 
+                     alt="CometaX" class="h-5 dark:invert">
+            </div>
+
+            <!-- LOGO CENTRAL DEL HERO + NOMBRE (Compacto) -->
+            <div class="mb-6 flex flex-col items-center animate-fade-in-up">
+                <img src="https://github.com/JFabrizzio5/TusSalonesEventos/blob/main/BrandingImages/Logo.png?raw=true" 
+                     alt="Eventotes Brand" 
+                     class="h-20 w-auto dark:invert drop-shadow-[0_0_25px_rgba(255,255,255,0.3)] mb-2 animate-float">
+                <h2 class="text-2xl font-black tracking-[0.3em] text-slate-900 dark:text-white uppercase">Eventotes</h2>
+            </div>
+
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-purple-500/50 bg-purple-900/20 text-purple-400 text-[10px] font-bold uppercase tracking-wider mb-6 backdrop-blur-md">
+                <span class="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></span>
+                The Party Operating System
             </div>
             
-            <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[1.1]">
-                <span id="hero-title-1">Gestiona.</span><br>
-                <span class="text-gradient" id="hero-title-2">Celebra. Repite.</span>
+            <!-- Título Principal (Headline) -->
+            <h1 class="text-5xl md:text-7xl font-black tracking-tight mb-6 leading-[1.1] text-slate-900 dark:text-white animate-fade-in-up" style="animation-delay: 0.1s;">
+                Control Total.<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 animate-shimmer" style="background-size: 200% auto;">Cero Estrés.</span>
             </h1>
             
-            <p id="hero-desc" class="text-xl md:text-2xl text-slate-600 dark:text-white/60 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
-                Tu salón no es una oficina, es una fiesta. Usa el software que entiende el ritmo, la adrenalina y el glamour de tu negocio.
+            <!-- Subtítulo -->
+            <p class="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-10 max-w-2xl mx-auto font-medium leading-relaxed animate-fade-in-up" style="animation-delay: 0.2s;">
+                Deja de jugar a las adivinanzas con Excel. Gestiona contratos, pagos y la fiesta entera desde una Web App potente diseñada para dominar el caos.
             </p>
             
-            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-24">
-                <a href="dashboard.html" id="hero-cta-primary" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:shadow-neon dark:hover:shadow-neon transition-all hover:scale-105">
-                    Empezar la Fiesta
+            <!-- Botones CTA -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-fade-in-up" style="animation-delay: 0.3s;">
+                <a href="#pricing" class="bg-white text-black px-8 py-3.5 rounded-full font-black text-base hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-all hover:scale-105 flex items-center gap-2">
+                    VER OFERTA <i data-lucide="zap" class="w-4 h-4 text-yellow-500 fill-current"></i>
                 </a>
-                <a href="#" id="hero-cta-secondary" class="text-slate-600 dark:text-white/80 font-medium text-lg hover:text-purple-600 dark:hover:text-white flex items-center gap-2 group transition-colors">
-                    <span class="w-10 h-10 rounded-full border border-slate-200 dark:border-white/20 flex items-center justify-center bg-white/50 dark:bg-white/5 group-hover:bg-purple-100 dark:group-hover:bg-white/10 transition">▶</span>
-                    Ver el Aftermovie
+                <a href="#features" class="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest text-xs hover:text-purple-500 transition-colors flex items-center gap-2 px-6 py-3.5 rounded-full border border-transparent hover:border-white/10">
+                    <i data-lucide="play-circle" class="w-4 h-4"></i>
+                    Ver Demo
                 </a>
             </div>
 
-            <!-- UI Mockup: Dashboard (Sin Cambios) -->
-            <div class="relative w-full perspective-1000">
-                <div class="relative glass-panel rounded-3xl overflow-hidden shadow-2xl dark:shadow-card-dark aspect-[16/9]">
-                    <!-- Header -->
-                    <div class="h-14 border-b border-black/5 dark:border-white/10 flex items-center px-6 gap-4 bg-white/40 dark:bg-white/5">
-                        <div class="flex gap-2">
-                            <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
-                            <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                            <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+            <!-- UI Mockup: "The Control Room" (Más arriba para cerrar el espacio) -->
+            <div class="relative w-full max-w-6xl perspective-1000 animate-fade-in-up group" style="animation-delay: 0.4s;">
+                <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                <div class="relative bg-[#0b0514] rounded-2xl overflow-hidden shadow-2xl border border-white/10 aspect-[16/9] flex flex-col">
+                     
+                     <!-- Browser Bar -->
+                     <div class="h-10 border-b border-white/5 flex items-center px-4 gap-3 bg-white/5 backdrop-blur-md">
+                        <div class="flex gap-1.5">
+                            <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
                         </div>
-                        <div class="ml-auto">
-                            <span class="px-3 py-1 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-300 text-[10px] font-bold border border-purple-500/20">● LIVE</span>
+                        <div class="flex-1 bg-black/20 h-6 rounded flex items-center justify-center text-[10px] text-white/30 font-mono">
+                            eventotes.app/control-room
                         </div>
                     </div>
-                    <!-- Body -->
-                    <div class="p-8 flex gap-8 h-full bg-white/20 dark:bg-[#1a0b2e]/40">
-                        <div class="w-64 hidden md:flex flex-col gap-4">
-                            <div class="p-5 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/10 dark:border-white/10">
-                                <p class="text-xs text-purple-600 dark:text-purple-300 font-bold uppercase mb-1">Ventas Totales</p>
-                                <p class="text-2xl font-bold text-slate-800 dark:text-white">$124,500</p>
+
+                    <!-- Dashboard Preview Content -->
+                    <div class="flex-1 p-6 grid grid-cols-[220px_1fr] gap-6 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')]">
+                        <!-- Sidebar -->
+                        <div class="hidden md:flex flex-col gap-3">
+                            <div class="h-10 w-full bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg flex items-center px-3 text-white font-bold text-xs shadow-neon">
+                                <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 mr-2"></i> Dashboard
                             </div>
-                            <div class="space-y-2">
-                                <div class="h-10 w-full bg-black/5 dark:bg-white/5 rounded-xl flex items-center px-4 text-sm text-slate-600 dark:text-white/70">📅 Calendario</div>
-                                <div class="h-10 w-full bg-black/5 dark:bg-white/5 rounded-xl flex items-center px-4 text-sm text-slate-600 dark:text-white/70">🥂 Catering</div>
+                            <div class="h-10 w-full hover:bg-white/5 rounded-lg flex items-center px-3 text-white/50 font-bold text-xs transition">
+                                <i data-lucide="calendar" class="w-3.5 h-3.5 mr-2"></i> Calendario
+                            </div>
+                            <div class="h-10 w-full hover:bg-white/5 rounded-lg flex items-center px-3 text-white/50 font-bold text-xs transition">
+                                <i data-lucide="dollar-sign" class="w-3.5 h-3.5 mr-2"></i> Finanzas
                             </div>
                         </div>
-                        <div class="flex-1 flex flex-col gap-6">
-                            <div class="h-40 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-500 p-6 flex items-center justify-between relative overflow-hidden text-white shadow-lg">
-                                <div class="relative z-10">
-                                    <span class="px-2 py-1 bg-white/20 rounded text-[10px] font-bold uppercase mb-2 inline-block backdrop-blur-sm">Next Event</span>
-                                    <h3 class="text-2xl font-bold">Gala de Año Nuevo ✨</h3>
-                                    <p class="opacity-80 text-sm">31 Dic • 450 Pax</p>
+
+                        <!-- Main Stats -->
+                        <div class="grid grid-rows-[auto_1fr] gap-6">
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-sm">
+                                    <p class="text-[10px] font-bold text-purple-400 uppercase mb-1">Ingresos Hoy</p>
+                                    <p class="text-2xl font-black text-white">$24,500</p>
                                 </div>
-                                <div class="relative z-10 w-16 h-16 rounded-full border-4 border-white/30 flex items-center justify-center bg-black/20 backdrop-blur">
-                                    <span class="font-bold text-sm">98%</span>
+                                <div class="bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-sm">
+                                    <p class="text-[10px] font-bold text-blue-400 uppercase mb-1">Eventos Activos</p>
+                                    <p class="text-2xl font-black text-white">8</p>
+                                </div>
+                                <div class="bg-gradient-to-br from-pink-500 to-orange-500 rounded-xl p-4 text-white shadow-lg flex items-center justify-between">
+                                    <div>
+                                        <p class="text-[10px] font-bold uppercase opacity-80">Próximo</p>
+                                        <p class="text-base font-black">Boda Ana & Luis</p>
+                                    </div>
+                                    <i data-lucide="arrow-right-circle" class="w-6 h-6"></i>
                                 </div>
                             </div>
-                            <div class="flex-1 rounded-2xl bg-white/40 dark:bg-white/5 border border-black/5 dark:border-white/10 p-6">
-                                <div class="flex items-center gap-4 mb-4">
-                                    <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-lg">💍</div>
-                                    <div>
-                                        <p class="text-sm font-bold text-slate-800 dark:text-white">Boda Gutierrez</p>
-                                        <p class="text-xs text-slate-500 dark:text-white/50">Firmado</p>
-                                    </div>
-                                    <div class="ml-auto text-green-600 dark:text-green-400 text-xs font-bold">+$45k</div>
+                            <!-- Chart Placeholder -->
+                            <div class="bg-white/5 border border-white/10 rounded-xl p-4 relative overflow-hidden">
+                                <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-purple-900/20 to-transparent"></div>
+                                <div class="flex items-end justify-between h-full gap-3 pb-2 px-2 opacity-50">
+                                    <div class="w-full bg-purple-500 rounded-t h-[40%]"></div>
+                                    <div class="w-full bg-purple-500 rounded-t h-[70%]"></div>
+                                    <div class="w-full bg-pink-500 rounded-t h-[50%] animate-pulse"></div>
+                                    <div class="w-full bg-purple-500 rounded-t h-[80%]"></div>
+                                    <div class="w-full bg-purple-500 rounded-t h-[60%]"></div>
                                 </div>
                             </div>
                         </div>
@@ -247,114 +276,186 @@
         </div>
     </section>
 
-    <!-- Features Bento Grid -->
+    <!-- Financial Comparison Section (Aggressive) -->
+    <section class="py-24 px-6 border-y border-white/5 bg-[#08030f]">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-red-500 font-bold tracking-widest uppercase text-xs mb-2 block">La cruda realidad</span>
+                <h2 class="text-3xl md:text-5xl font-black mb-6 text-white">El Costo del Descontrol.</h2>
+                <p class="text-lg text-slate-400 max-w-3xl mx-auto">
+                    ¿Sigues usando papel y Excel? Estás perdiendo dinero.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <!-- Traditional -->
+                <div class="p-8 rounded-3xl border border-red-500/20 bg-red-500/5 relative group grayscale hover:grayscale-0 transition duration-500">
+                    <div class="absolute top-4 right-4 text-xs font-bold text-red-500 uppercase tracking-wider border border-red-500/50 px-2 py-1 rounded">Método Antiguo</div>
+                    <h3 class="text-2xl font-bold text-slate-300 mb-6">El Caos Manual</h3>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center gap-3 text-slate-400">
+                            <i data-lucide="x-circle" class="text-red-500 w-6 h-6"></i>
+                            <span>Whatsapp personal saturado</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-400">
+                            <i data-lucide="x-circle" class="text-red-500 w-6 h-6"></i>
+                            <span>Cobros olvidados = Dinero perdido</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-400">
+                            <i data-lucide="x-circle" class="text-red-500 w-6 h-6"></i>
+                            <span>Contratos en papel (Inseguros)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Eventotes Way -->
+                <div class="p-10 rounded-3xl bg-gradient-to-b from-[#1a0b2e] to-[#0f0518] border border-purple-500 shadow-neon relative overflow-hidden transform md:scale-105 z-10">
+                    <div class="absolute top-0 right-0 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-4 py-2 rounded-bl-xl">EL FUTURO</div>
+                    
+                    <h3 class="text-3xl font-black text-white mb-6 flex items-center gap-3">
+                        <i data-lucide="check-circle-2" class="text-green-400 w-8 h-8"></i>
+                        Eventotes OS
+                    </h3>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center gap-3 text-white font-medium">
+                            <div class="bg-green-500/20 p-1 rounded-full"><i data-lucide="check" class="text-green-400 w-4 h-4"></i></div>
+                            <span>Panel Financiero en Tiempo Real</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-white font-medium">
+                            <div class="bg-green-500/20 p-1 rounded-full"><i data-lucide="check" class="text-green-400 w-4 h-4"></i></div>
+                            <span>Micrositios Web Automáticos</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-white font-medium">
+                            <div class="bg-green-500/20 p-1 rounded-full"><i data-lucide="check" class="text-green-400 w-4 h-4"></i></div>
+                            <span>Control desde tu Celular</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Bento Grid (Redistribuido) -->
     <section id="features" class="py-32 px-6 relative overflow-hidden">
-        <div class="max-w-[1080px] mx-auto relative z-10">
-            <h2 class="text-5xl md:text-7xl font-bold mb-20 text-center text-slate-900 dark:text-white">
-                <span id="feat-title-1">Domina la Pista.</span><br>
-                <span id="feat-title-2" class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 dark:from-white/60 dark:to-white/20">Sin sudar.</span>
+        <div class="max-w-[1280px] mx-auto relative z-10">
+            <h2 class="text-4xl md:text-6xl font-black mb-16 text-center text-white leading-tight">
+                Módulos de Poder.
             </h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[450px]">
+            <!-- Grid: Mejor distribuido para reflejar "Web App" -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[350px]">
                 
-                <!-- Card 1 -->
-                <div class="md:col-span-2 glass-panel rounded-[2rem] p-10 relative overflow-hidden group hover:border-purple-500/30 transition-all duration-500">
-                    <div class="relative z-10 h-full flex flex-col justify-between">
-                        <div>
-                            <span class="px-2 py-0.5 rounded bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 text-[10px] font-bold uppercase mb-3 inline-block">Cash Flow</span>
-                            <h3 id="card-1-title" class="text-3xl font-bold text-slate-900 dark:text-white mb-4">Dinero en mano.</h3>
-                            <p id="card-1-desc" class="text-slate-600 dark:text-white/60 text-lg">Visualiza tus ganancias como un headliner. Gráficas claras, sin ruido.</p>
+                <!-- Card 1: Command Center (Grande) -->
+                <div class="md:col-span-2 glass-panel rounded-3xl p-8 relative overflow-hidden group flex flex-col justify-between">
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4 text-purple-400">
+                            <i data-lucide="monitor" class="w-6 h-6"></i>
                         </div>
-                        <div class="mt-8 flex items-end gap-3 h-48 opacity-90">
-                             <div class="w-14 bg-slate-200 dark:bg-white/5 h-[40%] rounded-t-xl"></div>
-                             <div class="w-14 bg-slate-200 dark:bg-white/5 h-[60%] rounded-t-xl"></div>
-                             <div class="w-14 bg-purple-500 dark:bg-gradient-to-t dark:from-purple-600 dark:to-pink-500 h-[85%] rounded-t-xl shadow-lg relative overflow-hidden">
-                                 <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
-                             </div>
-                             <div class="w-14 bg-slate-200 dark:bg-white/5 h-[55%] rounded-t-xl"></div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Web App de Escritorio</h3>
+                        <p class="text-slate-400">Toda la potencia de un ERP en una interfaz hermosa. Finanzas, logística y ventas en una sola pantalla panorámica.</p>
+                    </div>
+                    <!-- Visual Abstracto de Interfaz -->
+                    <div class="mt-6 w-full h-40 bg-white/5 rounded-t-xl border-t border-l border-r border-white/10 p-4 translate-y-4 group-hover:translate-y-2 transition-transform">
+                        <div class="flex gap-4 mb-4">
+                            <div class="h-2 w-20 bg-white/20 rounded"></div>
+                            <div class="h-2 w-20 bg-white/10 rounded"></div>
+                        </div>
+                        <div class="grid grid-cols-4 gap-4">
+                            <div class="h-20 bg-purple-500/20 rounded-lg"></div>
+                            <div class="h-20 bg-white/5 rounded-lg"></div>
+                            <div class="h-20 bg-white/5 rounded-lg"></div>
+                            <div class="h-20 bg-white/5 rounded-lg"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 2 -->
-                <div class="glass-panel rounded-[2rem] p-10 flex flex-col justify-center items-center text-center hover:border-blue-500/30 transition-all group">
-                    <div class="w-24 h-24 bg-blue-500 rounded-[2rem] flex items-center justify-center shadow-xl mb-8 group-hover:scale-110 transition-transform">
-                        <span class="text-4xl text-white">🌐</span>
-                    </div>
-                    <h3 id="card-2-title" class="text-2xl font-bold text-slate-900 dark:text-white mb-3">Sitios Web</h3>
-                    <p id="card-2-desc" class="text-slate-600 dark:text-white/50">Cada evento genera su propia web automáticamente.</p>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="glass-panel rounded-[2rem] p-10 flex flex-col justify-between md:col-span-1">
-                    <div>
-                        <span class="px-2 py-0.5 rounded bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 text-[10px] font-bold uppercase mb-3 inline-block">Sold Out</span>
-                        <h3 id="card-3-title" class="text-3xl font-bold text-slate-900 dark:text-white">Agenda Full.</h3>
-                    </div>
-                    <div class="relative mt-6 space-y-3">
-                        <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5">
-                            <div class="w-2 h-10 bg-red-500 rounded-full"></div>
-                            <div class="flex-1 space-y-2">
-                                <div class="h-2 w-24 bg-slate-300 dark:bg-white/20 rounded"></div>
-                                <div class="h-1.5 w-12 bg-slate-200 dark:bg-white/10 rounded"></div>
+                <!-- Card 2: Micrositios (Vertical) -->
+                <div class="md:row-span-2 glass-panel rounded-3xl p-8 relative overflow-hidden group border border-blue-500/30">
+                    <div class="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent opacity-50"></div>
+                    <div class="relative z-10 h-full flex flex-col">
+                        <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6 text-blue-400">
+                            <i data-lucide="smartphone" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-4">Micrositios Móviles</h3>
+                        <p class="text-slate-400 mb-8">
+                            No mandes PDFs aburridos. Eventotes crea una <strong>Web App única para cada cliente</strong> con cuenta regresiva, mapas y pasarela de pagos.
+                        </p>
+                        <!-- Phone Mockup -->
+                        <div class="flex-1 bg-black rounded-t-3xl border-4 border-slate-800 border-b-0 mx-auto w-48 shadow-2xl relative overflow-hidden">
+                            <div class="absolute top-0 inset-x-0 h-6 bg-slate-800 rounded-b-lg mx-10"></div>
+                            <div class="mt-8 p-4 space-y-3">
+                                <div class="h-24 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl"></div>
+                                <div class="h-2 w-20 bg-white/20 rounded"></div>
+                                <div class="h-2 w-full bg-white/10 rounded"></div>
+                                <div class="h-8 w-full bg-white/10 rounded-lg mt-4"></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 4 -->
-                <div class="md:col-span-2 bg-slate-900 dark:bg-gradient-to-br dark:from-[#1e1b4b] dark:to-[#312e81] rounded-[2rem] p-10 flex flex-col md:flex-row items-center justify-between relative overflow-hidden group">
-                     <div class="relative z-10 max-w-md">
-                        <h3 id="card-4-title" class="text-3xl font-bold text-white mb-4">Seguridad VIP.</h3>
-                        <p id="card-4-desc" class="text-slate-400 dark:text-indigo-200 font-medium text-lg">Contratos blindados, firmas biométricas y encriptación. Solo entra quien está en la lista.</p>
-                     </div>
-                     <div class="relative z-10 bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 shadow-2xl mt-8 md:mt-0 transform group-hover:rotate-6 transition">
-                        <i data-lucide="shield-check" class="w-16 h-16 text-white"></i>
-                     </div>
+                <!-- Card 3: Calendario -->
+                <div class="glass-panel rounded-3xl p-8 flex flex-col justify-between group hover:bg-white/5">
+                    <div>
+                        <div class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-4 text-green-400">
+                            <i data-lucide="calendar-check" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Disponibilidad Real</h3>
+                        <p class="text-slate-400 text-sm mt-2">Bloqueo automático de fechas. Adiós al overbooking.</p>
+                    </div>
+                    <div class="grid grid-cols-7 gap-2 opacity-50 mt-4">
+                        <div class="aspect-square rounded bg-white/10"></div>
+                        <div class="aspect-square rounded bg-green-500"></div>
+                        <div class="aspect-square rounded bg-white/10"></div>
+                        <div class="aspect-square rounded bg-white/10"></div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Seguridad -->
+                <div class="glass-panel rounded-3xl p-8 flex items-center justify-between group hover:border-purple-500/50 transition">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-2">Contratos Blindados</h3>
+                        <p class="text-slate-400 text-sm">Firmas digitales y encriptación bancaria.</p>
+                    </div>
+                    <i data-lucide="shield-check" class="w-16 h-16 text-white/20 group-hover:text-purple-500 transition-colors"></i>
                 </div>
 
             </div>
         </div>
     </section>
 
-    <!-- Pricing Section (RENOVADO) -->
-    <section id="pricing" class="py-32 px-6 bg-slate-50 dark:bg-black/20">
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-32 px-6">
         <div class="max-w-[1200px] mx-auto">
             <div class="text-center mb-16">
-                <h2 id="pricing-title" class="text-4xl md:text-6xl font-bold mb-6 text-slate-900 dark:text-white">Arquitectura de Alta Velocidad.</h2>
-                <p id="pricing-subtitle" class="text-xl text-slate-600 dark:text-white/50 max-w-2xl mx-auto">Elige la potencia que necesitas. Cancela la burocracia.</p>
+                <h2 id="pricing-title" class="text-4xl md:text-6xl font-black mb-6 text-white">Oferta de Lanzamiento.</h2>
+                <p id="pricing-subtitle" class="text-xl text-slate-400 max-w-2xl mx-auto">Tecnología Enterprise a precio de Cover.</p>
                 
                 <!-- Pricing Controls -->
                 <div class="flex flex-col items-center gap-6 mt-10">
                     
                     <!-- Billing Toggle -->
-                    <div class="flex items-center gap-4 bg-white dark:bg-white/5 p-2 pr-6 rounded-full border border-black/5 dark:border-white/10 shadow-sm cursor-pointer hover:border-purple-500/50 transition" onclick="toggleBilling()">
+                    <div class="flex items-center gap-4 bg-white/5 p-1.5 pr-6 rounded-full border border-white/10 shadow-sm cursor-pointer hover:border-purple-500/50 transition" onclick="toggleBilling()">
                         <div class="flex items-center gap-3">
-                            <span id="label-monthly" class="text-sm font-bold text-slate-400 dark:text-white/40 pl-4">Mensual</span>
-                            
-                            <!-- Switch -->
-                            <div class="relative w-14 h-8 rounded-full transition-colors duration-300" id="billing-track" style="background-color: #9333ea;">
-                                <div id="billing-knob" class="absolute top-1 left-1 bg-white w-6 h-6 rounded-full transition-transform duration-300 shadow-md translate-x-6"></div>
+                            <span id="label-monthly" class="text-sm font-bold text-slate-400 pl-4">Mensual</span>
+                            <div class="relative w-12 h-7 rounded-full transition-colors duration-300" id="billing-track" style="background-color: #d946ef;">
+                                <div id="billing-knob" class="absolute top-1 left-1 bg-white w-5 h-5 rounded-full transition-transform duration-300 shadow-md translate-x-5"></div>
                             </div>
-
-                            <span id="label-annual" class="text-sm font-bold text-slate-900 dark:text-white">
-                                Anual 
-                            </span>
+                            <span id="label-annual" class="text-sm font-bold text-white">Anual</span>
                         </div>
-                        <span id="badge-save" class="text-[10px] bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full font-bold border border-green-500/20">AHORRA 15%</span>
+                        <span id="badge-save" class="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full font-bold border border-green-500/30">AHORRA 15%</span>
                     </div>
 
                     <!-- Priority Support Toggle -->
-                    <div onclick="toggleSupport()" id="support-container" class="cursor-pointer group flex items-center gap-4 px-6 py-3 rounded-2xl border border-dashed border-slate-300 dark:border-white/20 bg-transparent hover:bg-slate-100 dark:hover:bg-white/5 transition-all duration-300 select-none">
-                        <div id="support-icon-bg" class="p-2 rounded-lg bg-slate-200 dark:bg-white/10 text-slate-500 dark:text-white/50 transition-colors">
-                            <i data-lucide="life-buoy" class="w-5 h-5"></i>
+                    <div onclick="toggleSupport()" id="support-container" class="cursor-pointer group flex items-center gap-4 px-5 py-3 rounded-xl border border-dashed border-white/20 bg-transparent hover:bg-white/5 transition-all duration-300 select-none">
+                        <div id="support-icon-bg" class="p-1.5 rounded-lg bg-white/10 text-slate-400 transition-colors">
+                            <i data-lucide="life-buoy" class="w-4 h-4"></i>
                         </div>
                         <div class="text-left">
-                            <div id="support-text-title" class="font-bold text-sm text-slate-700 dark:text-slate-300">Soporte Mission-Critical 24/7</div>
-                            <div id="support-text-desc" class="text-xs text-slate-500 dark:text-white/40">Ingenieros dedicados + Capacitación VIP (+30%)</div>
+                            <div id="support-text-title" class="font-bold text-sm text-slate-300">Soporte VIP 24/7</div>
+                            <div id="support-text-desc" class="text-xs text-slate-500">Ingenieros dedicados (+30%)</div>
                         </div>
-                        <div id="support-check" class="w-6 h-6 rounded-full border border-slate-400 dark:border-white/30 flex items-center justify-center transition-colors">
-                            <i data-lucide="check" class="w-3.5 h-3.5 text-white opacity-0 transition-opacity" id="check-icon"></i>
+                        <div id="support-check" class="w-5 h-5 rounded-full border border-white/30 flex items-center justify-center transition-colors">
+                            <i data-lucide="check" class="w-3 h-3 text-white opacity-0 transition-opacity" id="check-icon"></i>
                         </div>
                     </div>
 
@@ -364,107 +465,119 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
                 
                 <!-- Plan START -->
-                <div class="p-8 rounded-[2rem] bg-white dark:bg-[#0f0518] border border-black/5 dark:border-white/10 shadow-xl dark:shadow-none hover:border-purple-500/30 transition-all duration-300 group">
+                <div class="glass-panel p-8 rounded-3xl hover:border-slate-500/50 transition-all duration-300 group">
                     <div class="mb-6">
-                        <div class="flex items-center gap-2 mb-2">
-                            <i data-lucide="rocket" class="text-slate-400 w-5 h-5"></i>
-                            <h3 id="plan-1-name" class="text-xl font-bold text-slate-900 dark:text-white">START</h3>
-                        </div>
-                        <p id="plan-1-tagline" class="text-slate-500 dark:text-white/50 text-sm">Digitaliza el caos.</p>
+                        <h3 id="plan-1-name" class="text-xl font-bold text-white mb-2">START</h3>
+                        <p id="plan-1-tagline" class="text-slate-400 text-sm">Para venues que inician.</p>
                     </div>
-                    
                     <div class="mb-8">
                         <div class="flex items-baseline gap-1">
-                            <span id="price-start" class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">$5,500</span>
-                            <span id="period-start" class="text-slate-500 dark:text-white/40 font-medium">/mes</span>
+                            <span id="price-start" class="text-4xl font-black text-white tracking-tight">$5,500</span>
+                            <span id="period-start" class="text-slate-500 font-medium">/mes</span>
                         </div>
-                        <div id="tax-start" class="text-xs text-orange-500 font-bold mt-2 hidden">+15% vs Anual</div>
+                        <div id="tax-start" class="text-xs text-orange-500 font-bold mt-2 hidden">+15% pago mensual</div>
                     </div>
-
-                    <a href="#" id="cta-start" class="block w-full py-4 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold text-center hover:bg-slate-200 dark:hover:bg-white/20 transition mb-8">Comenzar</a>
-                    
-                    <div id="features-start" class="space-y-4">
-                        <!-- JS injected -->
-                    </div>
+                    <a href="#" id="cta-start" class="block w-full py-3 rounded-xl bg-white/10 text-white font-bold text-center hover:bg-white/20 transition mb-8 text-sm">Ver Oferta</a>
+                    <div id="features-start" class="space-y-3"></div>
                 </div>
 
                 <!-- Plan SCALE (VIP) -->
-                <div class="p-8 rounded-[2rem] bg-slate-900 dark:bg-[#1a0b2e] border border-purple-500 relative overflow-hidden shadow-2xl transform md:-translate-y-6 z-10">
+                <div class="p-8 rounded-3xl bg-[#1a0b2e] border border-purple-500 relative overflow-hidden shadow-neon transform md:-translate-y-4 z-10">
                     <div id="badge-scale" class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
-                    <div id="badge-rec" class="absolute top-5 right-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase shadow-neon">Recomendado</div>
-                    
+                    <div id="badge-rec" class="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase shadow-lg">Más Vendido</div>
                     <div class="mb-6 mt-2">
-                        <div class="flex items-center gap-2 mb-2">
-                            <i data-lucide="zap" class="text-purple-400 w-5 h-5 fill-purple-400/20"></i>
-                            <h3 id="plan-2-name" class="text-2xl font-bold text-white">SCALE</h3>
-                        </div>
+                        <h3 id="plan-2-name" class="text-2xl font-black text-white mb-2">SCALE</h3>
                         <p id="plan-2-tagline" class="text-purple-200/60 text-sm">La opción inteligente.</p>
                     </div>
-
                     <div class="mb-8">
                         <div class="flex items-baseline gap-1">
-                            <span id="price-scale" class="text-5xl font-extrabold text-white tracking-tight">$8,000</span>
+                            <span id="price-scale" class="text-5xl font-black text-white tracking-tight">$8,000</span>
                             <span id="period-scale" class="text-purple-200/40 font-medium">/mes</span>
                         </div>
-                        <div id="tax-scale" class="text-xs text-orange-400 font-bold mt-2 hidden">+15% vs Anual</div>
+                        <div id="tax-scale" class="text-xs text-orange-400 font-bold mt-2 hidden">+15% pago mensual</div>
                     </div>
-
-                    <a href="#" id="cta-scale" class="block w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-center hover:shadow-neon transition mb-8 group flex items-center justify-center gap-2">
-                        <span>Empezar Ahora</span>
+                    <a href="#" id="cta-scale" class="block w-full py-3 rounded-xl bg-white text-slate-900 font-bold text-center hover:bg-purple-50 transition mb-8 group flex items-center justify-center gap-2 text-sm shadow-lg">
+                        <span>EMPEZAR AHORA</span>
                         <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                     </a>
-
-                    <div id="features-scale" class="space-y-4">
-                         <!-- JS injected -->
-                    </div>
+                    <div id="features-scale" class="space-y-3"></div>
                 </div>
 
                 <!-- Plan DOMINATE -->
-                <div class="p-8 rounded-[2rem] bg-white dark:bg-[#0f0518] border border-black/5 dark:border-white/10 shadow-xl dark:shadow-none hover:border-purple-500/30 transition-all duration-300 group">
+                <div class="glass-panel p-8 rounded-3xl hover:border-slate-500/50 transition-all duration-300 group">
                     <div class="mb-6">
-                        <div class="flex items-center gap-2 mb-2">
-                            <i data-lucide="crown" class="text-yellow-500 w-5 h-5"></i>
-                            <h3 id="plan-3-name" class="text-xl font-bold text-slate-900 dark:text-white">DOMINATE</h3>
-                        </div>
-                        <p id="plan-3-tagline" class="text-slate-500 dark:text-white/50 text-sm">Control total.</p>
+                        <h3 id="plan-3-name" class="text-xl font-bold text-white mb-2">DOMINATE</h3>
+                        <p id="plan-3-tagline" class="text-slate-400 text-sm">Control total para cadenas.</p>
                     </div>
-                    
                     <div class="mb-8">
                         <div class="flex items-baseline gap-1">
-                            <span id="price-dominate" class="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">$11,000</span>
-                            <span id="period-dominate" class="text-slate-500 dark:text-white/40 font-medium">/mes</span>
+                            <span id="price-dominate" class="text-4xl font-black text-white tracking-tight">$11,000</span>
+                            <span id="period-dominate" class="text-slate-500 font-medium">/mes</span>
                         </div>
-                        <div id="tax-dominate" class="text-xs text-orange-500 font-bold mt-2 hidden">+15% vs Anual</div>
+                        <div id="tax-dominate" class="text-xs text-orange-500 font-bold mt-2 hidden">+15% pago mensual</div>
                     </div>
-
-                    <a href="#" id="cta-dominate" class="block w-full py-4 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold text-center hover:bg-slate-200 dark:hover:bg-white/20 transition mb-8">Contactar</a>
-                    
-                    <div id="features-dominate" class="space-y-4">
-                        <!-- JS injected -->
-                    </div>
+                    <a href="#" id="cta-dominate" class="block w-full py-3 rounded-xl bg-white/10 text-white font-bold text-center hover:bg-white/20 transition mb-8 text-sm">Contactar</a>
+                    <div id="features-dominate" class="space-y-3"></div>
                 </div>
 
             </div>
         </div>
     </section>
 
+    <!-- Charity Section -->
+    <section class="py-20 px-6 border-t border-white/5 bg-[#05020a]">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="w-16 h-16 bg-pink-500/10 rounded-full flex items-center justify-center mx-auto mb-6 shadow-neon">
+                <i data-lucide="heart-handshake" class="text-pink-500 w-8 h-8"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-4 text-white">Tecnología con Karma.</h2>
+            <p class="text-base text-slate-400 mb-8 leading-relaxed max-w-2xl mx-auto">
+                El éxito sabe mejor compartido. El <span class="font-bold text-pink-500">10% de tu suscripción</span> se va directo a causas sociales vía Fundación CometaX.
+            </p>
+            <div class="flex flex-wrap justify-center items-center gap-8 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+                <div class="flex items-center gap-2 font-bold text-slate-500 hover:text-white"><i data-lucide="sprout"></i> GreenFuture</div>
+                <div class="flex items-center gap-2 font-bold text-slate-500 hover:text-white"><i data-lucide="graduation-cap"></i> EduCare</div>
+                <div class="flex items-center gap-2 font-bold text-slate-500 hover:text-white"><i data-lucide="utensils"></i> FoodBank</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sales Program Banner -->
+    <section class="py-10 px-6 bg-[#05020a]">
+        <div class="max-w-5xl mx-auto rounded-3xl bg-gradient-to-r from-[#1a0b2e] to-[#0f0518] border border-white/10 p-8 md:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+            
+            <div class="relative z-10 text-center md:text-left">
+                <span class="text-purple-400 font-bold tracking-widest uppercase text-[10px] mb-2 block">CometaX Partners</span>
+                <h2 class="text-2xl font-bold text-white mb-2">¿Vendes Tecnología?</h2>
+                <p class="text-slate-400 text-sm max-w-md">Asóciate con nosotros. Vende Eventotes a salones y llévate una comisión recurrente.</p>
+            </div>
+
+            <div class="relative z-10">
+                <a href="#" class="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-3 rounded-full font-bold hover:bg-purple-50 transition shadow-lg text-sm hover:scale-105 transform">
+                    Aplicar al Programa
+                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
-    <footer class="bg-slate-100 dark:bg-[#05020a] border-t border-black/5 dark:border-white/10 py-16 text-xs text-slate-500 dark:text-white/40">
+    <footer class="bg-[#020105] border-t border-white/5 py-16 text-xs text-slate-500">
         <div class="max-w-[1080px] mx-auto px-6 text-center">
             
             <p class="mb-12 font-medium opacity-60">Copyright © 2025 Eventotes Inc. Que siga la fiesta.</p>
             
-            <!-- Logo Footer (Restaurado y Limpio) -->
+            <!-- Logo Footer -->
             <div class="flex flex-col items-center justify-center gap-2 group cursor-pointer hover:opacity-100 transition-opacity">
                 
                 <span class="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40">Powered By</span>
 
-                <!-- Logo CometaX Sin Recortes Extraños -->
                 <img src="https://raw.githubusercontent.com/JFabrizzio5/CometaX/bbeb654b90e817236d9d64009b33618065fbba91/image_2025-12-16_083018257-removebg-preview%20(1).png" 
                      alt="CometaX Logo" 
-                     class="h-24 w-auto dark:invert transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]">
+                     class="h-20 w-auto dark:invert transition-all duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100 drop-shadow-lg">
                 
-                <span class="text-xl font-bold text-slate-800 dark:text-white tracking-tight transition-colors group-hover:text-purple-600">
+                <span class="text-lg font-bold text-white tracking-tight transition-colors group-hover:text-purple-500">
                     CometaX
                 </span>
 
@@ -474,10 +587,8 @@
     </footer>
 
     <script>
-        // Init Icons
         lucide.createIcons();
 
-        // Theme Toggle Logic
         const html = document.documentElement;
         function toggleTheme() {
             if (html.classList.contains('dark')) {
@@ -491,15 +602,13 @@
            LOGICA DE PRECIOS & IDIOMA (Dynamic Pricing)
            ------------------------------------------------ */
         
-        // Estado
         let state = {
             isAnnual: true,
-            currency: 'MXN', // 'MXN' or 'USD'
-            lang: 'es', // 'es' or 'en'
+            currency: 'MXN', 
+            lang: 'es', 
             prioritySupport: false
         };
 
-        // Data Store
         const data = {
             basePrices: {
                 MXN: { start: 5500, scale: 8000, dominate: 11000 },
@@ -507,43 +616,36 @@
             },
             content: {
                 es: {
-                    nav: { exp: "La Experiencia", back: "Backstage", vip: "VIP Access", cta: "Únete a la lista" },
-                    hero: { badge: "La nueva era de los eventos", t1: "Gestiona.", t2: "Celebra. Repite.", desc: "Tu salón no es una oficina, es una fiesta. Usa el software que entiende el ritmo, la adrenalina y el glamour de tu negocio.", cta1: "Empezar la Fiesta", cta2: "Ver el Aftermovie" },
-                    features: { t1: "Domina la Pista.", t2: "Sin sudar.", c1t: "Dinero en mano.", c1d: "Visualiza tus ganancias como un headliner. Gráficas claras, sin ruido.", c2t: "Sitios Web", c2d: "Cada evento genera su propia web automáticamente.", c3t: "Agenda Full.", c4t: "Seguridad VIP.", c4d: "Contratos blindados, firmas biométricas y encriptación." },
                     pricing: {
-                        title: "Arquitectura de Alta Velocidad.",
-                        subtitle: "Elige la potencia que necesitas. Cancela la burocracia.",
+                        title: "Oferta de Lanzamiento.",
+                        subtitle: "Tecnología Enterprise a precio de Cover.",
                         billing: { month: "Mensual", annual: "Anual", save: "AHORRA 15%" },
-                        support: { title: "Soporte Mission-Critical 24/7", desc: "Ingenieros dedicados + Capacitación VIP (+30%)" },
+                        support: { title: "Soporte VIP 24/7", desc: "Ingenieros dedicados (+30%)" },
                         plans: {
-                            start: { name: "START", tagline: "Digitaliza el caos.", cta: "Comenzar", features: ["Dashboard Administrativo", "5 Eventos Simultáneos", "Calendario Inteligente", "Micrositio Genérico", "Soporte Email"] },
-                            scale: { name: "SCALE", tagline: "La opción inteligente.", badge: "RECOMENDADO", cta: "Empezar Ahora", features: ["<b>Todo lo de Start +</b>", "<b>Micrositios por Evento</b>", "<b>Chatbot IA Invitados</b>", "Usuarios Staff Ilimitados", "Reportes Financieros"] },
-                            dominate: { name: "DOMINATE", tagline: "Control total.", cta: "Contactar", features: ["Todo lo de Scale +", "Micrositios Whitelabel", "Multi-Venue Management", "API Access", "Auditoría de Logs"] }
+                            start: { name: "START", tagline: "Para venues que inician.", cta: "Ver Oferta", features: ["Dashboard Financiero", "Gestión de 5 Eventos", "Calendario Inteligente", "Micrositio Básico", "Soporte Email"] },
+                            scale: { name: "SCALE", tagline: "La opción inteligente.", badge: "MÁS VENDIDO", cta: "EMPEZAR AHORA", features: ["<b>Todo lo de Start +</b>", "<b>Micrositios por Evento</b>", "<b>Chatbot IA Clientes</b>", "Usuarios Staff Ilimitados", "Reportes Avanzados"] },
+                            dominate: { name: "DOMINATE", tagline: "Control total para cadenas.", cta: "Contactar", features: ["Todo lo de Scale +", "Whitelabel (Tu Marca)", "Gestión Multi-Venue", "API Access", "Auditoría de Logs"] }
                         },
-                        tax: "+15% vs Anual"
+                        tax: "+15% pago mensual"
                     }
                 },
                 en: {
-                    nav: { exp: "The Experience", back: "Backstage", vip: "VIP Access", cta: "Join the list" },
-                    hero: { badge: "The new era of events", t1: "Manage.", t2: "Celebrate. Repeat.", desc: "Your venue is not an office, it's a party. Use software that understands the rhythm, adrenaline, and glamour of your business.", cta1: "Start the Party", cta2: "Watch Aftermovie" },
-                    features: { t1: "Own the Floor.", t2: "Don't sweat it.", c1t: "Cash in Hand.", c1d: "Visualize profits like a headliner. Clear charts, no noise.", c2t: "Websites", c2d: "Each event generates its own website automatically.", c3t: "Full House.", c4t: "VIP Security.", c4d: "Armored contracts, biometric signatures, and encryption." },
                     pricing: {
-                        title: "High-Velocity Architecture.",
-                        subtitle: "Choose the power you need. Cancel the bureaucracy.",
+                        title: "Launch Offer.",
+                        subtitle: "Enterprise tech at Cover price.",
                         billing: { month: "Monthly", annual: "Annual", save: "SAVE 15%" },
-                        support: { title: "Mission-Critical Support 24/7", desc: "Dedicated engineers + VIP Training (+30%)" },
+                        support: { title: "VIP Support 24/7", desc: "Dedicated engineers (+30%)" },
                         plans: {
-                            start: { name: "START", tagline: "Digitize the chaos.", cta: "Start Now", features: ["Admin Dashboard", "5 Simultaneous Events", "Smart Calendar", "Generic Microsite", "Email Support"] },
-                            scale: { name: "SCALE", tagline: "The smart choice.", badge: "RECOMMENDED", cta: "Get Started", features: ["<b>Everything in Start +</b>", "<b>Per-Event Microsites</b>", "<b>AI Guest Chatbot</b>", "Unlimited Staff Users", "Financial Reports"] },
-                            dominate: { name: "DOMINATE", tagline: "Total control.", cta: "Contact Us", features: ["Everything in Scale +", "Whitelabel Microsites", "Multi-Venue Management", "API Access", "Log Auditing"] }
+                            start: { name: "START", tagline: "For venues starting out.", cta: "See Offer", features: ["Financial Dashboard", "5 Active Events", "Smart Calendar", "Basic Microsite", "Email Support"] },
+                            scale: { name: "SCALE", tagline: "The smart choice.", badge: "BEST SELLER", cta: "START NOW", features: ["<b>Everything in Start +</b>", "<b>Per-Event Microsites</b>", "<b>AI Client Chatbot</b>", "Unlimited Staff Users", "Advanced Reporting"] },
+                            dominate: { name: "DOMINATE", tagline: "Total control for chains.", cta: "Contact Us", features: ["Everything in Scale +", "Whitelabel (Your Brand)", "Multi-Venue Management", "API Access", "Log Auditing"] }
                         },
-                        tax: "+15% vs Annual"
+                        tax: "+15% monthly payment"
                     }
                 }
             }
         };
 
-        // Actions
         function toggleBilling() {
             state.isAnnual = !state.isAnnual;
             updateUI();
@@ -562,9 +664,8 @@
 
         function calculatePrice(planKey) {
             let price = data.basePrices[state.currency][planKey];
-            if (!state.isAnnual) price = price * 1.15; // +15% Monthly
-            if (state.prioritySupport) price = price * 1.30; // +30% Support
-            // Round to nice numbers
+            if (!state.isAnnual) price = price * 1.15; 
+            if (state.prioritySupport) price = price * 1.30; 
             return Math.round(price / 10) * 10;
         }
 
@@ -579,15 +680,13 @@
         function renderFeatures(planKey, featuresArray) {
             const container = document.getElementById(`features-${planKey}`);
             container.innerHTML = '';
-            const t = data.content[state.lang];
             
             featuresArray.forEach(feat => {
                 const isHighlight = feat.includes('<b>');
                 const cleanFeat = feat.replace(/<b>/g, '').replace(/<\/b>/g, '');
                 
-                // Colors differ based on plan and theme (handled by CSS classes mainly)
-                let iconColor = 'text-slate-400 dark:text-slate-500';
-                let textColor = 'text-slate-600 dark:text-white/60';
+                let iconColor = 'text-slate-500';
+                let textColor = 'text-slate-400';
                 
                 if (planKey === 'scale') {
                     iconColor = 'text-purple-400';
@@ -608,35 +707,11 @@
         function updateUI() {
             const t = data.content[state.lang];
             
-            // 1. Language Buttons State
+            // Lang Buttons
             document.getElementById('btn-es').className = state.lang === 'es' ? 'px-3 py-1 rounded-full text-xs font-bold transition-all bg-white dark:bg-white/20 text-slate-900 dark:text-white shadow-sm' : 'px-3 py-1 rounded-full text-xs font-bold transition-all text-slate-400 hover:text-slate-600 dark:hover:text-white';
             document.getElementById('btn-en').className = state.lang === 'en' ? 'px-3 py-1 rounded-full text-xs font-bold transition-all bg-white dark:bg-white/20 text-slate-900 dark:text-white shadow-sm' : 'px-3 py-1 rounded-full text-xs font-bold transition-all text-slate-400 hover:text-slate-600 dark:hover:text-white';
 
-            // 2. Translate Nav & Hero & Features
-            document.getElementById('nav-exp').textContent = t.nav.exp;
-            document.getElementById('nav-back').textContent = t.nav.back;
-            document.getElementById('nav-vip').textContent = t.nav.vip;
-            document.getElementById('nav-cta').textContent = t.nav.cta;
-            
-            document.getElementById('hero-badge').textContent = t.hero.badge;
-            document.getElementById('hero-title-1').textContent = t.hero.t1;
-            document.getElementById('hero-title-2').textContent = t.hero.t2;
-            document.getElementById('hero-desc').textContent = t.hero.desc;
-            document.getElementById('hero-cta-primary').textContent = t.hero.cta1;
-            // HTML for secondary to keep icon
-            document.getElementById('hero-cta-secondary').innerHTML = `<span class="w-10 h-10 rounded-full border border-slate-200 dark:border-white/20 flex items-center justify-center bg-white/50 dark:bg-white/5 group-hover:bg-purple-100 dark:group-hover:bg-white/10 transition">▶</span> ${t.hero.cta2}`;
-            
-            document.getElementById('feat-title-1').textContent = t.features.t1;
-            document.getElementById('feat-title-2').textContent = t.features.t2;
-            document.getElementById('card-1-title').textContent = t.features.c1t;
-            document.getElementById('card-1-desc').textContent = t.features.c1d;
-            document.getElementById('card-2-title').textContent = t.features.c2t;
-            document.getElementById('card-2-desc').textContent = t.features.c2d;
-            document.getElementById('card-3-title').textContent = t.features.c3t;
-            document.getElementById('card-4-title').textContent = t.features.c4t;
-            document.getElementById('card-4-desc').textContent = t.features.c4d;
-
-            // 3. Pricing Text Updates
+            // Pricing Texts
             document.getElementById('pricing-title').textContent = t.pricing.title;
             document.getElementById('pricing-subtitle').textContent = t.pricing.subtitle;
             document.getElementById('label-monthly').textContent = t.pricing.billing.month;
@@ -646,21 +721,23 @@
             document.getElementById('support-text-title').textContent = t.pricing.support.title;
             document.getElementById('support-text-desc').textContent = t.pricing.support.desc;
 
-            // 4. Toggles Visual State
+            // Toggles Visual State
             const track = document.getElementById('billing-track');
             const knob = document.getElementById('billing-knob');
             if(state.isAnnual) {
-                track.style.backgroundColor = '#9333ea';
-                knob.style.transform = 'translateX(24px)';
-                document.getElementById('label-annual').classList.remove('text-slate-400', 'dark:text-white/40');
-                document.getElementById('label-annual').classList.add('text-slate-900', 'dark:text-white');
-                document.getElementById('label-monthly').classList.add('text-slate-400', 'dark:text-white/40');
+                track.style.backgroundColor = '#d946ef'; // Pink/Purple
+                knob.style.transform = 'translateX(20px)';
+                document.getElementById('label-annual').classList.add('text-white');
+                document.getElementById('label-annual').classList.remove('text-slate-400');
+                document.getElementById('label-monthly').classList.add('text-slate-400');
+                document.getElementById('label-monthly').classList.remove('text-white');
             } else {
-                track.style.backgroundColor = '#64748b';
+                track.style.backgroundColor = '#475569';
                 knob.style.transform = 'translateX(0px)';
-                document.getElementById('label-annual').classList.add('text-slate-400', 'dark:text-white/40');
-                document.getElementById('label-monthly').classList.remove('text-slate-400', 'dark:text-white/40');
-                document.getElementById('label-monthly').classList.add('text-slate-900', 'dark:text-white');
+                document.getElementById('label-annual').classList.add('text-slate-400');
+                document.getElementById('label-annual').classList.remove('text-white');
+                document.getElementById('label-monthly').classList.add('text-white');
+                document.getElementById('label-monthly').classList.remove('text-slate-400');
             }
 
             const supCont = document.getElementById('support-container');
@@ -669,31 +746,27 @@
             const checkIcon = document.getElementById('check-icon');
 
             if(state.prioritySupport) {
-                supCont.className = "cursor-pointer group flex items-center gap-4 px-6 py-3 rounded-2xl border border-indigo-500 bg-indigo-500/10 transition-all duration-300 select-none shadow-[0_0_15px_rgba(99,102,241,0.2)]";
-                supIconBg.className = "p-2 rounded-lg bg-indigo-500 text-white transition-colors";
-                supCheck.className = "w-6 h-6 rounded-full border border-indigo-500 bg-indigo-500 flex items-center justify-center transition-colors";
+                supCont.className = "cursor-pointer group flex items-center gap-4 px-5 py-3 rounded-xl border border-indigo-500 bg-indigo-500/20 transition-all duration-300 select-none shadow-neon-blue";
+                supIconBg.className = "p-1.5 rounded-lg bg-indigo-500 text-white transition-colors";
+                supCheck.className = "w-5 h-5 rounded-full border border-indigo-500 bg-indigo-500 flex items-center justify-center transition-colors";
                 checkIcon.style.opacity = '1';
-                document.getElementById('support-text-title').className = "font-bold text-sm text-indigo-600 dark:text-indigo-300";
+                document.getElementById('support-text-title').className = "font-bold text-sm text-indigo-300";
             } else {
-                supCont.className = "cursor-pointer group flex items-center gap-4 px-6 py-3 rounded-2xl border border-dashed border-slate-300 dark:border-white/20 bg-transparent hover:bg-slate-100 dark:hover:bg-white/5 transition-all duration-300 select-none";
-                supIconBg.className = "p-2 rounded-lg bg-slate-200 dark:bg-white/10 text-slate-500 dark:text-white/50 transition-colors";
-                supCheck.className = "w-6 h-6 rounded-full border border-slate-400 dark:border-white/30 flex items-center justify-center transition-colors";
+                supCont.className = "cursor-pointer group flex items-center gap-4 px-5 py-3 rounded-xl border border-dashed border-white/20 bg-transparent hover:bg-white/5 transition-all duration-300 select-none";
+                supIconBg.className = "p-1.5 rounded-lg bg-white/10 text-slate-400 transition-colors";
+                supCheck.className = "w-5 h-5 rounded-full border border-white/30 flex items-center justify-center transition-colors";
                 checkIcon.style.opacity = '0';
-                document.getElementById('support-text-title').className = "font-bold text-sm text-slate-700 dark:text-slate-300";
+                document.getElementById('support-text-title').className = "font-bold text-sm text-slate-300";
             }
 
-            // 5. Render Plans
+            // Render Plans
             ['start', 'scale', 'dominate'].forEach(plan => {
                 const pData = t.pricing.plans[plan];
                 
-                // Header
                 document.getElementById(`plan-${plan === 'start' ? 1 : plan === 'scale' ? 2 : 3}-name`).textContent = pData.name;
                 document.getElementById(`plan-${plan === 'start' ? 1 : plan === 'scale' ? 2 : 3}-tagline`).textContent = pData.tagline;
-                
-                // Price
                 document.getElementById(`price-${plan}`).textContent = formatMoney(calculatePrice(plan));
                 
-                // Tax Warning
                 const taxEl = document.getElementById(`tax-${plan}`);
                 if (!state.isAnnual) {
                     taxEl.classList.remove('hidden');
@@ -702,9 +775,7 @@
                     taxEl.classList.add('hidden');
                 }
 
-                // CTA
                 const ctaBtn = document.getElementById(`cta-${plan}`);
-                // Scale has specific innerHTML with arrow
                 if(plan === 'scale') {
                     ctaBtn.innerHTML = `<span>${pData.cta}</span><i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>`;
                     document.getElementById('badge-rec').textContent = pData.badge;
@@ -712,12 +783,10 @@
                     ctaBtn.textContent = pData.cta;
                 }
 
-                // Features
                 renderFeatures(plan, pData.features);
             });
         }
 
-        // Initial Load
         updateUI();
 
     </script>
