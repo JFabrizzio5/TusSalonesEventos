@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boda Ana & Carlos | Eventotes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        wedding: { gold: '#D4AF37', dark: '#1a1a1a', light: '#fcfbf9' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-wedding-light text-gray-800 antialiased">
+
+    <!-- Nav Minimalista -->
+    <nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 py-4">
+        <div class="max-w-5xl mx-auto px-6 flex justify-between items-center">
+            <span class="font-serif text-xl tracking-widest">A&C</span>
+            <div class="space-x-6 text-xs uppercase tracking-widest hidden md:block">
+                <a href="#historia" class="hover:text-[#D4AF37] transition">Nuestra Historia</a>
+                <a href="#detalles" class="hover:text-[#D4AF37] transition">Detalles</a>
+                <a href="#regalos" class="hover:text-[#D4AF37] transition">Mesa de Regalos</a>
+            </div>
+            <a href="#rsvp" class="bg-[#1a1a1a] text-white px-5 py-2 text-xs uppercase tracking-widest font-bold hover:bg-[#D4AF37] transition">RSVP</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1519225463359-28ff63863e76?q=80&w=2074&auto=format&fit=crop" class="w-full h-full object-cover opacity-90 grayscale-[30%]" alt="Boda Fondo">
+            <div class="absolute inset-0 bg-black/30"></div>
+        </div>
+        
+        <div class="relative z-10 text-white animate-fade-in-up mt-16">
+            <p class="text-sm md:text-base uppercase tracking-[0.3em] mb-6 font-light">Nos Casamos</p>
+            <h1 class="font-serif text-6xl md:text-9xl mb-6 leading-tight">Ana <span class="text-[#D4AF37] font-serif italic text-5xl md:text-7xl align-middle mx-2">&</span> Carlos</h1>
+            <div class="w-24 h-px bg-white/50 mx-auto my-8"></div>
+            <p class="text-lg md:text-xl font-light tracking-wide mb-10">20 • DIC • 2025</p>
+            
+            <!-- Countdown -->
+            <div class="flex justify-center gap-8 md:gap-16 font-serif text-center backdrop-blur-sm bg-white/10 p-6 rounded-xl border border-white/20" id="countdown">
+                <div><span class="text-4xl md:text-6xl block" id="days">00</span><span class="text-[10px] uppercase tracking-widest opacity-80">Días</span></div>
+                <div class="text-2xl md:text-4xl py-2 opacity-50">:</div>
+                <div><span class="text-4xl md:text-6xl block" id="hours">00</span><span class="text-[10px] uppercase tracking-widest opacity-80">Hrs</span></div>
+                <div class="text-2xl md:text-4xl py-2 opacity-50">:</div>
+                <div><span class="text-4xl md:text-6xl block" id="mins">00</span><span class="text-[10px] uppercase tracking-widest opacity-80">Min</span></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Quote/Intro -->
+    <section id="historia" class="py-24 px-6 text-center max-w-2xl mx-auto">
+        <i data-lucide="quote" class="w-8 h-8 text-[#D4AF37] mx-auto mb-6 opacity-50"></i>
+        <p class="font-serif text-2xl md:text-3xl italic leading-relaxed text-gray-600">"El amor no consiste en mirarse el uno al otro, sino en mirar juntos en la misma dirección."</p>
+        <div class="w-12 h-1 bg-[#D4AF37] mx-auto mt-8"></div>
+    </section>
+
+    <!-- Details Section -->
+    <section id="detalles" class="py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="font-serif text-4xl mb-16 text-center text-gray-900">Detalles del Evento</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+                <!-- Location Cards -->
+                <div class="space-y-8">
+                    <div class="flex gap-6 items-start p-6 border border-gray-100 rounded-xl hover:shadow-lg transition bg-[#fcfbf9]">
+                        <div class="w-16 h-16 bg-[#1a1a1a] text-[#D4AF37] flex items-center justify-center rounded-full shrink-0"><i data-lucide="church" class="w-8 h-8"></i></div>
+                        <div>
+                            <h3 class="font-serif text-2xl mb-2">Ceremonia Religiosa</h3>
+                            <p class="font-bold text-sm uppercase tracking-wide text-[#D4AF37] mb-2">4:00 PM</p>
+                            <p class="text-gray-600 mb-4">Parroquia San Miguel Arcángel. Un lugar lleno de historia para comenzar la nuestra.</p>
+                            <button class="text-xs font-bold uppercase tracking-widest underline decoration-[#D4AF37] hover:text-[#D4AF37] transition">Ver Ubicación</button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-6 items-start p-6 border border-gray-100 rounded-xl hover:shadow-lg transition bg-[#fcfbf9]">
+                        <div class="w-16 h-16 bg-[#1a1a1a] text-[#D4AF37] flex items-center justify-center rounded-full shrink-0"><i data-lucide="wine" class="w-8 h-8"></i></div>
+                        <div>
+                            <h3 class="font-serif text-2xl mb-2">Recepción & Fiesta</h3>
+                            <p class="font-bold text-sm uppercase tracking-wide text-[#D4AF37] mb-2">6:30 PM - 2:00 AM</p>
+                            <p class="text-gray-600 mb-4">Eventotes Grand Hall. Cena, brindis y baile hasta que el cuerpo aguante.</p>
+                            <button class="text-xs font-bold uppercase tracking-widest underline decoration-[#D4AF37] hover:text-[#D4AF37] transition">Ver Ubicación</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Adicional -->
+                <div class="bg-[#1a1a1a] text-white p-10 rounded-xl text-center md:text-left h-full flex flex-col justify-center relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37] rounded-full blur-[60px] opacity-20"></div>
+                    
+                    <div class="relative z-10 mb-8">
+                        <h3 class="font-serif text-2xl mb-4 text-[#D4AF37]">Código de Vestimenta</h3>
+                        <div class="flex items-center gap-3 justify-center md:justify-start mb-2">
+                            <i data-lucide="shirt" class="w-5 h-5"></i>
+                            <span class="font-bold uppercase tracking-widest text-sm">Etiqueta Rigurosa</span>
+                        </div>
+                        <p class="text-gray-400 text-sm">Ellas: Vestido Largo.<br>Ellos: Esmoquin o Traje Oscuro.</p>
+                    </div>
+
+                    <div class="relative z-10">
+                        <h3 class="font-serif text-2xl mb-4 text-[#D4AF37]">Niños</h3>
+                        <p class="text-gray-400 text-sm">Amamos a sus pequeños, pero este evento será <strong>sólo para adultos</strong>. ¡Gracias por entender!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mesa de Regalos -->
+    <section id="regalos" class="py-20 px-6 text-center bg-[#f4f2ed]">
+        <div class="max-w-3xl mx-auto">
+            <i data-lucide="gift" class="w-10 h-10 mx-auto mb-6 text-[#D4AF37]"></i>
+            <h2 class="font-serif text-3xl mb-6 text-gray-900">Mesa de Regalos</h2>
+            <p class="text-gray-600 mb-10 leading-relaxed">Su presencia es nuestro mayor regalo, pero si desean tener un detalle con nosotros, tenemos opciones registradas en:</p>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-6">
+                <a href="#" class="bg-white border border-gray-200 px-8 py-4 rounded-lg shadow-sm hover:shadow-md transition flex items-center justify-center gap-3 font-bold text-gray-800 hover:text-[#D4AF37]">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i> Liverpool <span class="text-gray-400 font-normal text-xs ml-1">#123456</span>
+                </a>
+                <a href="#" class="bg-white border border-gray-200 px-8 py-4 rounded-lg shadow-sm hover:shadow-md transition flex items-center justify-center gap-3 font-bold text-gray-800 hover:text-[#D4AF37]">
+                    <i data-lucide="package" class="w-5 h-5"></i> Amazon <span class="text-gray-400 font-normal text-xs ml-1">Wishlist</span>
+                </a>
+                <div class="bg-white border border-gray-200 px-8 py-4 rounded-lg shadow-sm flex flex-col items-center justify-center">
+                    <span class="font-bold text-gray-800 flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4"></i> Sobre</span>
+                    <span class="text-[10px] text-gray-500 uppercase tracking-wide">Recepción el día del evento</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP -->
+    <section id="rsvp" class="py-24 px-6 text-center relative">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+        <div class="max-w-lg mx-auto p-10 bg-white shadow-2xl rounded-xl relative z-10 border-t-4 border-[#D4AF37]">
+            <h2 class="font-serif text-3xl mb-2">Confirma tu Asistencia</h2>
+            <p class="text-gray-500 mb-8 text-sm">Por favor confirma antes del 1 de Diciembre para poder organizar todo perfectamente.</p>
+            
+            <form class="space-y-6 text-left">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider mb-2 text-gray-500">Nombre Completo</label>
+                    <input type="text" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition" placeholder="Escribe tu nombre">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider mb-2 text-gray-500">¿Asistirás?</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="attend" class="peer sr-only">
+                            <div class="rounded-lg border border-gray-200 p-3 text-center peer-checked:bg-[#D4AF37] peer-checked:text-white peer-checked:border-[#D4AF37] transition hover:bg-gray-50 text-sm font-medium">¡Sí, confirmo!</div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="attend" class="peer sr-only">
+                            <div class="rounded-lg border border-gray-200 p-3 text-center peer-checked:bg-gray-800 peer-checked:text-white peer-checked:border-gray-800 transition hover:bg-gray-50 text-sm font-medium">No podré asistir</div>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider mb-2 text-gray-500">Mensaje para los novios (Opcional)</label>
+                    <textarea class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] transition h-24 resize-none" placeholder="Déjanos tus buenos deseos..."></textarea>
+                </div>
+                <button class="w-full bg-[#1a1a1a] text-white font-bold uppercase tracking-widest py-4 rounded-lg shadow-lg hover:bg-[#D4AF37] hover:-translate-y-1 transition duration-300">Enviar Confirmación</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="bg-[#111] py-12 text-center text-gray-400">
+        <h2 class="font-serif text-2xl text-white mb-4">Ana & Carlos</h2>
+        <p class="text-xs uppercase tracking-widest mb-8">Gracias por ser parte de nuestra historia.</p>
+        <div class="w-full h-px bg-white/10 max-w-xs mx-auto mb-8"></div>
+        <p class="text-[10px] uppercase tracking-widest opacity-50">Powered by <span class="font-bold text-white">Eventotes</span></p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Countdown Logic
+        const weddingDate = new Date('December 20, 2025 16:00:00').getTime();
+        const timer = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            
+            document.getElementById("days").innerText = days < 10 ? '0'+days : days;
+            document.getElementById("hours").innerText = hours < 10 ? '0'+hours : hours;
+            document.getElementById("mins").innerText = minutes < 10 ? '0'+minutes : minutes;
+            
+            if (distance < 0) { clearInterval(timer); document.getElementById("countdown").innerHTML = "<span class='text-4xl'>¡ES HOY!</span>"; }
+        }, 1000);
+    </script>
+</body>
+</html>
