@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventotes | Admin Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Inter"', 'sans-serif'],
+                    },
+                    colors: {
+                        party: {
+                            light: '#fdf4ff', 
+                            dark: '#05020a', 
+                            accent: '#d946ef'
+                        }
+                    },
+                    boxShadow: {
+                        'neon': '0 0 25px rgba(217, 70, 239, 0.4), 0 0 70px rgba(168, 85, 247, 0.2)',
+                        'card-float': '0 20px 40px -10px rgba(0,0,0,0.5)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { transition: background-color 0.5s ease, color 0.5s ease; }
+        
+        /* --- BACKGROUNDS --- */
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(at 0% 0%, rgba(217, 70, 239, 0.05) 0px, transparent 50%);
+            color: #0f172a;
+        }
+        
+        html.dark body {
+            background-color: #05020a;
+            background-image: 
+                radial-gradient(at 50% 0%, rgba(147, 51, 234, 0.25) 0px, transparent 60%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
+            color: #ffffff;
+        }
+
+        /* Glassmorphism */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html.dark .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sidebar Glass */
+        .sidebar-glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            border-right: 1px solid rgba(0,0,0,0.05);
+        }
+        html.dark .sidebar-glass {
+            background: rgba(5, 2, 10, 0.6);
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .view-section { display: none; animation: fadeIn 0.4s ease; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .nav-item.active { background-color: rgba(217, 70, 239, 0.1); color: #d946ef; }
+        html.dark .nav-item.active { background-color: rgba(217, 70, 239, 0.15); color: #e879f9; text-shadow: 0 0 10px rgba(217, 70, 239, 0.4); }
+        
+        /* Calendar Styles */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .calendar-day { aspect-ratio: 1; border-radius: 12px; padding: 4px; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-end; font-size: 0.8rem; font-weight: 700; transition: all 0.2s; border: 1px solid transparent; }
+        .calendar-day:hover { background-color: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+        .calendar-day.empty { background: transparent; pointer-events: none; }
+        .calendar-day.today { background-color: rgba(217, 70, 239, 0.2); border-color: #d946ef; color: #d946ef; }
+        
+        .event-pill { font-size: 0.6rem; padding: 2px 4px; border-radius: 4px; margin-top: 2px; width: 100%; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .pill-wedding { background: rgba(168, 85, 247, 0.2); color: #e9d5ff; border-left: 2px solid #a855f7; }
+        .pill-corp { background: rgba(59, 130, 246, 0.2); color: #bfdbfe; border-left: 2px solid #3b82f6; }
+        .pill-birthday { background: rgba(236, 72, 153, 0.2); color: #fbcfe8; border-left: 2px solid #ec4899; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 10px; }
+    </style>
+</head>
+<body class="antialiased font-sans h-screen flex overflow-hidden selection:bg-purple-500 selection:text-white">
+
+    <!-- Sidebar -->
+    <aside class="w-20 lg:w-64 flex flex-col sidebar-glass z-20 transition-all duration-300">
+        <div class="h-20 flex items-center justify-center lg:justify-start lg:px-6 border-b border-transparent">
+            <img src="https://raw.githubusercontent.com/JFabrizzio5/TusSalonesEventos/08ed7cb29c0879549e8dad035f85f6ef5ccdfed0/BrandingImages/LogoFinal.svg" 
+                 alt="Eventotes Logo" 
+                 class="h-10 w-auto dark:invert transition-transform hover:scale-110">
+            <span class="ml-3 font-bold text-lg hidden lg:block text-slate-900 dark:text-white tracking-tight">Eventotes</span>
+        </div>
+
+        <nav class="flex-1 py-6 flex flex-col gap-2 px-3 overflow-y-auto">
+            <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-item active flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full group">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform"></i>
+                <span class="font-medium hidden lg:block text-sm" data-i18n="nav_dashboard">Dashboard</span>
+            </button>
+
+            <!-- NUEVO BOTÓN CALENDARIO -->
+            <button onclick="switchView('calendario')" id="nav-calendario" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full group">
+                <i data-lucide="calendar" class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform"></i>
+                <span class="font-medium hidden lg:block text-sm" data-i18n="nav_calendar">Calendario</span>
+            </button>
+
+            <button onclick="switchView('historial')" id="nav-historial" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full group">
+                <i data-lucide="calendar-days" class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform"></i>
+                <span class="font-medium hidden lg:block text-sm" data-i18n="nav_history">Historial Eventos</span>
+            </button>
+
+            <button onclick="switchView('finanzas')" id="nav-finanzas" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full group">
+                <i data-lucide="dollar-sign" class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform"></i>
+                <span class="font-medium hidden lg:block text-sm" data-i18n="nav_finance">Finanzas</span>
+            </button>
+
+            <button onclick="switchView('inventario')" id="nav-inventario" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full group">
+                <i data-lucide="package" class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform"></i>
+                <span class="font-medium hidden lg:block text-sm" data-i18n="nav_inventory">Inventario</span>
+            </button>
+
+             <button onclick="switchView('comprobantes')" id="nav-comprobantes" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full group">
+                <i data-lucide="receipt" class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform"></i>
+                <span class="font-medium hidden lg:block text-sm" data-i18n="nav_invoices">Comprobantes</span>
+            </button>
+
+            <button onclick="switchView('chat')" id="nav-chat" class="nav-item flex items-center gap-3 px-3 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-all w-full group">
+                <i data-lucide="message-square" class="w-5 h-5 shrink-0 group-hover:scale-110 transition-transform"></i>
+                <span class="font-medium hidden lg:block text-sm" data-i18n="nav_chat">Mensajes</span>
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-transparent">
+            <div class="glass-card flex items-center gap-3 p-2 rounded-xl border-0 bg-white/50 dark:bg-white/5">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold shrink-0 shadow-lg text-xs">JD</div>
+                <div class="hidden lg:block">
+                    <p class="text-sm font-bold text-slate-900 dark:text-white">Juan Pérez</p>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider" data-i18n="role_admin">Admin</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+        
+        <!-- Header -->
+        <header class="h-20 flex items-center justify-between px-8 border-b border-transparent bg-white/50 dark:bg-[#05020a]/50 backdrop-blur-md z-10 sticky top-0">
+            <div>
+                <h1 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight" id="page-title">Dashboard</h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium"><span data-i18n="sys_status">Estado del Sistema:</span> <span class="text-green-500 font-bold tracking-wider uppercase" data-i18n="status_online">En Línea</span></p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="toggleLanguage()" id="lang-btn" class="px-3 py-1.5 rounded-full text-xs font-bold border border-slate-300 dark:border-white/10 text-slate-600 dark:text-white hover:border-purple-500 hover:text-purple-500 transition-colors">ES</button>
+                <button onclick="toggleTheme()" class="p-2.5 rounded-full hover:bg-slate-200 dark:hover:bg-white/10 transition text-slate-600 dark:text-white">
+                    <i id="sun-icon" data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                    <i id="moon-icon" data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-6 lg:p-8 relative">
+            
+            <div class="fixed top-20 right-20 w-[400px] h-[400px] bg-purple-600/10 dark:bg-purple-600/20 blur-[100px] rounded-full pointer-events-none -z-10"></div>
+            <div class="fixed bottom-0 left-20 w-[300px] h-[300px] bg-cyan-500/10 blur-[80px] rounded-full pointer-events-none -z-10"></div>
+
+            <!-- VISTA: DASHBOARD -->
+            <div id="view-dashboard" class="view-section active">
+                <!-- (Contenido Dashboard Original) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition"><i data-lucide="dollar-sign" class="w-16 h-16 text-purple-500"></i></div>
+                        <p class="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1" data-i18n="stats_revenue">Ingresos Mensuales</p>
+                        <h3 class="text-3xl font-black text-slate-900 dark:text-white mb-2">$145,200</h3>
+                        <div class="flex items-center gap-1 text-[10px] font-bold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-500/10 px-2 py-0.5 rounded-full w-fit" data-i18n="stats_rev_growth">↑ 12% vs mes pasado</div>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
+                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition"><i data-lucide="party-popper" class="w-16 h-16 text-blue-500"></i></div>
+                        <p class="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1" data-i18n="stats_events">Eventos Activos</p>
+                        <h3 class="text-3xl font-black text-slate-900 dark:text-white mb-2">8</h3>
+                        <p class="text-[10px] font-bold text-slate-400" data-i18n="stats_events_desc">3 eventos esta semana</p>
+                    </div>
+                    <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
+                         <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition"><i data-lucide="calendar" class="w-16 h-16 text-pink-500"></i></div>
+                        <p class="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-1" data-i18n="stats_visits">Visitas Agendadas</p>
+                        <h3 class="text-3xl font-black text-slate-900 dark:text-white mb-2">14</h3>
+                        <div class="flex items-center gap-1 text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-500/10 px-2 py-0.5 rounded-full w-fit" data-i18n="stats_visits_desc">5 Para Hoy</div>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-600 to-pink-600 p-6 rounded-2xl flex flex-col justify-center items-center text-center text-white shadow-neon cursor-pointer hover:scale-[1.02] transition-transform group">
+                        <i data-lucide="plus-circle" class="w-8 h-8 mb-2 group-hover:rotate-90 transition-transform"></i>
+                        <h3 class="text-sm font-bold uppercase tracking-wider" data-i18n="btn_new_event">Nuevo Evento</h3>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                    <div class="lg:col-span-2 glass-card rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="chart_title">Resumen de Ingresos</h2>
+                            <select class="bg-transparent text-xs font-bold text-slate-500 focus:outline-none"><option data-i18n="opt_6months">Últimos 6 Meses</option><option data-i18n="opt_year">Último Año</option></select>
+                        </div>
+                        <div class="h-64 w-full"><canvas id="revenueChart"></canvas></div>
+                    </div>
+                    <div class="glass-card rounded-2xl p-6">
+                        <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4" data-i18n="upcoming_title">Próximos (7 Días)</h2>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-transparent hover:border-purple-500/30 transition cursor-pointer">
+                                <div class="flex items-center gap-3">
+                                    <div class="text-center w-10 py-1 bg-white dark:bg-white/5 rounded-lg border border-slate-200 dark:border-white/10">
+                                        <div class="text-[9px] text-red-500 font-bold uppercase">Dic</div><div class="text-sm font-black text-slate-900 dark:text-white">20</div>
+                                    </div>
+                                    <div><p class="text-sm font-bold text-slate-900 dark:text-white">Boda G&L</p><p class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase" data-i18n="hall_main">Salón Principal</p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA NUEVA: CALENDARIO -->
+            <div id="view-calendario" class="view-section">
+                <div class="glass-card rounded-2xl p-6 h-full flex flex-col">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="flex items-center gap-4">
+                            <h2 class="text-2xl font-black text-slate-900 dark:text-white">Diciembre 2025</h2>
+                            <div class="flex gap-1">
+                                <button class="p-1 rounded-full hover:bg-slate-200 dark:hover:bg-white/10"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                                <button class="p-1 rounded-full hover:bg-slate-200 dark:hover:bg-white/10"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-2 text-xs">
+                                <span class="w-3 h-3 rounded-full bg-purple-500"></span> Bodas
+                                <span class="w-3 h-3 rounded-full bg-blue-500"></span> Corp
+                                <span class="w-3 h-3 rounded-full bg-pink-500"></span> Social
+                            </div>
+                            <button class="bg-slate-900 dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg text-xs font-bold uppercase hover:opacity-90 transition">+ Evento</button>
+                        </div>
+                    </div>
+
+                    <!-- Grid Headers -->
+                    <div class="grid grid-cols-7 gap-2 text-center mb-2">
+                        <div class="text-xs font-bold text-slate-400 uppercase">Dom</div>
+                        <div class="text-xs font-bold text-slate-400 uppercase">Lun</div>
+                        <div class="text-xs font-bold text-slate-400 uppercase">Mar</div>
+                        <div class="text-xs font-bold text-slate-400 uppercase">Mié</div>
+                        <div class="text-xs font-bold text-slate-400 uppercase">Jue</div>
+                        <div class="text-xs font-bold text-slate-400 uppercase">Vie</div>
+                        <div class="text-xs font-bold text-slate-400 uppercase">Sáb</div>
+                    </div>
+
+                    <!-- Calendar Grid (Generated by JS) -->
+                    <div id="calendar-grid" class="calendar-grid flex-1">
+                        <!-- Dates go here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA: HISTORIAL -->
+            <div id="view-historial" class="view-section">
+                <!-- (Contenido Historial Original - Mantenido igual) -->
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <button class="px-4 py-2 rounded-full bg-purple-600 text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-purple-500/20" data-i18n="filter_all">Todos</button>
+                    <!-- ... otros botones ... -->
+                </div>
+                <div class="glass-card rounded-2xl overflow-hidden">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-50/50 dark:bg-white/5 text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">
+                            <tr><th class="px-6 py-4" data-i18n="th_event">Evento</th><th class="px-6 py-4" data-i18n="th_client">Cliente</th><th class="px-6 py-4" data-i18n="th_date">Fecha</th><th class="px-6 py-4 text-center" data-i18n="th_status">Estado</th><th class="px-6 py-4 text-right" data-i18n="th_amount">Monto Total</th><th class="px-6 py-4 text-right" data-i18n="th_action">Acción</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-white/5">
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-white/5 transition">
+                                <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400 text-xs font-bold">W</div><div><p class="font-bold text-slate-900 dark:text-white">Boda Pérez</p><p class="text-[10px] font-bold uppercase text-slate-500" data-i18n="hall_main">Salón Principal</p></div></div></td>
+                                <td class="px-6 py-4 text-slate-600 dark:text-slate-300">Juan Pérez</td>
+                                <td class="px-6 py-4 text-slate-600 dark:text-slate-300 font-mono text-xs">10 Nov, 2025</td>
+                                <td class="px-6 py-4 text-center"><span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-500/20" data-i18n="status_finished">Finalizado</span></td>
+                                <td class="px-6 py-4 text-right font-black text-slate-900 dark:text-white">$120,000</td>
+                                <td class="px-6 py-4 text-right"><button class="text-slate-400 hover:text-white hover:scale-110 transition"><i data-lucide="eye" class="w-4 h-4"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- VISTA: FINANZAS -->
+            <div id="view-finanzas" class="view-section">
+                <!-- (Contenido Finanzas Original - Mantenido igual) -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                    <div class="lg:col-span-3 bg-gradient-to-r from-emerald-600 to-teal-500 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
+                        <div class="absolute right-0 top-0 opacity-10 transform translate-x-10 -translate-y-10"><i data-lucide="wallet" class="w-64 h-64"></i></div>
+                        <p class="text-emerald-100 font-bold uppercase tracking-widest text-xs mb-1" data-i18n="bal_total">Balance Total Disponible</p>
+                        <h2 class="text-5xl font-black mb-6 tracking-tight">$342,150.00 <span class="text-lg font-bold opacity-70">MXN</span></h2>
+                        <div class="flex gap-8 border-t border-white/10 pt-4">
+                            <div><p class="text-emerald-200 text-[10px] uppercase font-bold tracking-wider" data-i18n="bal_income">Ingresos (Mes)</p><p id="fin-income-display" class="text-xl font-black">+$0.00</p></div>
+                            <div><p class="text-emerald-200 text-[10px] uppercase font-bold tracking-wider" data-i18n="bal_expenses">Gastos (Mes)</p><p id="fin-expense-display" class="text-xl font-black text-red-200">-$0.00</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card rounded-2xl p-6 col-span-2">
+                    <div class="flex flex-wrap items-center justify-between mb-6 gap-4">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="trans_history">Historial de Pagos</h3>
+                        <div class="flex items-center gap-2">
+                            <label class="text-xs font-bold text-slate-500 dark:text-slate-400" data-i18n="filter_month">Filtrar por Mes:</label>
+                            <select id="month-filter" class="bg-slate-50 dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-700 dark:text-white focus:outline-none focus:border-purple-500 transition" onchange="filterFinance()">
+                                <option value="all" data-i18n="opt_all">Todo el Año</option>
+                                <option value="11" selected data-i18n="month_dec">Diciembre</option>
+                                <!-- ... resto de opciones ... -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto max-h-[400px] overflow-y-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-white/10 sticky top-0 bg-slate-50 dark:bg-[#150a22] z-10">
+                                <tr><th class="px-4 py-3" data-i18n="th_date">Fecha</th><th class="px-4 py-3" data-i18n="th_concept">Concepto</th><th class="px-4 py-3" data-i18n="th_cat">Categoría</th><th class="px-4 py-3 text-right" data-i18n="th_amount">Monto</th><th class="px-4 py-3 text-right" data-i18n="th_type">Tipo</th></tr>
+                            </thead>
+                            <tbody id="finance-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA: INVENTARIO -->
+            <div id="view-inventario" class="view-section">
+                <!-- (Contenido Inventario Original - Mantenido igual) -->
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white" data-i18n="inv_title">Inventario</h2>
+                    <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition shadow-neon-blue" data-i18n="btn_add_item">+ Agregar Item</button>
+                </div>
+                <div class="glass-card rounded-2xl overflow-hidden">
+                    <table class="w-full text-left text-sm">
+                         <thead class="bg-slate-50/50 dark:bg-white/5 text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider">
+                            <tr><th class="px-6 py-4" data-i18n="th_item">Item</th><th class="px-6 py-4" data-i18n="th_cat">Categoría</th><th class="px-6 py-4 text-center" data-i18n="th_stock">Stock</th><th class="px-6 py-4 text-center" data-i18n="th_status">Estado</th><th class="px-6 py-4 text-right" data-i18n="th_action">Acción</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-white/5">
+                            <tr class="hover:bg-slate-50/50 dark:hover:bg-white/5 transition">
+                                <td class="px-6 py-4 font-bold text-slate-900 dark:text-white">Whisky Etiqueta Negra</td>
+                                <td class="px-6 py-4 text-slate-500 text-xs uppercase font-bold" data-i18n="cat_bar">Barra / Alcohol</td>
+                                <td class="px-6 py-4 text-center text-red-500 font-black">2 Units</td>
+                                <td class="px-6 py-4 text-center"><span class="px-2 py-1 rounded-full bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400 text-[10px] font-bold uppercase" data-i18n="status_low">Bajo</span></td>
+                                <td class="px-6 py-4 text-right"><button class="text-purple-500 hover:text-purple-400 font-bold text-xs uppercase" data-i18n="btn_reorder">Reordenar</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- VISTA: MENSAJES -->
+            <div id="view-chat" class="view-section h-[calc(100vh-140px)]">
+                <!-- (Contenido Chat Original - Mantenido igual) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 h-full">
+                    <div class="glass-card rounded-2xl flex flex-col h-full overflow-hidden">
+                        <div class="p-4 border-b border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/5">
+                            <h3 class="font-bold text-slate-900 dark:text-white" data-i18n="chat_inbox">Bandeja de Entrada</h3>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-2 space-y-1">
+                            <div class="p-3 rounded-xl bg-purple-500/10 border border-purple-500/20 cursor-pointer">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xs">AG</div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex justify-between"><p class="font-bold text-sm text-slate-900 dark:text-white truncate">Ana Gutierrez</p><span class="text-[10px] text-slate-500">12:30</span></div>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 truncate">Pregunta sobre horario...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 glass-card rounded-2xl flex flex-col h-full overflow-hidden">
+                        <div class="p-4 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
+                            <div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-xs">AG</div><span class="font-bold text-slate-900 dark:text-white">Ana Gutierrez - Boda</span></div>
+                            <span class="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"></span>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/30 dark:bg-[#0f0518]/30">
+                            <div class="flex gap-3">
+                                <div class="bg-white dark:bg-white/10 p-3 rounded-2xl rounded-tl-none border border-slate-200 dark:border-white/5 max-w-[80%]">
+                                    <p class="text-sm text-slate-800 dark:text-slate-200" data-i18n="chat_msg_1">Hola, ¿a qué hora pueden entrar los proveedores?</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 justify-end">
+                                <div class="bg-purple-600 text-white p-3 rounded-2xl rounded-tr-none max-w-[80%] shadow-neon">
+                                    <p class="text-sm" data-i18n="chat_msg_2">¡Hola Ana! Desde las 9:00 AM en adelante.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-white/50 dark:bg-white/5 border-t border-slate-200 dark:border-white/10">
+                            <div class="flex gap-2">
+                                <input type="text" data-placeholder-es="Escribe un mensaje..." data-placeholder-en="Type a message..." placeholder="Escribe un mensaje..." class="flex-1 bg-slate-100 dark:bg-[#0b0412] border border-slate-200 dark:border-white/10 rounded-full px-4 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 transition i18n-placeholder">
+                                <button class="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full transition shadow-lg"><i data-lucide="send" class="w-4 h-4"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA: COMPROBANTES -->
+            <div id="view-comprobantes" class="view-section">
+                <!-- (Contenido Comprobantes Original - Mantenido igual) -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 glass-card rounded-2xl p-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-slate-900 dark:text-white" data-i18n="inv_reg_title">Registrar Nuevo Movimiento</h2>
+                            <div class="flex bg-slate-100 dark:bg-white/10 rounded-lg p-1">
+                                <button class="px-4 py-1.5 rounded-md text-xs font-bold bg-white dark:bg-white/20 shadow text-slate-900 dark:text-white" data-i18n="type_expense">Gasto</button>
+                                <button class="px-4 py-1.5 rounded-md text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white" data-i18n="type_income">Ingreso</button>
+                            </div>
+                        </div>
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2" data-i18n="label_amount">Monto ($)</label>
+                                    <input type="number" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 transition" placeholder="0.00">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2" data-i18n="label_cat">Categoría</label>
+                                    <select class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 font-bold text-slate-900 dark:text-white focus:outline-none focus:border-purple-500 transition">
+                                        <option>Proveedores</option><option>Mantenimiento</option><option>Nómina</option><option>Insumos</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2" data-i18n="label_file">Comprobante (Factura/Recibo)</label>
+                                <div class="border-2 border-dashed border-purple-500/30 hover:border-purple-500 rounded-2xl p-8 text-center cursor-pointer transition group bg-purple-500/5 hover:bg-purple-500/10">
+                                    <div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-500/20 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"><i data-lucide="cloud-upload" class="w-6 h-6 text-purple-600 dark:text-purple-400"></i></div>
+                                    <p class="text-sm font-bold text-slate-900 dark:text-white" data-i18n="dropzone_text">Haz clic o arrastra tu archivo aquí</p>
+                                    <p class="text-xs text-slate-500 mt-1" data-i18n="dropzone_sub">Soporta PDF, JPG, PNG (Max 5MB)</p>
+                                </div>
+                            </div>
+                            <button class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 rounded-xl transition shadow-neon uppercase tracking-wider text-xs flex items-center justify-center gap-2"><i data-lucide="save" class="w-4 h-4"></i> <span data-i18n="btn_save">Guardar Registro</span></button>
+                        </div>
+                    </div>
+                    <div class="glass-card rounded-2xl p-6 flex flex-col h-full">
+                        <h3 class="font-bold text-slate-900 dark:text-white mb-4 border-b border-slate-200 dark:border-white/10 pb-4" data-i18n="recent_files_title">Archivos Recientes</h3>
+                        <div class="space-y-3 flex-1 overflow-y-auto">
+                            <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-transparent hover:border-purple-500/30 transition group cursor-pointer">
+                                <div class="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-500/20 flex items-center justify-center shrink-0"><i data-lucide="file-text" class="w-5 h-5 text-red-500"></i></div>
+                                <div class="flex-1 min-w-0"><p class="text-sm font-bold text-slate-900 dark:text-white truncate">Factura_Licores.pdf</p><p class="text-[10px] text-slate-500 uppercase font-bold" data-i18n="time_2h">Hace 2 horas</p></div>
+                                <div class="text-right"><span class="block text-xs font-black text-slate-900 dark:text-white">$8,500</span><span class="text-[9px] font-bold text-green-500 uppercase" data-i18n="status_approved">Aprobado</span></div>
+                            </div>
+                        </div>
+                        <button class="w-full mt-4 text-xs font-bold text-purple-500 hover:text-purple-400 uppercase tracking-wider py-2" data-i18n="btn_view_all">Ver Todo el Historial</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="mt-12 py-6 text-center border-t border-slate-200 dark:border-white/5">
+                <div class="flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-600">
+                    <span data-i18n="powered_by">Powered By</span>
+                    <img src="https://raw.githubusercontent.com/JFabrizzio5/CometaX/bbeb654b90e817236d9d64009b33618065fbba91/image_2025-12-16_083018257-removebg-preview%20(1).png" alt="CometaX" class="h-5 inline-block align-middle dark:invert transition-all hover:scale-110">
+                </div>
+            </footer>
+
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script>
+        lucide.createIcons();
+        
+        function switchView(viewName) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('view-' + viewName).classList.add('active');
+            document.getElementById('nav-' + viewName).classList.add('active');
+            updateTitle(viewName);
+        }
+
+        function updateTitle(viewName) {
+            const keys = {
+                'dashboard': 'nav_dashboard',
+                'calendario': 'nav_calendar',
+                'historial': 'nav_history',
+                'finanzas': 'nav_finance',
+                'inventario': 'nav_inventory',
+                'chat': 'nav_chat',
+                'comprobantes': 'nav_invoices'
+            };
+            const key = keys[viewName];
+            if(translations[currentLang][key]) {
+                document.getElementById('page-title').innerText = translations[currentLang][key];
+            }
+        }
+
+        const html = document.documentElement;
+        function toggleTheme() {
+            if (html.classList.contains('dark')) { html.classList.remove('dark'); } else { html.classList.add('dark'); }
+            updateChartTheme();
+        }
+
+        // --- LANGUAGE LOGIC ---
+        let currentLang = 'es';
+        const translations = {
+            es: {
+                nav_dashboard: "Dashboard",
+                nav_calendar: "Calendario",
+                nav_history: "Historial Eventos",
+                nav_finance: "Finanzas",
+                nav_inventory: "Inventario",
+                nav_invoices: "Comprobantes",
+                nav_chat: "Mensajes",
+                role_admin: "Admin",
+                sys_status: "Estado del Sistema:",
+                status_online: "En Línea",
+                stats_revenue: "Ingresos Mensuales",
+                stats_rev_growth: "↑ 12% vs mes pasado",
+                stats_events: "Eventos Activos",
+                stats_events_desc: "3 eventos esta semana",
+                stats_visits: "Visitas Agendadas",
+                stats_visits_desc: "5 Para Hoy",
+                btn_new_event: "Nuevo Evento",
+                chart_title: "Resumen de Ingresos",
+                opt_6months: "Últimos 6 Meses",
+                opt_year: "Último Año",
+                upcoming_title: "Próximos (7 Días)",
+                hall_main: "Salón Principal",
+                hall_garden: "Jardín",
+                filter_all: "Todos",
+                filter_progress: "En Progreso",
+                filter_completed: "Completados",
+                filter_cancelled: "Cancelados",
+                th_event: "Evento",
+                th_client: "Cliente",
+                th_date: "Fecha",
+                th_status: "Estado",
+                th_amount: "Monto Total",
+                th_action: "Acción",
+                status_finished: "Finalizado",
+                bal_total: "Balance Total Disponible",
+                bal_income: "Ingresos (Mes)",
+                bal_expenses: "Gastos (Mes)",
+                trans_title: "Últimas Transacciones",
+                th_concept: "Concepto",
+                th_cat: "Categoría",
+                cat_income: "Ingreso",
+                status_verified: "Verificado",
+                inv_title: "Inventario",
+                btn_add_item: "+ Agregar Item",
+                th_item: "Item",
+                th_stock: "Stock",
+                cat_bar: "Bar / Alcohol",
+                status_low: "Bajo",
+                btn_reorder: "Reordenar",
+                chat_inbox: "Bandeja de Entrada",
+                chat_msg_1: "Hola, ¿a qué hora pueden entrar los proveedores?",
+                chat_msg_2: "¡Hola Ana! Desde las 9:00 AM en adelante.",
+                inv_reg_title: "Registrar Nuevo Movimiento",
+                type_expense: "Gasto",
+                type_income: "Ingreso",
+                label_amount: "Monto ($)",
+                label_cat: "Categoría",
+                label_file: "Comprobante (Factura/Recibo)",
+                dropzone_text: "Haz clic o arrastra tu archivo aquí",
+                dropzone_sub: "Soporta PDF, JPG, PNG (Max 5MB)",
+                btn_save: "Guardar Registro",
+                recent_files_title: "Archivos Recientes",
+                time_2h: "Hace 2 horas",
+                status_approved: "Aprobado",
+                time_yesterday: "Ayer",
+                status_review: "Revisión",
+                btn_view_all: "Ver Todo el Historial",
+                powered_by: "Powered By",
+                trans_history: "Historial de Pagos",
+                filter_month: "Filtrar por Mes:",
+                opt_all: "Todo el Año",
+                month_jan: "Enero", month_feb: "Febrero", month_mar: "Marzo", month_apr: "Abril",
+                month_may: "Mayo", month_jun: "Junio", month_jul: "Julio", month_aug: "Agosto",
+                month_sep: "Septiembre", month_oct: "Octubre", month_nov: "Noviembre", month_dec: "Diciembre",
+                th_type: "Tipo", type_in: "Ingreso", type_out: "Gasto"
+            },
+            en: {
+                nav_dashboard: "Dashboard",
+                nav_calendar: "Calendar",
+                nav_history: "Event History",
+                nav_finance: "Finance",
+                nav_inventory: "Inventory",
+                nav_invoices: "Receipts & Invoices",
+                nav_chat: "Messages",
+                role_admin: "Admin",
+                sys_status: "System Status:",
+                status_online: "Online",
+                stats_revenue: "Monthly Revenue",
+                stats_rev_growth: "↑ 12% vs last mo",
+                stats_events: "Active Events",
+                stats_events_desc: "3 events this week",
+                stats_visits: "Scheduled Visits",
+                stats_visits_desc: "5 Today",
+                btn_new_event: "New Event",
+                chart_title: "Revenue Overview",
+                opt_6months: "Last 6 Months",
+                opt_year: "Last Year",
+                upcoming_title: "Upcoming (7 Days)",
+                hall_main: "Main Hall",
+                hall_garden: "Garden",
+                filter_all: "All",
+                filter_progress: "In Progress",
+                filter_completed: "Completed",
+                filter_cancelled: "Cancelled",
+                th_event: "Event",
+                th_client: "Client",
+                th_date: "Date",
+                th_status: "Status",
+                th_amount: "Total Amount",
+                th_action: "Action",
+                status_finished: "Finished",
+                bal_total: "Total Available Balance",
+                bal_income: "Income (Mo)",
+                bal_expenses: "Expenses (Mo)",
+                trans_title: "Latest Transactions",
+                th_concept: "Concept",
+                th_cat: "Category",
+                cat_income: "Income",
+                status_verified: "Verified",
+                inv_title: "Inventory",
+                btn_add_item: "+ Add Item",
+                th_item: "Item",
+                th_stock: "Stock",
+                cat_bar: "Bar / Alcohol",
+                status_low: "Low",
+                btn_reorder: "Reorder",
+                chat_inbox: "Inbox",
+                chat_msg_1: "Hi, when can vendors arrive?",
+                chat_msg_2: "Hi Ana! From 9:00 AM onwards.",
+                inv_reg_title: "Register New Transaction",
+                type_expense: "Expense",
+                type_income: "Income",
+                label_amount: "Amount ($)",
+                label_cat: "Category",
+                label_file: "Receipt (Invoice/Bill)",
+                dropzone_text: "Click or drop your file here",
+                dropzone_sub: "Supports PDF, JPG, PNG (Max 5MB)",
+                btn_save: "Save Record",
+                recent_files_title: "Recent Files",
+                time_2h: "2 hours ago",
+                status_approved: "Approved",
+                time_yesterday: "Yesterday",
+                status_review: "In Review",
+                btn_view_all: "View Full History",
+                powered_by: "Powered By",
+                trans_history: "Payment History",
+                filter_month: "Filter by Month:",
+                opt_all: "All Year",
+                month_jan: "January", month_feb: "February", month_mar: "March", month_apr: "April",
+                month_may: "May", month_jun: "June", month_jul: "July", month_aug: "August",
+                month_sep: "September", month_oct: "October", month_nov: "November", month_dec: "December",
+                th_type: "Type", type_in: "Income", type_out: "Expense"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'es' ? 'en' : 'es';
+            document.getElementById('lang-btn').textContent = currentLang.toUpperCase();
+            
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(translations[currentLang][key]) {
+                    el.innerText = translations[currentLang][key];
+                }
+            });
+
+            document.querySelectorAll('.i18n-placeholder').forEach(el => {
+                el.placeholder = el.getAttribute(`data-placeholder-${currentLang}`);
+            });
+
+            const activeView = document.querySelector('.view-section.active').id.replace('view-', '');
+            updateTitle(activeView);
+            filterFinance(); // Re-render table with new language
+        }
+
+        // --- Configuración Gráfica ---
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(217, 70, 239, 0.5)');
+        gradient.addColorStop(1, 'rgba(217, 70, 239, 0)');
+
+        let chartConfig = {
+            type: 'line',
+            data: {
+                labels: ['Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                datasets: [{
+                    label: 'Ingresos',
+                    data: [65000, 59000, 80000, 81000, 110000, 145000],
+                    borderColor: '#d946ef',
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#d946ef',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } },
+                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                }
+            }
+        };
+
+        const revenueChart = new Chart(ctx, chartConfig);
+
+        function updateChartTheme() {
+            const isDark = html.classList.contains('dark');
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
+            const tickColor = isDark ? '#94a3b8' : '#64748b';
+            
+            revenueChart.options.scales.y.grid.color = gridColor;
+            revenueChart.options.scales.y.ticks.color = tickColor;
+            revenueChart.options.scales.x.ticks.color = tickColor;
+            revenueChart.update();
+        }
+        updateChartTheme();
+
+        // --- LÓGICA DE FINANZAS / HISTORIAL DE PAGOS ---
+        const transactions = [
+            { id: 1, date: "2025-12-20", month: 11, concept: "Anticipo Boda G&L", category: "Venta", amount: 25000, type: "income" },
+            { id: 2, date: "2025-12-18", month: 11, concept: "Pago Proveedor Flores", category: "Decoración", amount: 8500, type: "expense" },
+            { id: 3, date: "2025-12-15", month: 11, concept: "Pago Restante XV Sofia", category: "Venta", amount: 45000, type: "income" },
+            { id: 4, date: "2025-12-10", month: 11, concept: "Compra Bebidas", category: "Insumos", amount: 3200, type: "expense" },
+            { id: 5, date: "2025-11-28", month: 10, concept: "Liquidación Evento Corp", category: "Venta", amount: 110000, type: "income" },
+            { id: 6, date: "2025-11-15", month: 10, concept: "Mantenimiento Aire Acond", category: "Mantenimiento", amount: 4500, type: "expense" },
+            { id: 7, date: "2025-11-05", month: 10, concept: "Nómina Extra", category: "Personal", amount: 12000, type: "expense" },
+            { id: 8, date: "2025-10-30", month: 9, concept: "Anticipo Posada", category: "Venta", amount: 15000, type: "income" },
+        ];
+
+        function filterFinance() {
+            const selectedMonth = document.getElementById('month-filter').value;
+            const tableBody = document.getElementById('finance-table-body');
+            const incomeDisplay = document.getElementById('fin-income-display');
+            const expenseDisplay = document.getElementById('fin-expense-display');
+            
+            tableBody.innerHTML = '';
+            
+            let filtered = transactions;
+            if(selectedMonth !== 'all') {
+                filtered = transactions.filter(t => t.month == selectedMonth);
+            }
+
+            let totalIncome = 0;
+            let totalExpense = 0;
+
+            filtered.forEach(t => {
+                if(t.type === 'income') totalIncome += t.amount;
+                else totalExpense += t.amount;
+
+                const amountClass = t.type === 'income' ? 'text-green-500' : 'text-red-500';
+                const sign = t.type === 'income' ? '+' : '-';
+                const typeLabel = t.type === 'income' 
+                    ? (currentLang === 'es' ? 'Ingreso' : 'Income') 
+                    : (currentLang === 'es' ? 'Gasto' : 'Expense');
+                
+                const typeBadgeClass = t.type === 'income' 
+                    ? 'bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400' 
+                    : 'bg-red-100 dark:bg-red-500/20 text-red-600 dark:text-red-400';
+
+                const row = `
+                    <tr class="border-b border-slate-100 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-white/5 transition">
+                        <td class="px-4 py-3 font-mono text-xs text-slate-500">${t.date}</td>
+                        <td class="px-4 py-3 font-bold text-slate-900 dark:text-white">${t.concept}</td>
+                        <td class="px-4 py-3 text-xs text-slate-500 uppercase font-bold">${t.category}</td>
+                        <td class="px-4 py-3 text-right ${amountClass} font-black">${sign}$${t.amount.toLocaleString()}</td>
+                        <td class="px-4 py-3 text-right"><span class="${typeBadgeClass} text-[10px] font-bold uppercase px-2 py-0.5 rounded">${typeLabel}</span></td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+
+            incomeDisplay.innerText = `+$${totalIncome.toLocaleString()}`;
+            expenseDisplay.innerText = `-$${totalExpense.toLocaleString()}`;
+        }
+
+        filterFinance();
+
+        // --- LÓGICA DE CALENDARIO ---
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            const daysInMonth = 31; // Simplificado para Diciembre
+            const startDay = 1; // 0=Sun, 1=Mon, etc. (Empieza en Lunes para Dic 2025 ej.)
+            
+            grid.innerHTML = '';
+
+            // Espacios vacíos antes del día 1
+            for(let i=0; i<startDay; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'calendar-day empty';
+                grid.appendChild(empty);
+            }
+
+            // Eventos Dummy
+            const events = {
+                5: { title: "Boda Ana & Luis", type: "wedding" },
+                12: { title: "Posada Corp", type: "corp" },
+                20: { title: "Boda G&L", type: "wedding" },
+                22: { title: "XV Años Sofia", type: "birthday" },
+                24: { title: "Cena Navidad", type: "corp" }
+            };
+
+            for(let d=1; d<=daysInMonth; d++) {
+                const dayEl = document.createElement('div');
+                const isToday = d === 18; // Simulamos hoy es 18
+                dayEl.className = `calendar-day cursor-pointer hover:bg-white/5 ${isToday ? 'today' : 'text-slate-600 dark:text-slate-300'}`;
+                dayEl.innerHTML = `<span>${d}</span>`;
+
+                if(events[d]) {
+                    const evt = events[d];
+                    const typeClass = evt.type === 'wedding' ? 'pill-wedding' : evt.type === 'corp' ? 'pill-corp' : 'pill-birthday';
+                    dayEl.innerHTML += `<div class="event-pill ${typeClass}">${evt.title}</div>`;
+                }
+
+                grid.appendChild(dayEl);
+            }
+        }
+        renderCalendar();
+
+    </script>
+</body>
+</html>
