@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth dark" style="scroll-padding-top: 100px;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventotes | The Party OS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Inter"', 'sans-serif'],
+                    },
+                    colors: {
+                        party: {
+                            light: '#fdf4ff', 
+                            dark: '#05020a', 
+                            accent: '#d946ef'
+                        }
+                    },
+                    boxShadow: {
+                        'neon': '0 0 25px rgba(217, 70, 239, 0.4), 0 0 70px rgba(168, 85, 247, 0.2)',
+                        'neon-blue': '0 0 25px rgba(6, 182, 212, 0.4), 0 0 70px rgba(59, 130, 246, 0.2)',
+                        'card-float': '0 20px 40px -10px rgba(0,0,0,0.5)',
+                        'nav-glass': '0 10px 40px -10px rgba(0,0,0,0.1)',
+                    },
+                    animation: {
+                        'logo-shine': 'logoShine 3s infinite ease-in-out',
+                        'pulse-glow': 'pulseGlow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'shimmer': 'shimmer 2.5s linear infinite',
+                    },
+                    keyframes: {
+                        logoShine: {
+                            '0%, 100%': { 
+                                filter: 'drop-shadow(0 0 10px rgba(168, 85, 247, 0.2)) brightness(1)',
+                                transform: 'scale(1)' 
+                            },
+                            '50%': { 
+                                filter: 'drop-shadow(0 0 25px rgba(217, 70, 239, 0.6)) brightness(1.1)',
+                                transform: 'scale(1.02)' 
+                            },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: 1, transform: 'scale(1)' },
+                            '50%': { opacity: .8, transform: 'scale(1.05)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: 0, transform: 'translateY(20px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' }
+                        },
+                        shimmer: {
+                            '100%': { transform: 'translateX(100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { transition: background-color 0.5s ease, color 0.5s ease; }
+        
+        /* --- MODO CLARO --- */
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(at 0% 0%, rgba(217, 70, 239, 0.05) 0px, transparent 50%);
+            color: #0f172a;
+        }
+        
+        /* --- MODO OSCURO (Party Mode) --- */
+        html.dark body {
+            background-color: #05020a;
+            background-image: 
+                radial-gradient(at 50% 0%, rgba(147, 51, 234, 0.25) 0px, transparent 60%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
+            color: #ffffff;
+        }
+
+        /* Glassmorphism Premium Adaptativo */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html.dark .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .glass-panel:hover { transform: translateY(-5px); }
+        html.dark .glass-panel:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(217, 70, 239, 0.3);
+            box-shadow: 0 0 30px rgba(217, 70, 239, 0.15);
+        }
+        html:not(.dark) .glass-panel:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(217, 70, 239, 0.3);
+            box-shadow: 0 10px 40px rgba(217, 70, 239, 0.1);
+        }
+
+        /* Navbar Específica - Estilo Isla */
+        .nav-island {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        html.dark .nav-island {
+            background: rgba(5, 2, 10, 0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Text Gradients */
+        .text-gradient {
+            background: linear-gradient(to right, #d946ef, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .toggle-checkbox:checked { right: 0; border-color: #d946ef; }
+        .grid-bg { 
+            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), 
+                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px); 
+            background-size: 40px 40px; 
+        }
+        html:not(.dark) .grid-bg {
+            background-image: linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px), 
+                              linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px); 
+        }
+
+        #mobile-menu { transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; }
+        #mobile-menu.hidden-menu { transform: translateY(-20px); opacity: 0; pointer-events: none; }
+        #mobile-menu.visible-menu { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    </style>
+</head>
+<body class="antialiased font-sans selection:bg-purple-500 selection:text-white">
+
+    <!-- Navbar -->
+    <header class="fixed top-4 left-0 right-0 z-50 flex justify-center px-4">
+        <nav class="nav-island w-full max-w-5xl rounded-full px-4 py-2.5 shadow-nav-glass flex items-center justify-between transition-all duration-300">
+            
+            <a href="#" class="flex items-center gap-2 group shrink-0 pl-2">
+                <img src="https://raw.githubusercontent.com/JFabrizzio5/TusSalonesEventos/08ed7cb29c0879549e8dad035f85f6ef5ccdfed0/BrandingImages/LogoFinal.svg" 
+                     alt="Eventotes Logo" 
+                     class="h-10 w-auto dark:invert transition-transform group-hover:scale-110">
+                <span class="font-bold text-lg tracking-tight text-slate-900 dark:text-white hidden sm:block">Eventotes</span>
+            </a>
+            
+            <div class="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-white/5 rounded-full px-2 py-1">
+                <a href="#overview" id="menu-overview" class="px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-white/10 hover:text-purple-600 dark:hover:text-purple-400 rounded-full transition-all">La Fiesta</a>
+                <a href="#comparison" id="menu-comparison" class="px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-white/10 hover:text-purple-600 dark:hover:text-purple-400 rounded-full transition-all">Realidad</a>
+                <a href="#features" id="menu-features" class="px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-white/10 hover:text-purple-600 dark:hover:text-purple-400 rounded-full transition-all">El Control</a>
+                <a href="#pricing" id="menu-pricing" class="px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-white/10 hover:text-purple-600 dark:hover:text-purple-400 rounded-full transition-all">Entradas</a>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-slate-600 dark:text-white/80 transition-colors focus:outline-none">
+                    <svg id="sun-icon" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg id="moon-icon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                </button>
+                <button onclick="cycleCurrency()" id="currency-btn" class="hidden sm:block text-[10px] font-black border border-slate-300 dark:border-white/10 rounded-md px-2 py-1 text-slate-600 dark:text-slate-300 hover:border-purple-500 transition-colors">MXN</button>
+                <a href="#pricing" id="nav-cta" class="bg-slate-900 dark:bg-white text-white dark:text-black text-[11px] font-black uppercase tracking-wider px-5 py-2 rounded-full hover:shadow-lg hover:-translate-y-0.5 transition-all ml-1">Únete</a>
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-slate-800 dark:text-white"><i data-lucide="menu" class="w-5 h-5"></i></button>
+            </div>
+        </nav>
+
+        <div id="mobile-menu" class="absolute top-20 left-4 right-4 nav-island rounded-2xl p-6 hidden-menu md:hidden flex-col gap-4 shadow-2xl z-40 border border-white/10">
+            <a href="#overview" onclick="toggleMobileMenu()" class="flex items-center gap-3 p-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                <i data-lucide="party-popper" class="w-5 h-5 text-purple-500"></i><span class="font-bold text-slate-800 dark:text-white" id="mob-overview">La Fiesta</span>
+            </a>
+            <a href="#comparison" onclick="toggleMobileMenu()" class="flex items-center gap-3 p-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                <i data-lucide="alert-triangle" class="w-5 h-5 text-red-500"></i><span class="font-bold text-slate-800 dark:text-white" id="mob-comparison">Realidad</span>
+            </a>
+            <a href="#features" onclick="toggleMobileMenu()" class="flex items-center gap-3 p-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 text-blue-500"></i><span class="font-bold text-slate-800 dark:text-white" id="mob-features">El Control</span>
+            </a>
+            <a href="#pricing" onclick="toggleMobileMenu()" class="flex items-center gap-3 p-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                <i data-lucide="ticket" class="w-5 h-5 text-pink-500"></i><span class="font-bold text-slate-800 dark:text-white" id="mob-pricing">Entradas</span>
+            </a>
+            <div class="h-px w-full bg-slate-200 dark:bg-white/10 my-1"></div>
+            <div class="flex items-center justify-between px-3">
+                <span class="text-xs font-bold text-slate-500">Idioma/Moneda</span>
+                <div class="flex bg-slate-100 dark:bg-white/10 rounded-lg p-1">
+                    <button onclick="setLang('es')" class="px-3 py-1 rounded-md text-[10px] font-bold bg-white dark:bg-white/20 shadow-sm text-slate-900 dark:text-white">MXN</button>
+                    <button onclick="setLang('en')" class="px-3 py-1 rounded-md text-[10px] font-bold text-slate-400">USD</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="overview" class="relative pt-40 pb-20 px-6 flex flex-col items-center justify-center text-center overflow-hidden min-h-screen">
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none grid-bg opacity-30"></div>
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div class="absolute top-[20%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-purple-600/10 dark:bg-purple-600/20 blur-[120px] rounded-full animate-pulse"></div>
+            <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-500/10 blur-[100px] rounded-full"></div>
+        </div>
+
+        <div class="max-w-6xl mx-auto z-10 relative flex flex-col items-center w-full">
+            <div class="flex items-center justify-center gap-2 mb-4 opacity-50 hover:opacity-100 transition-opacity">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Powered By</span>
+                <img src="https://raw.githubusercontent.com/JFabrizzio5/CometaX/bbeb654b90e817236d9d64009b33618065fbba91/image_2025-12-16_083018257-removebg-preview%20(1).png" alt="CometaX" class="h-5 dark:invert">
+            </div>
+
+            <div class="mb-6 flex flex-col items-center animate-fade-in-up">
+                <div class="animate-logo-shine mb-8">
+                    <img src="https://raw.githubusercontent.com/JFabrizzio5/TusSalonesEventos/08ed7cb29c0879549e8dad035f85f6ef5ccdfed0/BrandingImages/LogoFinal.svg" alt="Eventotes Brand" class="h-20 w-auto dark:invert transition-all duration-300">
+                </div>
+                <h2 class="text-2xl font-black tracking-[0.3em] text-slate-900 dark:text-white uppercase">Eventotes</h2>
+            </div>
+
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-purple-500/50 bg-purple-100 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 text-[10px] font-bold uppercase tracking-wider mb-6 backdrop-blur-md">
+                <span class="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></span>
+                The Party Operating System
+            </div>
+            
+            <h1 id="hero-title" class="text-5xl md:text-7xl font-black tracking-tight mb-6 leading-[1.1] text-slate-900 dark:text-white animate-fade-in-up" style="animation-delay: 0.1s;">
+                Control Total.<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 animate-shimmer" style="background-size: 200% auto;">Cero Estrés.</span>
+            </h1>
+            
+            <p id="hero-subtitle" class="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-10 max-w-2xl mx-auto font-medium leading-relaxed animate-fade-in-up" style="animation-delay: 0.2s;">
+                Deja de jugar a las adivinanzas con Excel. Gestiona contratos, pagos y la fiesta entera desde una Web App potente diseñada para dominar el caos.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-fade-in-up" style="animation-delay: 0.3s;">
+                <a href="#pricing" id="hero-cta-main" class="bg-slate-900 dark:bg-white text-white dark:text-black px-8 py-3.5 rounded-full font-black text-base hover:shadow-[0_0_30px_rgba(217,70,239,0.3)] transition-all hover:scale-105 flex items-center gap-2">
+                    ÚNETE <i data-lucide="zap" class="w-4 h-4 text-yellow-500 fill-current"></i>
+                </a>
+                <a href="dashboard.html" id="hero-cta-demo" class="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest text-xs hover:text-purple-500 transition-colors flex items-center gap-2 px-6 py-3.5 rounded-full border border-transparent hover:border-slate-200 dark:hover:border-white/10">
+                    <i data-lucide="play-circle" class="w-4 h-4"></i>
+                    Ver Demo
+                </a>
+            </div>
+
+            <!-- UI Mockup -->
+            <div class="relative w-full max-w-6xl perspective-1000 animate-fade-in-up group" style="animation-delay: 0.4s;">
+                <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                <div class="relative bg-slate-900 dark:bg-[#0b0514] rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-white/10 aspect-[16/9] flex flex-col">
+                     <div class="h-10 border-b border-white/5 flex items-center px-4 gap-3 bg-white/5 backdrop-blur-md">
+                        <div class="flex gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-red-500"></div><div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div><div class="w-2.5 h-2.5 rounded-full bg-green-500"></div></div>
+                        <div class="flex-1 bg-black/20 h-6 rounded flex items-center justify-center text-[10px] text-white/30 font-mono">eventotes.app/control-room</div>
+                    </div>
+                    <div class="flex-1 p-6 grid grid-cols-[220px_1fr] gap-6 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')]">
+                        <div class="hidden md:flex flex-col gap-3">
+                            <div class="h-10 w-full bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg flex items-center px-3 text-white font-bold text-xs shadow-neon"><i data-lucide="layout-dashboard" class="w-3.5 h-3.5 mr-2"></i> Dashboard</div>
+                            <div class="h-10 w-full hover:bg-white/5 rounded-lg flex items-center px-3 text-white/50 font-bold text-xs transition"><i data-lucide="calendar" class="w-3.5 h-3.5 mr-2"></i> Calendario</div>
+                            <div class="h-10 w-full hover:bg-white/5 rounded-lg flex items-center px-3 text-white/50 font-bold text-xs transition"><i data-lucide="dollar-sign" class="w-3.5 h-3.5 mr-2"></i> Finanzas</div>
+                        </div>
+                        <div class="grid grid-rows-[auto_1fr] gap-6">
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-sm">
+                                    <p class="text-[10px] font-bold text-purple-400 uppercase mb-1">Ingresos Hoy</p>
+                                    <p class="text-2xl font-black text-white">$24,500</p>
+                                </div>
+                                <div class="bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-sm">
+                                    <p class="text-[10px] font-bold text-blue-400 uppercase mb-1">Eventos Activos</p>
+                                    <p class="text-2xl font-black text-white">8</p>
+                                </div>
+                                <div class="bg-gradient-to-br from-pink-500 to-orange-500 rounded-xl p-4 text-white shadow-lg flex items-center justify-between">
+                                    <div><p class="text-[10px] font-bold uppercase opacity-80">Próximo</p><p class="text-base font-black">Boda Ana & Luis</p></div>
+                                    <i data-lucide="arrow-right-circle" class="w-6 h-6"></i>
+                                </div>
+                            </div>
+                            <div class="bg-white/5 border border-white/10 rounded-xl p-4 relative overflow-hidden">
+                                <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-purple-900/20 to-transparent"></div>
+                                <div class="flex items-end justify-between h-full gap-3 pb-2 px-2 opacity-50">
+                                    <div class="w-full bg-purple-500 rounded-t h-[40%]"></div><div class="w-full bg-purple-500 rounded-t h-[70%]"></div><div class="w-full bg-pink-500 rounded-t h-[50%] animate-pulse"></div><div class="w-full bg-purple-500 rounded-t h-[80%]"></div><div class="w-full bg-purple-500 rounded-t h-[60%]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Financial Comparison Section -->
+    <section id="comparison" class="py-24 px-6 border-y border-white/5 bg-slate-50 dark:bg-[#08030f]">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <span id="comp-label" class="text-red-500 font-bold tracking-widest uppercase text-xs mb-2 block">La cruda realidad</span>
+                <h2 id="comp-title" class="text-3xl md:text-5xl font-black mb-6 text-slate-900 dark:text-white">El Costo del Descontrol.</h2>
+                <p id="comp-subtitle" class="text-lg text-slate-500 dark:text-slate-400 max-w-3xl mx-auto">¿Sigues usando papel y Excel? Estás perdiendo dinero.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <!-- Traditional -->
+                <div class="p-8 rounded-3xl border border-red-500/20 bg-red-500/5 relative group grayscale hover:grayscale-0 transition duration-500">
+                    <div id="comp-old-label" class="absolute top-4 right-4 text-xs font-bold text-red-500 uppercase tracking-wider border border-red-500/50 px-2 py-1 rounded">Método Antiguo</div>
+                    <h3 id="comp-old-title" class="text-2xl font-bold text-slate-700 dark:text-slate-300 mb-6">El Caos Manual</h3>
+                    <div class="space-y-4 mb-8" id="comp-old-list">
+                        <!-- Content rendered by JS to handle language -->
+                        <div class="flex items-center justify-between text-slate-600 dark:text-slate-400 border-b border-red-500/10 pb-2">
+                            <span class="flex items-center gap-2"><i data-lucide="user-x" class="w-4 h-4 text-red-500"></i> Sueldo Admin Dedicado</span>
+                            <span class="font-mono text-red-400 font-bold">-$12,000</span>
+                        </div>
+                        <div class="flex items-center justify-between text-slate-600 dark:text-slate-400 border-b border-red-500/10 pb-2">
+                            <span class="flex items-center gap-2"><i data-lucide="trending-down" class="w-4 h-4 text-red-500"></i> Clientes Perdidos (Fugas)</span>
+                            <span class="font-mono text-red-400 font-bold">-$8,000</span>
+                        </div>
+                         <div class="flex items-center justify-between text-slate-600 dark:text-slate-400 border-b border-red-500/10 pb-2">
+                            <span class="flex items-center gap-2"><i data-lucide="alert-circle" class="w-4 h-4 text-red-500"></i> Errores de Cobro</span>
+                            <span class="font-mono text-red-400 font-bold">-$5,000</span>
+                        </div>
+                         <div class="flex items-center justify-between text-slate-600 dark:text-slate-400 pt-2">
+                            <span class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4 text-red-500"></i> Tiempo perdido</span>
+                            <span class="font-bold text-xs uppercase text-red-500">Incalculable</span>
+                        </div>
+                    </div>
+                    <!-- Cost Footer -->
+                    <div class="mt-6 pt-6 border-t border-red-500/20">
+                        <p id="comp-loss-label" class="text-xs font-bold text-red-500 uppercase tracking-wider mb-1">Pérdidas Estimadas</p>
+                        <p class="text-3xl font-black text-slate-700 dark:text-slate-300">-$25,000 <span class="text-sm font-normal text-slate-500">/mes</span></p>
+                    </div>
+                </div>
+
+                <!-- Eventotes Way -->
+                <div class="p-10 rounded-3xl bg-slate-900 dark:bg-gradient-to-b dark:from-[#1a0b2e] dark:to-[#0f0518] border border-purple-500 shadow-neon relative overflow-hidden transform md:scale-105 z-10">
+                    <div id="comp-new-label" class="absolute top-0 right-0 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-4 py-2 rounded-bl-xl">EL FUTURO</div>
+                    
+                    <h3 class="text-3xl font-black text-white mb-6 flex items-center gap-3">
+                        <i data-lucide="check-circle-2" class="text-green-400 w-8 h-8"></i>
+                        <span id="comp-new-title">Con Eventotes</span>
+                    </h3>
+                    <ul class="space-y-4 mb-8" id="comp-new-list">
+                        <li class="flex items-center gap-3 text-white font-medium">
+                            <div class="bg-green-500/20 p-1 rounded-full"><i data-lucide="check" class="text-green-400 w-4 h-4"></i></div>
+                            <span>Panel Financiero en Tiempo Real</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-white font-medium">
+                            <div class="bg-green-500/20 p-1 rounded-full"><i data-lucide="check" class="text-green-400 w-4 h-4"></i></div>
+                            <span>Micrositios Web Automáticos</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-white font-medium">
+                            <div class="bg-green-500/20 p-1 rounded-full"><i data-lucide="check" class="text-green-400 w-4 h-4"></i></div>
+                            <span>Control desde tu Celular</span>
+                        </li>
+                    </ul>
+                     <!-- Investment Footer -->
+                     <div class="mt-6 pt-6 border-t border-white/20">
+                        <p id="comp-invest-label" class="text-xs font-bold text-purple-200 uppercase tracking-wider mb-1">Inversión Mensual</p>
+                        <p class="text-3xl font-black text-white">$5,500 <span id="comp-invest-sub" class="text-sm font-normal text-purple-200">retorno inmediato</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Bento Grid -->
+    <section id="features" class="py-32 px-6 relative overflow-hidden">
+        <div class="max-w-[1280px] mx-auto relative z-10">
+            <h2 id="feat-title" class="text-4xl md:text-6xl font-black mb-16 text-center text-slate-900 dark:text-white leading-tight">Módulos de Poder.</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[350px]">
+                <div class="md:col-span-2 glass-panel rounded-3xl p-8 relative overflow-hidden group flex flex-col justify-between">
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4 text-purple-600 dark:text-purple-400"><i data-lucide="monitor" class="w-6 h-6"></i></div>
+                        <h3 id="feat-1-title" class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Web App de Escritorio</h3>
+                        <p id="feat-1-desc" class="text-slate-600 dark:text-slate-400">Toda la potencia de un ERP en una interfaz hermosa. Finanzas, logística y ventas en una sola pantalla panorámica.</p>
+                    </div>
+                    <div class="mt-6 w-full h-40 bg-slate-200 dark:bg-white/5 rounded-t-xl border-t border-l border-r border-slate-300 dark:border-white/10 p-4 translate-y-4 group-hover:translate-y-2 transition-transform">
+                        <div class="flex gap-4 mb-4"><div class="h-2 w-20 bg-slate-400 dark:bg-white/20 rounded"></div><div class="h-2 w-20 bg-slate-300 dark:bg-white/10 rounded"></div></div>
+                        <div class="grid grid-cols-4 gap-4"><div class="h-20 bg-purple-500/20 rounded-lg"></div><div class="h-20 bg-slate-100 dark:bg-white/5 rounded-lg"></div><div class="h-20 bg-slate-100 dark:bg-white/5 rounded-lg"></div><div class="h-20 bg-slate-100 dark:bg-white/5 rounded-lg"></div></div>
+                    </div>
+                </div>
+
+                <div class="md:row-span-2 glass-panel rounded-3xl p-8 relative overflow-hidden group border border-blue-500/30">
+                    <div class="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent opacity-50"></div>
+                    <div class="relative z-10 h-full flex flex-col">
+                        <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-6 text-blue-600 dark:text-blue-400"><i data-lucide="smartphone" class="w-6 h-6"></i></div>
+                        <h3 id="feat-2-title" class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Micrositios Móviles</h3>
+                        <p id="feat-2-desc" class="text-slate-600 dark:text-slate-400 mb-8">No mandes PDFs aburridos. Eventotes crea una <strong>Web App única para cada cliente</strong> con cuenta regresiva, mapas y pasarela de pagos.</p>
+                        <div class="flex-1 bg-black rounded-t-3xl border-4 border-slate-800 border-b-0 mx-auto w-48 shadow-2xl relative overflow-hidden">
+                            <div class="absolute top-0 inset-x-0 h-6 bg-slate-800 rounded-b-lg mx-10"></div>
+                            <div class="mt-8 p-4 space-y-3"><div class="h-24 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl"></div><div class="h-2 w-20 bg-white/20 rounded"></div><div class="h-2 w-full bg-white/10 rounded"></div><div class="h-8 w-full bg-white/10 rounded-lg mt-4"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-8 flex flex-col justify-between group hover:bg-white/50 dark:hover:bg-white/5">
+                    <div>
+                        <div class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-4 text-green-600 dark:text-green-400"><i data-lucide="calendar-check" class="w-6 h-6"></i></div>
+                        <h3 id="feat-3-title" class="text-xl font-bold text-slate-900 dark:text-white">Disponibilidad Real</h3>
+                        <p id="feat-3-desc" class="text-slate-600 dark:text-slate-400 text-sm mt-2">Bloqueo automático de fechas. Adiós al overbooking.</p>
+                    </div>
+                    <div class="grid grid-cols-7 gap-2 opacity-50 mt-4"><div class="aspect-square rounded bg-slate-300 dark:bg-white/10"></div><div class="aspect-square rounded bg-green-500"></div><div class="aspect-square rounded bg-slate-300 dark:bg-white/10"></div><div class="aspect-square rounded bg-slate-300 dark:bg-white/10"></div></div>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-8 flex items-center justify-between group hover:border-purple-500/50 transition">
+                    <div>
+                        <h3 id="feat-4-title" class="text-xl font-bold text-slate-900 dark:text-white mb-2">Contratos Blindados</h3>
+                        <p id="feat-4-desc" class="text-slate-600 dark:text-slate-400 text-sm">Firmas digitales y encriptación bancaria.</p>
+                    </div>
+                    <i data-lucide="shield-check" class="w-16 h-16 text-slate-200 dark:text-white/20 group-hover:text-purple-500 transition-colors"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-32 px-6">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <h2 id="pricing-title" class="text-4xl md:text-6xl font-black mb-6 text-slate-900 dark:text-white">Oferta de Lanzamiento.</h2>
+                <p id="pricing-subtitle" class="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">Tecnología Enterprise a precio de Cover.</p>
+                
+                <div class="flex flex-col items-center gap-6 mt-10">
+                    <div class="flex items-center gap-4 bg-white/50 dark:bg-white/5 p-1.5 pr-6 rounded-full border border-slate-200 dark:border-white/10 shadow-sm cursor-pointer hover:border-purple-500/50 transition" onclick="toggleBilling()">
+                        <div class="flex items-center gap-3">
+                            <span id="label-monthly" class="text-sm font-bold text-slate-400 pl-4">Mensual</span>
+                            <div class="relative w-12 h-7 rounded-full transition-colors duration-300" id="billing-track" style="background-color: #d946ef;">
+                                <div id="billing-knob" class="absolute top-1 left-1 bg-white w-5 h-5 rounded-full transition-transform duration-300 shadow-md translate-x-5"></div>
+                            </div>
+                            <span id="label-annual" class="text-sm font-bold text-slate-900 dark:text-white">Anual</span>
+                        </div>
+                        <span id="badge-save" class="text-[10px] bg-green-100 dark:bg-green-500/20 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full font-bold border border-green-500/30">AHORRA 15%</span>
+                    </div>
+
+                    <div onclick="toggleSupport()" id="support-container" class="cursor-pointer group flex items-center gap-4 px-5 py-3 rounded-xl border border-dashed border-slate-300 dark:border-white/20 bg-transparent hover:bg-white/5 transition-all duration-300 select-none">
+                        <div id="support-icon-bg" class="p-1.5 rounded-lg bg-slate-100 dark:bg-white/10 text-slate-400 transition-colors"><i data-lucide="life-buoy" class="w-4 h-4"></i></div>
+                        <div class="text-left"><div id="support-text-title" class="font-bold text-sm text-slate-700 dark:text-slate-300">Soporte VIP 24/7</div><div id="support-text-desc" class="text-xs text-slate-500">Ingenieros dedicados (+30%)</div></div>
+                        <div id="support-check" class="w-5 h-5 rounded-full border border-slate-300 dark:border-white/30 flex items-center justify-center transition-colors"><i data-lucide="check" class="w-3 h-3 text-white opacity-0 transition-opacity" id="check-icon"></i></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                <div class="glass-panel p-8 rounded-3xl hover:border-slate-500/50 transition-all duration-300 group">
+                    <div class="mb-6"><h3 id="plan-1-name" class="text-xl font-bold text-slate-900 dark:text-white mb-2">START</h3><p id="plan-1-tagline" class="text-slate-500 dark:text-slate-400 text-sm">Para venues que inician.</p></div>
+                    <div class="mb-8"><div class="flex items-baseline gap-1"><span id="price-start" class="text-4xl font-black text-slate-900 dark:text-white tracking-tight">$5,500</span><span id="period-start" class="text-slate-500 font-medium">/mes</span></div><div id="tax-start" class="text-xs text-orange-500 font-bold mt-2 hidden">+15% pago mensual</div></div>
+                    <a href="#" id="cta-start" class="block w-full py-3 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold text-center hover:bg-slate-200 dark:hover:bg-white/20 transition mb-8 text-sm">Ver Oferta</a><div id="features-start" class="space-y-3"></div>
+                </div>
+
+                <div class="p-8 rounded-3xl bg-slate-900 dark:bg-[#1a0b2e] border border-purple-500 relative overflow-hidden shadow-neon transform md:-translate-y-4 z-10">
+                    <div id="badge-scale" class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div><div id="badge-rec" class="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase shadow-lg">Más Vendido</div>
+                    <div class="mb-6 mt-2"><h3 id="plan-2-name" class="text-2xl font-black text-white mb-2">SCALE</h3><p id="plan-2-tagline" class="text-purple-200/60 text-sm">La opción inteligente.</p></div>
+                    <div class="mb-8"><div class="flex items-baseline gap-1"><span id="price-scale" class="text-5xl font-black text-white tracking-tight">$8,000</span><span id="period-scale" class="text-purple-200/40 font-medium">/mes</span></div><div id="tax-scale" class="text-xs text-orange-400 font-bold mt-2 hidden">+15% pago mensual</div></div>
+                    <a href="#" id="cta-scale" class="block w-full py-3 rounded-xl bg-white text-slate-900 font-bold text-center hover:bg-purple-50 transition mb-8 group flex items-center justify-center gap-2 text-sm shadow-lg"><span>EMPEZAR AHORA</span><i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i></a><div id="features-scale" class="space-y-3"></div>
+                </div>
+
+                <div class="glass-panel p-8 rounded-3xl hover:border-slate-500/50 transition-all duration-300 group">
+                    <div class="mb-6"><h3 id="plan-3-name" class="text-xl font-bold text-slate-900 dark:text-white mb-2">DOMINATE</h3><p id="plan-3-tagline" class="text-slate-500 dark:text-slate-400 text-sm">Control total para cadenas.</p></div>
+                    <div class="mb-8"><div class="flex items-baseline gap-1"><span id="price-dominate" class="text-4xl font-black text-slate-900 dark:text-white tracking-tight">$11,000</span><span id="period-dominate" class="text-slate-500 font-medium">/mes</span></div><div id="tax-dominate" class="text-xs text-orange-500 font-bold mt-2 hidden">+15% pago mensual</div></div>
+                    <a href="#" id="cta-dominate" class="block w-full py-3 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white font-bold text-center hover:bg-slate-200 dark:hover:bg-white/20 transition mb-8 text-sm">Contactar</a><div id="features-dominate" class="space-y-3"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Charity Section -->
+    <section class="py-20 px-6 border-t border-slate-200 dark:border-white/5 bg-white dark:bg-[#05020a]">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="w-16 h-16 bg-pink-500/10 rounded-full flex items-center justify-center mx-auto mb-6 shadow-neon"><i data-lucide="heart-handshake" class="text-pink-500 w-8 h-8"></i></div>
+            <h2 id="charity-title" class="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Tecnología con Karma.</h2>
+            <p id="charity-desc" class="text-base text-slate-600 dark:text-slate-400 mb-8 leading-relaxed max-w-2xl mx-auto">
+                El éxito sabe mejor compartido. El <span class="font-bold text-pink-500">10% de tu suscripción</span> se va directo a causas sociales vía Fundación CometaX.
+            </p>
+            <div class="flex flex-wrap justify-center items-center gap-8 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+                <div class="flex items-center gap-2 font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white"><i data-lucide="sprout"></i> GreenFuture</div>
+                <div class="flex items-center gap-2 font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white"><i data-lucide="graduation-cap"></i> EduCare</div>
+                <div class="flex items-center gap-2 font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white"><i data-lucide="utensils"></i> FoodBank</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sales Program Banner -->
+    <section class="py-10 px-6 bg-slate-50 dark:bg-[#05020a]">
+        <div class="max-w-5xl mx-auto rounded-3xl bg-slate-900 dark:bg-gradient-to-r dark:from-[#1a0b2e] dark:to-[#0f0518] border border-white/10 p-8 md:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+            <div class="relative z-10 text-center md:text-left">
+                <span id="sales-label" class="text-purple-400 font-bold tracking-widest uppercase text-[10px] mb-2 block">CometaX Partners</span>
+                <h2 id="sales-title" class="text-2xl font-bold text-white mb-2">¿Vendes Tecnología?</h2>
+                <p id="sales-desc" class="text-slate-400 text-sm max-w-md">Asóciate con nosotros. Vende Eventotes a salones y llévate una comisión recurrente.</p>
+            </div>
+            <div class="relative z-10">
+                <a href="#" id="sales-btn" class="inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-3 rounded-full font-bold hover:bg-purple-50 transition shadow-lg text-sm hover:scale-105 transform">
+                    Aplicar al Programa <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-[#020105] border-t border-slate-200 dark:border-white/5 py-16 text-xs text-slate-500">
+        <div class="max-w-[1080px] mx-auto px-6 text-center">
+            <p id="footer-copy" class="mb-12 font-medium opacity-60">Copyright © 2025 Eventotes Inc. Que siga la fiesta.</p>
+            <div class="flex flex-col items-center justify-center gap-2 group cursor-pointer hover:opacity-100 transition-opacity">
+                <span class="text-[10px] font-bold uppercase tracking-[0.2em] opacity-40">Powered By</span>
+                <img src="https://raw.githubusercontent.com/JFabrizzio5/CometaX/bbeb654b90e817236d9d64009b33618065fbba91/image_2025-12-16_083018257-removebg-preview%20(1).png" alt="CometaX Logo" class="h-20 w-auto dark:invert transition-all duration-500 group-hover:scale-105 opacity-80 group-hover:opacity-100 drop-shadow-lg">
+                <span class="text-lg font-bold text-slate-900 dark:text-white tracking-tight transition-colors group-hover:text-purple-500">CometaX</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        const html = document.documentElement;
+        function toggleTheme() {
+            if (html.classList.contains('dark')) { html.classList.remove('dark'); } else { html.classList.add('dark'); }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('hidden-menu')) { menu.classList.remove('hidden-menu'); menu.classList.add('visible-menu'); } 
+            else { menu.classList.remove('visible-menu'); menu.classList.add('hidden-menu'); }
+        }
+
+        function cycleCurrency() {
+            if(state.lang === 'es') { setLang('en'); } else { setLang('es'); }
+        }
+        
+        let state = {
+            isAnnual: true,
+            currency: 'MXN', 
+            lang: 'es', 
+            prioritySupport: false
+        };
+
+        const data = {
+            basePrices: {
+                MXN: { start: 5500, scale: 8000, dominate: 11000 },
+                USD: { start: 300, scale: 450, dominate: 600 }
+            },
+            content: {
+                es: {
+                    nav: { overview: "La Fiesta", comparison: "Realidad", features: "El Control", pricing: "Entradas", cta: "Únete" },
+                    hero: { title: "Control Total.<br><span class='text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 animate-shimmer' style='background-size: 200% auto;'>Cero Estrés.</span>", subtitle: "Deja de jugar a las adivinanzas con Excel. Gestiona contratos, pagos y la fiesta entera desde una Web App potente diseñada para dominar el caos.", ctaMain: "ÚNETE", ctaDemo: "Ver Demo" },
+                    comparison: {
+                        label: "La cruda realidad", title: "El Costo del Descontrol.", subtitle: "¿Sigues usando papel y Excel? Estás perdiendo dinero.",
+                        oldLabel: "Método Antiguo", oldTitle: "El Caos Manual",
+                        oldList: [
+                            { icon: "user-x", text: "Sueldo Admin Dedicado", val: "-$12,000" },
+                            { icon: "trending-down", text: "Clientes Perdidos (Fugas)", val: "-$8,000" },
+                            { icon: "alert-circle", text: "Errores de Cobro", val: "-$5,000" },
+                            { icon: "clock", text: "Tiempo perdido", val: "INCALCULABLE" }
+                        ],
+                        lossLabel: "Pérdidas Estimadas", lossVal: "-$25,000", lossPeriod: "/mes",
+                        newLabel: "EL FUTURO", newTitle: "Con Eventotes",
+                        newList: ["Panel Financiero en Tiempo Real", "Micrositios Web Automáticos", "Control desde tu Celular"],
+                        investLabel: "Inversión Mensual", investSub: "retorno inmediato"
+                    },
+                    features: {
+                        title: "Módulos de Poder.",
+                        items: [
+                            { title: "Web App de Escritorio", desc: "Toda la potencia de un ERP en una interfaz hermosa. Finanzas, logística y ventas en una sola pantalla panorámica." },
+                            { title: "Micrositios Móviles", desc: "No mandes PDFs aburridos. Eventotes crea una <strong>Web App única para cada cliente</strong> con cuenta regresiva, mapas y pasarela de pagos." },
+                            { title: "Disponibilidad Real", desc: "Bloqueo automático de fechas. Adiós al overbooking." },
+                            { title: "Contratos Blindados", desc: "Firmas digitales y encriptación bancaria." }
+                        ]
+                    },
+                    pricing: {
+                        title: "Oferta de Lanzamiento.", subtitle: "Tecnología Enterprise a precio de Cover.",
+                        billing: { month: "Mensual", annual: "Anual", save: "AHORRA 15%" },
+                        support: { title: "Soporte VIP 24/7", desc: "Ingenieros dedicados (+30%)" },
+                        plans: {
+                            start: { name: "START", tagline: "Para venues que inician.", cta: "Ver Oferta", features: ["Dashboard Financiero", "Gestión de 5 Eventos", "Calendario Inteligente", "Micrositio Básico", "Soporte Email"] },
+                            scale: { name: "SCALE", tagline: "La opción inteligente.", badge: "MÁS VENDIDO", cta: "EMPEZAR AHORA", features: ["<b>Todo lo de Start +</b>", "<b>Micrositios por Evento</b>", "<b>Chatbot IA Clientes</b>", "Usuarios Staff Ilimitados", "Reportes Avanzados"] },
+                            dominate: { name: "DOMINATE", tagline: "Control total para cadenas.", cta: "Contactar", features: ["Todo lo de Scale +", "Whitelabel (Tu Marca)", "Gestión Multi-Venue", "API Access", "Auditoría de Logs"] }
+                        },
+                        tax: "+15% pago mensual"
+                    },
+                    charity: { title: "Tecnología con Karma.", desc: "El éxito sabe mejor compartido. El <span class='font-bold text-pink-500'>10% de tu suscripción</span> se va directo a causas sociales vía Fundación CometaX." },
+                    sales: { label: "CometaX Partners", title: "¿Vendes Tecnología?", desc: "Asóciate con nosotros. Vende Eventotes a salones y llévate una comisión recurrente.", btn: "Aplicar al Programa" },
+                    footer: "Copyright © 2025 Eventotes Inc. Que siga la fiesta."
+                },
+                en: {
+                    nav: { overview: "The Party", comparison: "Reality", features: "Control", pricing: "Tickets", cta: "Join Now" },
+                    hero: { title: "Total Control.<br><span class='text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 animate-shimmer' style='background-size: 200% auto;'>Zero Stress.</span>", subtitle: "Stop guessing with Excel. Manage contracts, payments, and the entire party from a powerful Web App designed to master the chaos.", ctaMain: "JOIN NOW", ctaDemo: "Watch Demo" },
+                    comparison: {
+                        label: "The Harsh Reality", title: "The Cost of Chaos.", subtitle: "Still using paper and Excel? You are losing money.",
+                        oldLabel: "Old Method", oldTitle: "Manual Chaos",
+                        oldList: [
+                            { icon: "user-x", text: "Dedicated Admin Salary", val: "-$600" },
+                            { icon: "trending-down", text: "Lost Leads (Leaks)", val: "-$400" },
+                            { icon: "alert-circle", text: "Billing Errors", val: "-$250" },
+                            { icon: "clock", text: "Wasted Time", val: "PRICELESS" }
+                        ],
+                        lossLabel: "Estimated Losses", lossVal: "-$1,250", lossPeriod: "/mo",
+                        newLabel: "THE FUTURE", newTitle: "With Eventotes",
+                        newList: ["Real-time Financial Dashboard", "Automatic Web Microsites", "Control from your Phone"],
+                        investLabel: "Monthly Investment", investSub: "immediate return"
+                    },
+                    features: {
+                        title: "Power Modules.",
+                        items: [
+                            { title: "Desktop Web App", desc: "All the power of an ERP in a beautiful interface. Finance, logistics, and sales on a single panoramic screen." },
+                            { title: "Mobile Microsites", desc: "Don't send boring PDFs. Eventotes creates a <strong>unique Web App for each client</strong> with countdowns, maps, and payment gateways." },
+                            { title: "Real Availability", desc: "Automatic date blocking. Goodbye overbooking." },
+                            { title: "Armored Contracts", desc: "Digital signatures and bank-grade encryption." }
+                        ]
+                    },
+                    pricing: {
+                        title: "Launch Offer.", subtitle: "Enterprise tech at Cover price.",
+                        billing: { month: "Monthly", annual: "Annual", save: "SAVE 15%" },
+                        support: { title: "VIP Support 24/7", desc: "Dedicated engineers (+30%)" },
+                        plans: {
+                            start: { name: "START", tagline: "For venues starting out.", cta: "See Offer", features: ["Financial Dashboard", "5 Active Events", "Smart Calendar", "Basic Microsite", "Email Support"] },
+                            scale: { name: "SCALE", tagline: "The smart choice.", badge: "BEST SELLER", cta: "START NOW", features: ["<b>Everything in Start +</b>", "<b>Per-Event Microsites</b>", "<b>AI Client Chatbot</b>", "Unlimited Staff Users", "Advanced Reporting"] },
+                            dominate: { name: "DOMINATE", tagline: "Total control for chains.", cta: "Contact Us", features: ["Everything in Scale +", "Whitelabel (Your Brand)", "Multi-Venue Management", "API Access", "Log Auditing"] }
+                        },
+                        tax: "+15% monthly payment"
+                    },
+                    charity: { title: "Tech with Karma.", desc: "Success tastes better shared. <span class='font-bold text-pink-500'>10% of your subscription</span> goes directly to social causes via CometaX Foundation." },
+                    sales: { label: "CometaX Partners", title: "Sell Tech?", desc: "Partner with us. Sell Eventotes to venues and earn recurring commission.", btn: "Apply to Program" },
+                    footer: "Copyright © 2025 Eventotes Inc. Party on."
+                }
+            }
+        };
+
+        function toggleBilling() { state.isAnnual = !state.isAnnual; updateUI(); }
+        function toggleSupport() { state.prioritySupport = !state.prioritySupport; updateUI(); }
+        function setLang(lang) { state.lang = lang; state.currency = lang === 'es' ? 'MXN' : 'USD'; updateUI(); }
+
+        function calculatePrice(planKey) {
+            let price = data.basePrices[state.currency][planKey];
+            if (!state.isAnnual) price = price * 1.15; 
+            if (state.prioritySupport) price = price * 1.30; 
+            return Math.round(price / 10) * 10;
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat(state.lang === 'es' ? 'es-MX' : 'en-US', { style: 'currency', currency: state.currency, maximumFractionDigits: 0 }).format(amount);
+        }
+
+        function renderFeatures(planKey, featuresArray) {
+            const container = document.getElementById(`features-${planKey}`);
+            container.innerHTML = '';
+            featuresArray.forEach(feat => {
+                const isHighlight = feat.includes('<b>');
+                const cleanFeat = feat.replace(/<b>/g, '').replace(/<\/b>/g, '');
+                let iconColor = 'text-slate-500', textColor = html.classList.contains('dark') ? 'text-slate-400' : 'text-slate-500';
+                if (planKey === 'scale') {
+                    iconColor = 'text-purple-400'; textColor = 'text-purple-100/80';
+                    if(isHighlight) textColor = 'text-white';
+                }
+                container.innerHTML += `<div class="flex items-start gap-3 text-sm ${textColor}"><i data-lucide="check" class="${iconColor} w-4 h-4 mt-0.5 shrink-0"></i><span class="${isHighlight ? 'font-bold' : ''}">${cleanFeat}</span></div>`;
+            });
+            lucide.createIcons();
+        }
+
+        function updateUI() {
+            const t = data.content[state.lang];
+            const btnCurr = document.getElementById('currency-btn'); if(btnCurr) btnCurr.innerText = state.currency;
+
+            // Nav
+            ['overview', 'comparison', 'features', 'pricing'].forEach(k => {
+                document.getElementById(`menu-${k}`).textContent = t.nav[k];
+                document.getElementById(`mob-${k}`).textContent = t.nav[k];
+            });
+            document.getElementById('nav-cta').textContent = t.nav.cta;
+
+            // Hero
+            document.getElementById('hero-title').innerHTML = t.hero.title;
+            document.getElementById('hero-subtitle').textContent = t.hero.subtitle;
+            document.getElementById('hero-cta-main').innerHTML = `${t.hero.ctaMain} <i data-lucide="zap" class="w-4 h-4 text-yellow-500 fill-current ml-2"></i>`;
+            document.getElementById('hero-cta-demo').innerHTML = `<i data-lucide="play-circle" class="w-4 h-4 mr-2"></i> ${t.hero.ctaDemo}`;
+
+            // Comparison
+            document.getElementById('comp-label').textContent = t.comparison.label;
+            document.getElementById('comp-title').textContent = t.comparison.title;
+            document.getElementById('comp-subtitle').textContent = t.comparison.subtitle;
+            document.getElementById('comp-old-label').textContent = t.comparison.oldLabel;
+            document.getElementById('comp-old-title').textContent = t.comparison.oldTitle;
+            
+            // Comparison List (Dynamic)
+            const oldListContainer = document.getElementById('comp-old-list');
+            oldListContainer.innerHTML = '';
+            t.comparison.oldList.forEach(item => {
+                oldListContainer.innerHTML += `
+                    <div class="flex items-center justify-between text-slate-600 dark:text-slate-400 border-b border-red-500/10 pb-2">
+                        <span class="flex items-center gap-2"><i data-lucide="${item.icon}" class="w-4 h-4 text-red-500"></i> ${item.text}</span>
+                        <span class="${item.val === 'PRICELESS' || item.val === 'INCALCULABLE' ? 'font-bold text-xs uppercase text-red-500' : 'font-mono text-red-400 font-bold'}">${item.val}</span>
+                    </div>`;
+            });
+
+            document.getElementById('comp-loss-label').textContent = t.comparison.lossLabel;
+            document.querySelector('#comp-loss-label + p').innerHTML = `${t.comparison.lossVal} <span class="text-sm font-normal text-slate-500">${t.comparison.lossPeriod}</span>`;
+
+            document.getElementById('comp-new-label').textContent = t.comparison.newLabel;
+            document.getElementById('comp-new-title').textContent = t.comparison.newTitle;
+            
+            const newListContainer = document.getElementById('comp-new-list');
+            newListContainer.innerHTML = '';
+            t.comparison.newList.forEach(item => {
+                newListContainer.innerHTML += `<li class="flex items-center gap-3 text-white font-medium"><div class="bg-green-500/20 p-1 rounded-full"><i data-lucide="check" class="text-green-400 w-4 h-4"></i></div><span>${item}</span></li>`;
+            });
+
+            document.getElementById('comp-invest-label').textContent = t.comparison.investLabel;
+            document.getElementById('comp-invest-sub').textContent = t.comparison.investSub;
+
+            // Features
+            document.getElementById('feat-title').textContent = t.features.title;
+            t.features.items.forEach((item, idx) => {
+                document.getElementById(`feat-${idx+1}-title`).textContent = item.title;
+                document.getElementById(`feat-${idx+1}-desc`).innerHTML = item.desc;
+            });
+
+            // Pricing
+            document.getElementById('pricing-title').textContent = t.pricing.title;
+            document.getElementById('pricing-subtitle').textContent = t.pricing.subtitle;
+            document.getElementById('label-monthly').textContent = t.pricing.billing.month;
+            document.getElementById('label-annual').textContent = t.pricing.billing.annual;
+            document.getElementById('badge-save').textContent = t.pricing.billing.save;
+            document.getElementById('support-text-title').textContent = t.pricing.support.title;
+            document.getElementById('support-text-desc').textContent = t.pricing.support.desc;
+
+            // Charity & Sales & Footer
+            document.getElementById('charity-title').textContent = t.charity.title;
+            document.getElementById('charity-desc').innerHTML = t.charity.desc;
+            document.getElementById('sales-label').textContent = t.sales.label;
+            document.getElementById('sales-title').textContent = t.sales.title;
+            document.getElementById('sales-desc').textContent = t.sales.desc;
+            document.getElementById('sales-btn').innerHTML = `${t.sales.btn} <i data-lucide="arrow-up-right" class="w-4 h-4"></i>`;
+            document.getElementById('footer-copy').textContent = t.footer;
+
+            // Visual Toggles
+            const track = document.getElementById('billing-track');
+            const knob = document.getElementById('billing-knob');
+            const isDark = html.classList.contains('dark');
+            const activeText = isDark ? 'text-white' : 'text-slate-900';
+            const inactiveText = isDark ? 'text-slate-400' : 'text-slate-400';
+
+            if(state.isAnnual) {
+                track.style.backgroundColor = '#d946ef'; knob.style.transform = 'translateX(20px)';
+                document.getElementById('label-annual').className = `text-sm font-bold ${activeText}`;
+                document.getElementById('label-monthly').className = `text-sm font-bold ${inactiveText} pl-4`;
+            } else {
+                track.style.backgroundColor = '#475569'; knob.style.transform = 'translateX(0px)';
+                document.getElementById('label-annual').className = `text-sm font-bold ${inactiveText}`;
+                document.getElementById('label-monthly').className = `text-sm font-bold ${activeText} pl-4`;
+            }
+
+            const supCont = document.getElementById('support-container'), supIconBg = document.getElementById('support-icon-bg'), supCheck = document.getElementById('support-check'), checkIcon = document.getElementById('check-icon');
+            if(state.prioritySupport) {
+                supCont.className = "cursor-pointer group flex items-center gap-4 px-5 py-3 rounded-xl border border-indigo-500 bg-indigo-500/20 transition-all duration-300 select-none shadow-neon-blue";
+                supIconBg.className = "p-1.5 rounded-lg bg-indigo-500 text-white transition-colors";
+                supCheck.className = "w-5 h-5 rounded-full border border-indigo-500 bg-indigo-500 flex items-center justify-center transition-colors";
+                checkIcon.style.opacity = '1';
+                document.getElementById('support-text-title').className = "font-bold text-sm text-indigo-500 dark:text-indigo-300";
+            } else {
+                supCont.className = "cursor-pointer group flex items-center gap-4 px-5 py-3 rounded-xl border border-dashed border-slate-300 dark:border-white/20 bg-transparent hover:bg-white/5 transition-all duration-300 select-none";
+                supIconBg.className = "p-1.5 rounded-lg bg-slate-100 dark:bg-white/10 text-slate-400 transition-colors";
+                supCheck.className = "w-5 h-5 rounded-full border border-slate-300 dark:border-white/30 flex items-center justify-center transition-colors";
+                checkIcon.style.opacity = '0';
+                document.getElementById('support-text-title').className = "font-bold text-sm text-slate-700 dark:text-slate-300";
+            }
+
+            ['start', 'scale', 'dominate'].forEach(plan => {
+                const pData = t.pricing.plans[plan];
+                document.getElementById(`plan-${plan === 'start' ? 1 : plan === 'scale' ? 2 : 3}-name`).textContent = pData.name;
+                document.getElementById(`plan-${plan === 'start' ? 1 : plan === 'scale' ? 2 : 3}-tagline`).textContent = pData.tagline;
+                document.getElementById(`price-${plan}`).textContent = formatMoney(calculatePrice(plan));
+                const taxEl = document.getElementById(`tax-${plan}`);
+                if (!state.isAnnual) { taxEl.classList.remove('hidden'); taxEl.textContent = t.pricing.tax; } else { taxEl.classList.add('hidden'); }
+                const ctaBtn = document.getElementById(`cta-${plan}`);
+                if(plan === 'scale') { ctaBtn.innerHTML = `<span>${pData.cta}</span><i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>`; document.getElementById('badge-rec').textContent = pData.badge; } else { ctaBtn.textContent = pData.cta; }
+                renderFeatures(plan, pData.features);
+            });
+            lucide.createIcons();
+        }
+        updateUI();
+    </script>
+</body>
+</html>
