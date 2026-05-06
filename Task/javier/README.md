@@ -6,6 +6,7 @@ Este repositorio contiene los microservicios para el módulo de eventos y calend
 Se requiere el desarrollo de módulos independientes que consuman y gestionen:
 * `app_id`
 * `userauth_id`
+* **Solo vía API** (Intercambio de datos JSON)
 
 ---
 
