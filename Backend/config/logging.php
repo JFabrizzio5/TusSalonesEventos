@@ -51,6 +51,10 @@ return [
     */
 
     'channels' => [
+        'sentry_logs' => [
+            'driver' => 'sentry',
+        ],
+
 
         'stack' => [
             'driver' => 'stack',
