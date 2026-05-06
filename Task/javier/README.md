@@ -1,7 +1,44 @@
-# Javier's Tasks
+# Javier - Persona 1: Calendario / Eventos
 
-## Branch
-- `JavierRodriguez-Develop`
+Este repositorio contiene los microservicios para el módulo de eventos y calendario.
 
-## Ongoing Tasks
-- [ ] List tasks here...
+## Contexto del Proyecto
+Se requiere el desarrollo de módulos independientes que consuman y gestionen:
+* `app_id`
+* `userauth_id`
+
+---
+
+## Task 1 — $900 MXN total (Entregable: Modelos, Migraciones y CRUD Base)
+
+### Calendario / eventos
+* [ ] **CRUD de eventos**: Creación, lectura, actualización y eliminación.
+* [ ] **Calendario**: Vista mensual y semanal.
+* [ ] **Filtros**: Por usuario (`userauth_id`), aplicación (`app_id`), fecha y tipo de evento.
+* [ ] **Validación de conflictos**: Evitar que se traslapen eventos en el mismo horario.
+* [ ] **Importación/Exportación**: Soporte para archivos `.csv` y `.ics`.
+* [ ] **Tipos de evento**: Soporte dinámico para:
+  * Cine
+  * Torneo
+  * Showcase
+  * Sesión de DJs
+  * Conferencias
+
+> [!IMPORTANT]
+> Se otorgará carta de recomendación laboral una vez entregado satisfactoriamente el Task 1.
+
+---
+
+## Task 2 — $900 MXN total (Entregable: Demo y Funcionalidad Avanzada)
+
+### Demo + exportaciones
+* [ ] **Vista simple de calendario**: Interfaz funcional para visualización.
+* [ ] **Gestión de eventos**: Interfaz para crear, editar y ver detalles.
+* [ ] **Exportación .ics**: Generación de archivos para calendarios externos.
+* [ ] **Google Wallet**: Generación de pase básico tipo Google Wallet.
+
+---
+
+## Contacto e Integración
+Si tienes dudas, manda mensaje a @269694032437313.
+Los primeros 2 se quedan con la integración dentro de lo que ya estamos armando.
