@@ -1,58 +1,47 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# TusSalonesEventos - Backend API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este proyecto es el backend para la gestión de salones y eventos, desarrollado con Laravel 13 y enfocado exclusivamente en servicios API.
 
-## About Laravel
+## Requisitos
+* Docker Desktop
+* Composer (para instalaciones locales)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Configuración del Entorno (Docker + Sail)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Este proyecto utiliza **Laravel Sail** para gestionar el entorno de desarrollo. La base de datos configurada es **PostgreSQL**.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
+### 1. Iniciar los contenedores
+Para levantar los servicios (PHP, PostgreSQL, Redis, etc.), ejecuta:
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+./vendor/bin/sail up -d
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Ejecutar Migraciones
+Una vez que los contenedores estén corriendo, prepara la base de datos:
+```bash
+./vendor/bin/sail artisan migrate
+```
 
-## Contributing
+### 3. Acceso a la API
+La API estará disponible en `http://localhost`.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## Desarrollo y Tareas
+El desarrollo está dividido en módulos independientes:
+* **Módulo de Eventos**: Gestionado en la rama `JavierRodriguez-Develop`.
+* **Módulo de Salones/Tickets**: Gestionado en la rama `CesarJankarlo-Develop`.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Reglas de Desarrollo
+* **Solo vía API**: Todo el intercambio de datos debe realizarse a través de endpoints JSON.
+* **Autenticación**: Los servicios deben consumir y validar `userauth_id` y `app_id`.
+* **Base de Datos**: Utilizar PostgreSQL (configurado automáticamente en Docker).
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Comandos Útiles de Sail
+* Levantar servicios: `./vendor/bin/sail up -d`
+* Detener servicios: `./vendor/bin/sail stop`
+* Ejecutar artisan: `./vendor/bin/sail artisan [comando]`
+* Ejecutar composer: `./vendor/bin/sail composer [comando]`
+* Ejecutar tests: `./vendor/bin/sail test`
