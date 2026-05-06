@@ -9,7 +9,7 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
 
 ---
 
-## Task 1 — $900 MXN total (Entregable: Modelos, Migraciones y CRUD Base)
+## Task 1 — $450 MXN (Entregable: Modelos, Migraciones y CRUD Base)
 
 ### Calendario / eventos
 * [ ] **CRUD de eventos**: Creación, lectura, actualización y eliminación.
@@ -29,7 +29,7 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
 
 ---
 
-## Task 2 — $900 MXN total (Entregable: Demo y Funcionalidad Avanzada)
+## Task 2 — $450 MXN (Entregable: Demo y Funcionalidad Avanzada)
 
 ### Demo + exportaciones
 * [ ] **Vista simple de calendario**: Interfaz funcional para visualización.
@@ -37,8 +37,3 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
 * [ ] **Exportación .ics**: Generación de archivos para calendarios externos.
 * [ ] **Google Wallet**: Generación de pase básico tipo Google Wallet.
 
----
-
-## Contacto e Integración
-Si tienes dudas, manda mensaje a @269694032437313.
-Los primeros 2 se quedan con la integración dentro de lo que ya estamos armando.
