@@ -9,7 +9,7 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
 
 ---
 
-## Task 1 — $900 MXN total (Entregable: Modelos, Migraciones y CRUD Base)
+## Task 1 — $450 MXN (Entregable: Modelos, Migraciones y CRUD Base)
 
 ### Salones / asientos / tickets
 * [ ] **CRUD de salones**: Gestión de espacios físicos.
@@ -29,7 +29,7 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
 
 ---
 
-## Task 2 — $900 MXN total (Entregable: Sistema de Reservas y Tickets)
+## Task 2 — $450 MXN (Entregable: Sistema de Reservas y Tickets)
 
 ### Reservas / tickets
 * [ ] **Reservar asiento**: Proceso de selección y bloqueo de lugar.
@@ -39,8 +39,3 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
 * [ ] **Tickets por evento**: Generación detallada de boletaje.
 * [ ] **Importación/Exportación**: Gestión de reservas en `.csv`.
 
----
-
-## Contacto e Integración
-Si tienes dudas, manda mensaje a @269694032437313.
-Los primeros 2 se quedan con la integración dentro de lo que ya estamos armando.
