@@ -14,6 +14,7 @@ class EventRepository
             ->with('eventType')
             ->forTenant($appId, $userauthId)
             ->when($filters['event_type_id'] ?? null, fn ($query, $eventTypeId) => $query->where('event_type_id', $eventTypeId))
+            ->when($filters['event_type_slug'] ?? null, fn ($query, $eventTypeSlug) => $query->whereHas('eventType', fn ($eventTypeQuery) => $eventTypeQuery->where('slug', $eventTypeSlug)))
             ->when($filters['start_time'] ?? null, fn ($query, $startTime) => $query->where('end_time', '>=', $startTime))
             ->when($filters['end_time'] ?? null, fn ($query, $endTime) => $query->where('start_time', '<=', $endTime))
             ->orderBy('start_time')

@@ -17,7 +17,7 @@ class EventController extends Controller
 
     // --- LIST_EVENTS ---
     // Descripción: Lista eventos filtrados por app_id, userauth_id, fecha y tipo de evento.
-    // Parámetros: app_id, userauth_id, start_time, end_time, event_type_id, per_page
+    // Parámetros: app_id, userauth_id, start_time, end_time, event_type_id, event_type_slug, per_page
     // Respuesta: JSON Structure
     // -----------------------------
     public function index(Request $request): AnonymousResourceCollection
@@ -26,6 +26,7 @@ class EventController extends Controller
             'app_id' => ['required', 'string', 'max:255'],
             'userauth_id' => ['required', 'string', 'max:255'],
             'event_type_id' => ['sometimes', 'integer', 'exists:event_types,id'],
+            'event_type_slug' => ['sometimes', 'string', 'max:255', 'exists:event_types,slug'],
             'start_time' => ['sometimes', 'date'],
             'end_time' => ['sometimes', 'date'],
             'per_page' => ['sometimes', 'integer', 'min:1', 'max:100'],
