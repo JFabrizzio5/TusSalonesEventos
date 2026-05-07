@@ -21,6 +21,11 @@ return new class extends Migration
             $table->string('app_id');
             $table->string('userauth_id');
             $table->timestamps();
+
+            // Indexes para una mejor eficiecnia
+            $table->index(['app_id', 'userauth_id']);
+            $table->index(['app_id', 'userauth_id', 'start_time', 'end_time']);
+            $table->index(['app_id', 'userauth_id', 'event_type_id']);
         });
     }
 

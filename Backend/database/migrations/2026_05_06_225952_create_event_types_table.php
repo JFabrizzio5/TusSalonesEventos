@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('event_types', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // cine, torneo, showcase, sesión de DJs, conferencias
+            $table->string('slug')->unique();  // Agregue un campo slug para URLs amigables
+            $table->boolean('is_active')->default(true); 
             $table->timestamps();
         });
     }
