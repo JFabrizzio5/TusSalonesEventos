@@ -14,7 +14,7 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
 
 ### Calendario / eventos
 * [X] **CRUD de eventos**: Creación, lectura, actualización y eliminación.
-* [ ] **Calendario**: Vista mensual y semanal.
+* [X] **Calendario**: Vista mensual y semanal.
 * [ ] **Filtros**: Por usuario (`userauth_id`), aplicación (`app_id`), fecha y tipo de evento.
 * [ ] **Validación de conflictos**: Evitar que se traslapen eventos en el mismo horario.
 * [ ] **Importación/Exportación**: Soporte para archivos `.csv` y `.ics`.
@@ -37,4 +37,3 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
 * [ ] **Gestión de eventos**: Interfaz para crear, editar y ver detalles.
 * [ ] **Exportación .ics**: Generación de archivos para calendarios externos.
 * [ ] **Google Wallet**: Generación de pase básico tipo Google Wallet.
-

@@ -13,9 +13,7 @@ use Illuminate\Http\Response;
 
 class EventController extends Controller
 {
-    public function __construct(private readonly EventService $events)
-    {
-    }
+    public function __construct(private readonly EventService $events) {}
 
     // --- LIST_EVENTS ---
     // Descripción: Lista eventos filtrados por app_id, userauth_id, fecha y tipo de evento.

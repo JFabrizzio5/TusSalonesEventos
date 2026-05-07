@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Event;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class EventRepository
 {
@@ -26,6 +27,17 @@ class EventRepository
             ->forTenant($appId, $userauthId)
             ->whereKey($eventId)
             ->first();
+    }
+
+    public function rangeForTenant(string $appId, string $userauthId, mixed $rangeStart, mixed $rangeEnd): Collection
+    {
+        return Event::query()
+            ->with('eventType')
+            ->forTenant($appId, $userauthId)
+            ->where('start_time', '<=', $rangeEnd)
+            ->where('end_time', '>=', $rangeStart)
+            ->orderBy('start_time')
+            ->get();
     }
 
     public function create(array $data): Event

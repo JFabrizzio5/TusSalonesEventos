@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Event extends Model
@@ -11,7 +11,7 @@ class Event extends Model
     protected $fillable = [
         'title',
         'description',
-        'satrt_time',
+        'start_time',
         'end_time',
         'event_type_id',
         'app_id',
@@ -26,13 +26,14 @@ class Event extends Model
         ];
     }
 
-    public function eventType(): BelongsTo{
+    public function eventType(): BelongsTo
+    {
         return $this->belongsTo(EventType::class);
     }
 
-    public function scopeForTenant(Builder $query, string $appId, string $userAuthId): BUilder {
+    public function scopeForTenant(Builder $query, string $appId, string $userAuthId): Builder
+    {
         return $query->where('app_id', $appId)
-                     ->where('userauth_id', $userAuthId);
+            ->where('userauth_id', $userAuthId);
     }
-
 }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Event;
 use App\Repositories\EventRepository;
+use Carbon\CarbonImmutable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
@@ -54,6 +55,32 @@ class EventService
         $event = $this->get($eventId, $appId, $userauthId);
 
         $this->events->delete($event);
+    }
+
+    public function weeklyCalendar(string $appId, string $userauthId, string $weekStart): array
+    {
+        $rangeStart = CarbonImmutable::parse($weekStart)->startOfDay();
+        $rangeEnd = $rangeStart->addDays(7)->subSecond();
+
+        return [
+            'view' => 'week',
+            'range_start' => $rangeStart,
+            'range_end' => $rangeEnd,
+            'events' => $this->events->rangeForTenant($appId, $userauthId, $rangeStart, $rangeEnd),
+        ];
+    }
+
+    public function monthlyCalendar(string $appId, string $userauthId, int $year, int $month): array
+    {
+        $rangeStart = CarbonImmutable::create($year, $month, 1)->startOfDay();
+        $rangeEnd = $rangeStart->endOfMonth();
+
+        return [
+            'view' => 'month',
+            'range_start' => $rangeStart,
+            'range_end' => $rangeEnd,
+            'events' => $this->events->rangeForTenant($appId, $userauthId, $rangeStart, $rangeEnd),
+        ];
     }
 
     private function ensureValidTimeRange(mixed $startTime, mixed $endTime): void
