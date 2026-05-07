@@ -13,7 +13,7 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
 ## Task 1 — $450 MXN (Entregable: Modelos, Migraciones y CRUD Base)
 
 ### Calendario / eventos
-* [ ] **CRUD de eventos**: Creación, lectura, actualización y eliminación.
+* [X] **CRUD de eventos**: Creación, lectura, actualización y eliminación.
 * [ ] **Calendario**: Vista mensual y semanal.
 * [ ] **Filtros**: Por usuario (`userauth_id`), aplicación (`app_id`), fecha y tipo de evento.
 * [ ] **Validación de conflictos**: Evitar que se traslapen eventos en el mismo horario.
