@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EventController;
 
 // --- CometaX Default Tools ---
 Route::get('/health', function () {
@@ -11,6 +12,15 @@ Route::get('/health', function () {
 // --- Diagnóstico Sentry Full-Stack (CometaX Diagnostics) ---
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+
+ // --- Rutas de Eventos ---
+Route::apiResource('events', EventController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+
+Route::get('events', [EventController::class, 'index'])->name('events.index');
+Route::post('events', [EventController::class, 'store'])->name('events.store');
+Route::get('events/{event}', [EventController::class, 'show'])->name('events.show');
+Route::put('events/{event}', [EventController::class, 'update'])->name('events.update');
+Route::delete('events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
 
 Route::get('/test-sentry', function () {
     // 0. Forzar nombre de transacción para Discover y Metrics
