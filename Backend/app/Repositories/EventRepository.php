@@ -41,6 +41,16 @@ class EventRepository
             ->get();
     }
 
+    public function hasScheduleOverlap(string $appId, string $userauthId, mixed $startTime, mixed $endTime, ?int $ignoreEventId = null): bool
+    {
+        return Event::query()
+            ->forTenant($appId, $userauthId)
+            ->where('start_time', '<', $endTime)
+            ->where('end_time', '>', $startTime)
+            ->when($ignoreEventId !== null, fn ($query) => $query->whereKeyNot($ignoreEventId))
+            ->exists();
+    }
+
     public function create(array $data): Event
     {
         return Event::query()->create($data)->load('eventType');

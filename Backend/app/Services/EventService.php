@@ -34,6 +34,7 @@ class EventService
     public function create(array $data): Event
     {
         $this->ensureValidTimeRange($data['start_time'], $data['end_time']);
+        $this->ensureNoScheduleConflict($data['app_id'], $data['userauth_id'], $data['start_time'], $data['end_time']);
 
         return $this->events->create($data);
     }
@@ -46,6 +47,7 @@ class EventService
         $endTime = $updateData['end_time'] ?? $event->end_time;
 
         $this->ensureValidTimeRange($startTime, $endTime);
+        $this->ensureNoScheduleConflict($event->app_id, $event->userauth_id, $startTime, $endTime, $event->id);
 
         return $this->events->update($event, $updateData);
     }
@@ -90,5 +92,17 @@ class EventService
                 'end_time' => ['La hora de finalización debe ser posterior a la hora de inicio.'],
             ]);
         }
+    }
+
+    private function ensureNoScheduleConflict(string $appId, string $userauthId, mixed $startTime, mixed $endTime, ?int $ignoreEventId = null): void
+    {
+        if (! $this->events->hasScheduleOverlap($appId, $userauthId, $startTime, $endTime, $ignoreEventId)) {
+            return;
+        }
+
+        throw ValidationException::withMessages([
+            'start_time' => ['El horario se traslapa con otro evento existente.'],
+            'end_time' => ['El horario se traslapa con otro evento existente.'],
+        ]);
     }
 }
