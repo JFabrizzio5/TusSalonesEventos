@@ -4,11 +4,23 @@ namespace App\Repositories;
 
 use App\Models\Event;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class EventRepository
 {
     public function paginateForTenant(string $appId, string $userauthId, array $filters = []): LengthAwarePaginator
+    {
+        return $this->filteredQueryForTenant($appId, $userauthId, $filters)
+            ->paginate($filters['per_page'] ?? 15);
+    }
+
+    public function getFilteredForTenant(string $appId, string $userauthId, array $filters = []): Collection
+    {
+        return $this->filteredQueryForTenant($appId, $userauthId, $filters)->get();
+    }
+
+    private function filteredQueryForTenant(string $appId, string $userauthId, array $filters = []): Builder
     {
         return Event::query()
             ->with('eventType')
@@ -17,8 +29,7 @@ class EventRepository
             ->when($filters['event_type_slug'] ?? null, fn ($query, $eventTypeSlug) => $query->whereHas('eventType', fn ($eventTypeQuery) => $eventTypeQuery->where('slug', $eventTypeSlug)))
             ->when($filters['start_time'] ?? null, fn ($query, $startTime) => $query->where('end_time', '>=', $startTime))
             ->when($filters['end_time'] ?? null, fn ($query, $endTime) => $query->where('start_time', '<=', $endTime))
-            ->orderBy('start_time')
-            ->paginate($filters['per_page'] ?? 15);
+            ->orderBy('start_time');
     }
 
     public function findForTenant(int $eventId, string $appId, string $userauthId): ?Event

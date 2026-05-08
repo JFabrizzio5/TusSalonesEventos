@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventImportExportController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,8 @@ Route::get('/health', function () {
 
 // --- Rutas de Eventos ---
 Route::get('events', [EventController::class, 'index'])->name('events.index');
+Route::post('events/import', [EventImportExportController::class, 'import'])->name('events.import');
+Route::get('events/export', [EventImportExportController::class, 'export'])->name('events.export');
 Route::post('events', [EventController::class, 'store'])->name('events.store');
 Route::get('events/{event}', [EventController::class, 'show'])->name('events.show');
 Route::put('events/{event}', [EventController::class, 'update'])->name('events.update');

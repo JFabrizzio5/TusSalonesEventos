@@ -13,13 +13,15 @@ class EventType extends Model
         'is_active',
     ];
 
-    protected function casts(): array{
+    protected function casts(): array
+    {
         return [
             'is_active' => 'boolean',
         ];
     }
 
-    public function events(): HasMany {
+    public function events(): HasMany
+    {
         return $this->hasMany(Event::class);
     }
 }
