@@ -13,26 +13,22 @@ class SalonService
     }
 
     //Obtener un salon por id
-    public function getById(string $id)
+    public function getById(string $id): Salon
     {
-        return Salon::find($id);
+        return Salon::findOrFail($id);
     }
 
     //Crear salon
-    public function create(array $data)
+    public function create(array $data): Salon
     {
         return Salon::create($data);
     }
 
     //Actualizar salon
-    public function update(string $id, array $data)
+    public function update(string $id, array $data): Salon
     {
-        $salon = Salon::find($id);
-
-        if (!$salon) {
-            return null;
-        }
-
+        $salon = Salon::findOrFail($id);
+        
         $salon -> update($data);
         return $salon;
     }
@@ -40,7 +36,7 @@ class SalonService
     // Eliminar
     public function delete(string $id)
     {
-        $salon = Salon::find($id);
+        $salon = Salon::findOrFail($id);
 
         if (!$salon) {
             return false;
