@@ -1,0 +1,21 @@
+meta {
+  name: ObtenerSalons
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost/api/salons/
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~name[eq]: SalonExample
+  ~app_id[eq]: APP001
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

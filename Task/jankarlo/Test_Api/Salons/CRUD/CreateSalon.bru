@@ -1,0 +1,25 @@
+meta {
+  name: CreateSalon
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost/api/salons/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "SalonExample",
+    "capacity": 35,
+    "app_id": "APP001",
+    "userauth_id": "USER001"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

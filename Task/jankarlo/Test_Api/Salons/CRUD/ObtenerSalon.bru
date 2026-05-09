@@ -1,0 +1,16 @@
+meta {
+  name: ObtenerSalon
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost/api/salons/1
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

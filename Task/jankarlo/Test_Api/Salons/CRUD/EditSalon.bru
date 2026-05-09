@@ -1,0 +1,22 @@
+meta {
+  name: EditSalon
+  type: http
+  seq: 1
+}
+
+put {
+  url: http://localhost/api/salons/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "capacity": 350
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
