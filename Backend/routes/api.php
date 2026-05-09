@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SalonController;
 
 // --- CometaX Default Tools ---
 Route::get('/health', function () {
@@ -40,3 +41,6 @@ Route::get('/test-sentry', function () {
     \Sentry\flush(); // <--- CRÍTICO: Asegura que las métricas y logs se envíen antes de que Laravel mate el proceso
     throw new \Exception('🔥 Diagnóstico Discover en TusSalonesEventos: Si ves esto, cambia el filtro de proyecto en Sentry a "All Projects".');
 });
+
+// --- Rutas de API para Salones ---
+Route::apiResource('salons', SalonController::class);
