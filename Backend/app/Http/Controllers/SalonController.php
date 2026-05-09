@@ -4,26 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\SalonService;
+use App\Http\Requests\Salons\StoreSalonRequest;
+use App\Http\Requests\Salons\UpdateSalonRequest;
+use App\Filters\CustomerFilter;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class SalonController extends Controller
 {
-    // Inyección de dependencia del servicio de Salones
-    protected $salonService;
-
-    public function __construct(SalonService $salonService)
+    public function __construct(protected SalonService $salonService)
     {
-        $this->salonService = $salonService;
     }
-
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //Get all salones /api/salons
-        $salon = $this->salonService->getAll();
+        //Filter
+        $filter = new CustomerFilter();
+        $queryItems = $filter->transform($request); // [['column', 'operator', 'value']]
 
-        return response()->json($salon);
+        //Get all salones /api/salons
+        $salon = $this->salonService->getAll($queryItems);
+
+        return $this->success($salon);
     }
 
     /**
@@ -31,58 +34,42 @@ class SalonController extends Controller
      */
     public function show(string $id)
     {
-        //GET /api/salons/{id}
-        $salon = $this->salonService->getById($id);
-
-        if (!$salon){
-            return response()->json(['message' => 'Salon no encontrado'], 404);
+        try{
+            //GET /api/salons/{id}
+            $salon = $this->salonService->getById($id);
+            return $this ->success($salon);
+        }catch(ModelNotFoundException){
+            return $this -> notFound();
         }
-        return response()->json($salon);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreSalonRequest $request)
     {
         // POST /api/salons
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'capacity' => 'required|integer|min:1',
-            'app_id' => 'required|string',
-            'userauth_id' => 'required|string'
-        ]);
+        $salon = $this->salonService->create($request->validated());
 
-        $salon = $this ->salonService->create($validatedData);
-
-        return response()->json([
-            'message' => 'Salon creado correctamente',
-            'data' => $salon
-        ], 201);
+        return $this->success(
+            data: $salon,
+            message: 'Salon creado correctamente',
+            status: 201
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateSalonRequest $request, string $id)
     {
         // PUT /api/salons/{id}
-        // Validar datos de entrada(solo los campos name y capacity pueden ser actualizados)
-        $validatedData = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'capacity' => 'sometimes|integer|min:1'
-        ]);
-
-        $salon = $this ->salonService->update($id, $validatedData);
-
-        if (!$salon){
-            return response()->json(['message' => 'Salon no encontrado'], 404);
+        try {
+            $salon = $this->salonService->update($id, $request->validated());
+            return $this->success($salon, 'Salón actualizado correctamente.');
+        } catch (ModelNotFoundException) {
+            return $this->notFound();
         }
-
-        return response()->json([
-            'message' => 'Salon actualizado correctamente',
-            'data' => $salon
-        ]);
     }
 
     /**
@@ -90,17 +77,32 @@ class SalonController extends Controller
      */
     public function destroy(string $id)
     {
-        //DELETE /api/salons/{id}
-        $deleted = $this->salonService->delete($id);
+        try{
+            //DELETE /api/salons/{id}
+            $this->salonService->delete($id);
+            return $this->success(message: 'Salon eliminado correctamente');
+        }catch(ModelNotFoundException){
+            return $this -> notFound();
+        }
+    }
 
-        if (!$deleted) {
-            return response()->json([
-                'message' => 'Salon no encontrado'
-            ], 404);
+    /* -----------------------------------------------------------------------
+    | Helpers privados para respuestas consistentes
+    | ---------------------------------------------------------------------- */
+
+    private function success(mixed $data = null, string $message = 'OK', int $status = 200)
+    {
+        $body = ['message' => $message];
+
+        if (!is_null($data)) {
+            $body['data'] = $data;
         }
 
-        return response()->json([
-            'message' => 'Salon eliminado correctamente'
-        ]);
+        return response()->json($body, $status);
+    }
+
+    private function notFound(string $message = 'Salón no encontrado.')
+    {
+        return response()->json(['message' => $message], 404);
     }
 }
