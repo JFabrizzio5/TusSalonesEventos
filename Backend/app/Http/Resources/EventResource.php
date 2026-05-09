@@ -21,6 +21,7 @@ class EventResource extends JsonResource
             ]),
             'title' => $this->title,
             'description' => $this->description,
+            'metadata' => $this->metadata,
             'start_time' => $this->start_time?->toISOString(),
             'end_time' => $this->end_time?->toISOString(),
             'created_at' => $this->created_at?->toISOString(),

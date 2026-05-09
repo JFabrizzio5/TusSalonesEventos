@@ -18,7 +18,7 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
 * [X] **Filtros**: Por usuario (`userauth_id`), aplicación (`app_id`), fecha y tipo de evento.
 * [X] **Validación de conflictos**: Evitar que se traslapen eventos en el mismo horario.
 * [X] **Importación/Exportación**: Soporte para archivos `.csv` y `.ics`.
-* [ ] **Tipos de evento**: Soporte dinámico para:
+* [X] **Tipos de evento**: Soporte dinámico para:
   * Cine
   * Torneo
   * Showcase

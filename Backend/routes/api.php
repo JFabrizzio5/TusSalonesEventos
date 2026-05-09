@@ -3,6 +3,7 @@
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventImportExportController;
+use App\Http\Controllers\EventTypeController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,7 @@ Route::get('/health', function () {
 });
 
 // --- Rutas de Eventos ---
+Route::get('event-types', [EventTypeController::class, 'index'])->name('event-types.index');
 Route::get('events', [EventController::class, 'index'])->name('events.index');
 Route::post('events/import', [EventImportExportController::class, 'import'])->name('events.import');
 Route::get('events/export', [EventImportExportController::class, 'export'])->name('events.export');

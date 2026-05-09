@@ -19,6 +19,7 @@ class UpdateEventRequest extends FormRequest
             'event_type_id' => ['sometimes', 'integer', 'exists:event_types,id'],
             'title' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
+            'metadata' => ['nullable', 'array'],
             'start_time' => ['sometimes', 'date'],
             'end_time' => ['sometimes', 'date'],
         ];

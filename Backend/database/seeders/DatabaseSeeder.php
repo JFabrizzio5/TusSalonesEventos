@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\EventType;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -22,10 +22,12 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Showcase', 'slug' => 'showcase'],
             ['name' => 'Sesión de DJs', 'slug' => 'sesion-djs'],
             ['name' => 'Conferencias', 'slug' => 'conferencias'],
-        ])->each(fn(array $type) => EventType::query()->firstOrCreate(
-                ['slug' => $type['slug']],
-                ['name' => $type['name'], 'is_active' => true],
-            ));
+            ['name' => 'DJ Set', 'slug' => 'dj-set'],
+            ['name' => 'Llamada de Zoom', 'slug' => 'llamada-de-zoom'],
+        ])->each(fn (array $type) => EventType::query()->firstOrCreate(
+            ['slug' => $type['slug']],
+            ['name' => $type['name'], 'is_active' => true],
+        ));
         // User::factory(10)->create();
 
         User::factory()->create([
