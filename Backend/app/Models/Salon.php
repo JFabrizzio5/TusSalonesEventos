@@ -15,4 +15,11 @@ class Salon extends Model
         'app_id',
         'userauth_id'
     ];
+
+    //Casting de tipos de datos
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
+    ];
+
 }
