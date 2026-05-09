@@ -7,9 +7,14 @@ use App\Models\Salon;
 class SalonService
 {
     //Obtener todos los salones
-    public function getAll()
+    public function getAll(array $filters = [])
     {
-        return Salon::all();
+        $query = Salon::query();
+        //Validar si hay filtros
+        if(!empty($filters)){
+            $query -> where($filters);
+        }
+        return $query->get();
     }
 
     //Obtener un salon por id
