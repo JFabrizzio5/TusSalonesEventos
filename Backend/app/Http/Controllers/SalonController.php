@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\SalonService;
 use App\Http\Requests\Salons\StoreSalonRequest;
 use App\Http\Requests\Salons\UpdateSalonRequest;
-use App\Filters\CustomerFilter;
+use App\Filters\SalonFilter;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class SalonController extends Controller
@@ -20,7 +20,7 @@ class SalonController extends Controller
     public function index(Request $request)
     {
         //Filter
-        $filter = new CustomerFilter();
+        $filter = new SalonFilter();
         $queryItems = $filter->transform($request); // [['column', 'operator', 'value']]
 
         //Get all salones /api/salons
