@@ -1,5 +1,5 @@
 $kind: http-request
-url: "{{baseUrl}}/api/events/1?app_id={{app_id}}&userauth_id={{userauth_id}}"
+url: "{{baseUrl}}/api/events/{{eventId}}?app_id={{app_id}}&userauth_id={{userauth_id}}"
 method: GET
 queryParams:
   app_id: "{{app_id}}"

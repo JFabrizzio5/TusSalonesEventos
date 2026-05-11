@@ -6,6 +6,8 @@ localResources:
   collections:
     - ../endpoints.postman_collection.json
 
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
 cloudResources:
   collections:
-    ../postman/collections/TusSalonesEventos API: 57115a04-92ca-42ca-8916-d06e5a532443
+    ../postman/collections/TusSalonesEventos API: 4c4ee2c0-db8a-48a6-9c1e-5cee537dbb0e

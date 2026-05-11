@@ -22,6 +22,7 @@ Route::get('events', [EventController::class, 'index'])->name('events.index');
 Route::post('events/import', [EventImportExportController::class, 'import'])->name('events.import');
 Route::get('events/export', [EventImportExportController::class, 'export'])->name('events.export');
 Route::post('events', [EventController::class, 'store'])->name('events.store');
+Route::delete('events/reset', [EventController::class, 'reset'])->name('events.reset');
 Route::get('events/{event}', [EventController::class, 'show'])->name('events.show');
 Route::put('events/{event}', [EventController::class, 'update'])->name('events.update');
 Route::delete('events/{event}', [EventController::class, 'destroy'])->name('events.destroy');

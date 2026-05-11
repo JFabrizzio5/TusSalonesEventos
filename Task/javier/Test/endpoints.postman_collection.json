@@ -19,9 +19,71 @@
       "key": "userauth_id",
       "value": "user-a",
       "type": "string"
+    },
+    {
+      "key": "eventId",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
+    {
+      "name": "SETUP - Reset y Crear Evento Base",
+      "item": [
+        {
+          "name": "Reset Events",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/events/reset?app_id={{app_id}}&userauth_id={{userauth_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "reset"],
+              "query": [
+                {"key": "app_id", "value": "{{app_id}}"},
+                {"key": "userauth_id", "value": "{{userauth_id}}"}
+              ]
+            },
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Create Base Event",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.id) {",
+                  "    pm.collectionVariables.set('eventId', jsonData.data.id);",
+                  "}",
+                  "console.log('Event ID saved:', jsonData.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/events",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events"]
+            },
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"app_id\": \"{{app_id}}\",\n    \"userauth_id\": \"{{userauth_id}}\",\n    \"event_type_id\": 1,\n    \"title\": \"Cumpleaños de Juan\",\n    \"description\": \"Celebración de cumpleaños\",\n    \"start_time\": \"2026-06-15T18:00:00\",\n    \"end_time\": \"2026-06-15T22:00:00\"\n}",
+              "options": {"raw": {"language": "json"}}
+            }
+          },
+          "response": []
+        }
+      ]
+    },
     {
       "name": "Event Types",
       "item": [
@@ -74,7 +136,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"app_id\": \"{{app_id}}\",\n    \"userauth_id\": \"{{userauth_id}}\",\n    \"event_type_id\": 1,\n    \"title\": \"Cumpleaños de Juan\",\n    \"description\": \"Celebración de cumpleaños\",\n    \"start_time\": \"2026-06-15T18:00:00\",\n    \"end_time\": \"2026-06-15T22:00:00\"\n}",
+              "raw": "{\n    \"app_id\": \"{{app_id}}\",\n    \"userauth_id\": \"{{userauth_id}}\",\n    \"event_type_id\": 1,\n    \"title\": \"Evento de Prueba\",\n    \"description\": \"Descripción del evento\",\n    \"start_time\": \"2026-07-01T10:00:00\",\n    \"end_time\": \"2026-07-01T12:00:00\"\n}",
               "options": {"raw": {"language": "json"}}
             }
           },
@@ -85,9 +147,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{baseUrl}}/api/events/1?app_id={{app_id}}&userauth_id={{userauth_id}}",
+              "raw": "{{baseUrl}}/api/events/{{eventId}}?app_id={{app_id}}&userauth_id={{userauth_id}}",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "events", "1"],
+              "path": ["api", "events", "{{eventId}}"],
               "query": [
                 {"key": "app_id", "value": "{{app_id}}"},
                 {"key": "userauth_id", "value": "{{userauth_id}}"}
@@ -102,9 +164,9 @@
           "request": {
             "method": "PUT",
             "url": {
-              "raw": "{{baseUrl}}/api/events/1",
+              "raw": "{{baseUrl}}/api/events/{{eventId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "events", "1"]
+              "path": ["api", "events", "{{eventId}}"]
             },
             "header": [
               {"key": "Content-Type", "value": "application/json"}
@@ -122,9 +184,9 @@
           "request": {
             "method": "DELETE",
             "url": {
-              "raw": "{{baseUrl}}/api/events/1?app_id={{app_id}}&userauth_id={{userauth_id}}",
+              "raw": "{{baseUrl}}/api/events/{{eventId}}?app_id={{app_id}}&userauth_id={{userauth_id}}",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "events", "1"],
+              "path": ["api", "events", "{{eventId}}"],
               "query": [
                 {"key": "app_id", "value": "{{app_id}}"},
                 {"key": "userauth_id", "value": "{{userauth_id}}"}

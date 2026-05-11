@@ -59,6 +59,11 @@ class EventService
         $this->events->delete($event);
     }
 
+    public function deleteByTenant(string $appId, string $userauthId): int
+    {
+        return $this->events->deleteForTenant($appId, $userauthId);
+    }
+
     public function weeklyCalendar(string $appId, string $userauthId, string $weekStart): array
     {
         $rangeStart = CarbonImmutable::parse($weekStart)->startOfDay();

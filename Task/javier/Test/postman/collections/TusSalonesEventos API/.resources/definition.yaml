@@ -4,3 +4,4 @@ variables:
   baseUrl: http://localhost:80
   app_id: app-a
   userauth_id: user-a
+  eventId: ""

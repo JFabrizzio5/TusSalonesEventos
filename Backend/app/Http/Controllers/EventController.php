@@ -90,4 +90,19 @@ class EventController extends Controller
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }
+
+    public function reset(Request $request): JsonResponse
+    {
+        $tenant = $request->validate([
+            'app_id' => ['required', 'string', 'max:255'],
+            'userauth_id' => ['required', 'string', 'max:255'],
+        ]);
+
+        $deleted = $this->events->deleteByTenant($tenant['app_id'], $tenant['userauth_id']);
+
+        return response()->json([
+            'message' => 'Eventos eliminados',
+            'deleted_count' => $deleted,
+        ]);
+    }
 }

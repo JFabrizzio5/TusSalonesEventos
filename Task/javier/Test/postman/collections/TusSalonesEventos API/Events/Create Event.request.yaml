@@ -10,9 +10,9 @@ body:
         "app_id": "{{app_id}}",
         "userauth_id": "{{userauth_id}}",
         "event_type_id": 1,
-        "title": "Cumpleaños de Juan",
-        "description": "Celebración de cumpleaños",
-        "start_time": "2026-06-15T18:00:00",
-        "end_time": "2026-06-15T22:00:00"
+        "title": "Evento de Prueba",
+        "description": "Descripción del evento",
+        "start_time": "2026-07-01T10:00:00",
+        "end_time": "2026-07-01T12:00:00"
     }
 order: 2000

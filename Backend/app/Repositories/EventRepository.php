@@ -78,4 +78,11 @@ class EventRepository
     {
         $event->delete();
     }
+
+    public function deleteForTenant(string $appId, string $userauthId): int
+    {
+        return Event::query()
+            ->forTenant($appId, $userauthId)
+            ->delete();
+    }
 }
