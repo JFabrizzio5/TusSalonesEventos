@@ -1,0 +1,11 @@
+# Use this workspace to collaborate
+workspace:
+  id: d38d57da-7b93-4f06-8ffa-ce6df210c692
+
+localResources:
+  collections:
+    - ../endpoints.postman_collection.json
+
+cloudResources:
+  collections:
+    ../postman/collections/TusSalonesEventos API: 57115a04-92ca-42ca-8916-d06e5a532443

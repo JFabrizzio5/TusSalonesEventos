@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseUrl}}/api/events"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+        "app_id": "{{app_id}}",
+        "userauth_id": "{{userauth_id}}",
+        "event_type_id": 1,
+        "title": "Cumpleaños de Juan",
+        "description": "Celebración de cumpleaños",
+        "start_time": "2026-06-15T18:00:00",
+        "end_time": "2026-06-15T22:00:00"
+    }
+order: 2000

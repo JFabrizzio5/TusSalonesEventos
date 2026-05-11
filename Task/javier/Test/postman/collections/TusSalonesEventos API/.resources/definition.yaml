@@ -1,0 +1,6 @@
+$kind: collection
+description: Colección de endpoints para el sistema de gestión de eventos y calendarios
+variables:
+  baseUrl: http://localhost:80
+  app_id: app-a
+  userauth_id: user-a

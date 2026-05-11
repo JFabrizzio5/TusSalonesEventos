@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/calendar/month?app_id={{app_id}}&userauth_id={{userauth_id}}&year=2026&month=5"
+method: GET
+queryParams:
+  app_id: "{{app_id}}"
+  userauth_id: "{{userauth_id}}"
+  year: "2026"
+  month: "5"
+order: 2000

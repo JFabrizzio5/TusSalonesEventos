@@ -1,0 +1,8 @@
+$kind: http-request
+url: "{{baseUrl}}/api/calendar/week?app_id={{app_id}}&userauth_id={{userauth_id}}&week_start=2026-05-11"
+method: GET
+queryParams:
+  app_id: "{{app_id}}"
+  userauth_id: "{{userauth_id}}"
+  week_start: 2026-05-11
+order: 1000

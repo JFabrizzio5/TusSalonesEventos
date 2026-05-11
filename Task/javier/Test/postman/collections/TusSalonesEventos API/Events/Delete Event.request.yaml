@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{baseUrl}}/api/events/1?app_id={{app_id}}&userauth_id={{userauth_id}}"
+method: DELETE
+queryParams:
+  app_id: "{{app_id}}"
+  userauth_id: "{{userauth_id}}"
+order: 5000

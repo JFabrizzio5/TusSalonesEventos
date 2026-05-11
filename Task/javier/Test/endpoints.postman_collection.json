@@ -1,0 +1,222 @@
+{
+  "info": {
+    "name": "TusSalonesEventos API",
+    "description": "Colección de endpoints para el sistema de gestión de eventos y calendarios",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:80",
+      "type": "string"
+    },
+    {
+      "key": "app_id",
+      "value": "app-a",
+      "type": "string"
+    },
+    {
+      "key": "userauth_id",
+      "value": "user-a",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Event Types",
+      "item": [
+        {
+          "name": "List Event Types",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/event-types",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "event-types"]
+            },
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "List Events",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/events?app_id={{app_id}}&userauth_id={{userauth_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events"],
+              "query": [
+                {"key": "app_id", "value": "{{app_id}}"},
+                {"key": "userauth_id", "value": "{{userauth_id}}"}
+              ]
+            },
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Create Event",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/events",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events"]
+            },
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"app_id\": \"{{app_id}}\",\n    \"userauth_id\": \"{{userauth_id}}\",\n    \"event_type_id\": 1,\n    \"title\": \"Cumpleaños de Juan\",\n    \"description\": \"Celebración de cumpleaños\",\n    \"start_time\": \"2026-06-15T18:00:00\",\n    \"end_time\": \"2026-06-15T22:00:00\"\n}",
+              "options": {"raw": {"language": "json"}}
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Event",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/events/1?app_id={{app_id}}&userauth_id={{userauth_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "1"],
+              "query": [
+                {"key": "app_id", "value": "{{app_id}}"},
+                {"key": "userauth_id", "value": "{{userauth_id}}"}
+              ]
+            },
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Update Event",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/api/events/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "1"]
+            },
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"app_id\": \"{{app_id}}\",\n    \"userauth_id\": \"{{userauth_id}}\",\n    \"title\": \"Cumpleaños de Juan - Actualizado\",\n    \"description\": \"Celebración de cumpleaños actualizada\",\n    \"start_time\": \"2026-06-15T19:00:00\",\n    \"end_time\": \"2026-06-15T23:00:00\"\n}",
+              "options": {"raw": {"language": "json"}}
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Event",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/events/1?app_id={{app_id}}&userauth_id={{userauth_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "1"],
+              "query": [
+                {"key": "app_id", "value": "{{app_id}}"},
+                {"key": "userauth_id", "value": "{{userauth_id}}"}
+              ]
+            },
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Import Events",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/events/import",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "import"]
+            },
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {"key": "app_id", "value": "{{app_id}}", "type": "text"},
+                {"key": "userauth_id", "value": "{{userauth_id}}", "type": "text"},
+                {"key": "format", "value": "csv", "type": "text"},
+                {"key": "file", "type": "file", "src": []}
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Export Events",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/events/export?app_id={{app_id}}&userauth_id={{userauth_id}}&format=csv",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "events", "export"],
+              "query": [
+                {"key": "app_id", "value": "{{app_id}}"},
+                {"key": "userauth_id", "value": "{{userauth_id}}"},
+                {"key": "format", "value": "csv"}
+              ]
+            },
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Calendar",
+      "item": [
+        {
+          "name": "Week View",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/calendar/week?app_id={{app_id}}&userauth_id={{userauth_id}}&week_start=2026-05-11",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "calendar", "week"],
+              "query": [
+                {"key": "app_id", "value": "{{app_id}}"},
+                {"key": "userauth_id", "value": "{{userauth_id}}"},
+                {"key": "week_start", "value": "2026-05-11"}
+              ]
+            },
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Month View",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/calendar/month?app_id={{app_id}}&userauth_id={{userauth_id}}&year=2026&month=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "calendar", "month"],
+              "query": [
+                {"key": "app_id", "value": "{{app_id}}"},
+                {"key": "userauth_id", "value": "{{userauth_id}}"},
+                {"key": "year", "value": "2026"},
+                {"key": "month", "value": "5"}
+              ]
+            },
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

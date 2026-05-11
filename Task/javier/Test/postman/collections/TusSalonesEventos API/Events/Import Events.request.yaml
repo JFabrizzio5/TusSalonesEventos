@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{baseUrl}}/api/events/import"
+method: POST
+body:
+  type: formdata
+  content:
+    - type: text
+      key: app_id
+      value: "{{app_id}}"
+    - type: text
+      key: userauth_id
+      value: "{{userauth_id}}"
+    - type: text
+      key: format
+      value: csv
+    - type: file
+      key: file
+      src: []
+order: 6000

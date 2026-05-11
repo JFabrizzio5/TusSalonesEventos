@@ -1,0 +1,8 @@
+$kind: http-request
+url: "{{baseUrl}}/api/events/export?app_id={{app_id}}&userauth_id={{userauth_id}}&format=csv"
+method: GET
+queryParams:
+  app_id: "{{app_id}}"
+  userauth_id: "{{userauth_id}}"
+  format: csv
+order: 7000
