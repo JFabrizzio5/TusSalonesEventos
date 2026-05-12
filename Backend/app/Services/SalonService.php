@@ -9,7 +9,7 @@ class SalonService
     //Obtener todos los salones
     public function getAll(array $filters = [])
     {
-        $query = Salon::query();
+        $query = Salon::query();    
         //Validar si hay filtros
         if(!empty($filters)){
             $query -> where($filters);
