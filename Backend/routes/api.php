@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SalonController;
+use App\Http\Controllers\ZoneController;
+
+
 
 // --- CometaX Default Tools ---
 Route::get('/health', function () {
@@ -44,3 +47,4 @@ Route::get('/test-sentry', function () {
 
 // --- Rutas de API para Salones ---
 Route::apiResource('salons', SalonController::class);
+Route::apiResource('zones', ZoneController::class);
