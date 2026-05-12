@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Utils\ApiResponse;
 use App\Services\SalonService;
 use App\Http\Requests\Salons\StoreSalonRequest;
 use App\Http\Requests\Salons\UpdateSalonRequest;
 use App\Filters\SalonFilter;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class SalonController extends Controller
 {
+    use ApiResponse;
+
     public function __construct(protected SalonService $salonService)
     {
     }
@@ -84,25 +87,5 @@ class SalonController extends Controller
         }catch(ModelNotFoundException){
             return $this -> notFound();
         }
-    }
-
-    /* -----------------------------------------------------------------------
-    | Helpers privados para respuestas consistentes
-    | ---------------------------------------------------------------------- */
-
-    private function success(mixed $data = null, string $message = 'OK', int $status = 200)
-    {
-        $body = ['message' => $message];
-
-        if (!is_null($data)) {
-            $body['data'] = $data;
-        }
-
-        return response()->json($body, $status);
-    }
-
-    private function notFound(string $message = 'Salón no encontrado.')
-    {
-        return response()->json(['message' => $message], 404);
     }
 }
