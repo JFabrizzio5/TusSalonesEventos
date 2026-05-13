@@ -45,6 +45,7 @@ Route::get('/test-sentry', function () {
     throw new \Exception('🔥 Diagnóstico Discover en TusSalonesEventos: Si ves esto, cambia el filtro de proyecto en Sentry a "All Projects".');
 });
 
-// --- Rutas de API para Salones ---
+// --- Rutas de API ---
 Route::apiResource('salons', SalonController::class);
+Route::get('salons/{id}/capacity', [SalonController::class, 'capacity']);
 Route::apiResource('zones', ZoneController::class);
