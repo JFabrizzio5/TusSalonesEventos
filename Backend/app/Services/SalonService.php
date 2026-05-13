@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Salon;
+use App\Models\Reservation;
 
 class SalonService
 {
@@ -48,5 +49,26 @@ class SalonService
         }
 
         return $salon->delete();
+    }
+    // Obtener la capacidad de un salon
+    public function getCapacity(string $id)
+    {
+        $salon = Salon::findOrFail($id);
+        
+        //Obtener el numero de personas registradas en las reservas del salon
+        $registeredPeople = Reservation::where('status', 'active')
+            ->sum('guest_count');
+
+        //lugares restantes
+        $remainingCapacity = $salon->capacity - $registeredPeople;
+
+        return [
+            'salon_id'            => $salon->id,
+            'salon_name'          => $salon->name,
+            'capacity'            => $salon->capacity,
+            'registered_people'  => $registeredPeople,
+            'remaining_capacity' => max($remainingCapacity, 0),
+            'is_full'             => $remainingCapacity <= 0,
+        ];
     }
 }
