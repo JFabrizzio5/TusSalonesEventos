@@ -45,7 +45,16 @@ class SalonController extends Controller
             return $this -> notFound();
         }
     }
-
+    public function capacity(string $id)
+    {
+        try{
+            //GET /api/salons/{id}/capacity
+            $capacity = $this->salonService->getCapacity($id);
+            return $this ->success($capacity);
+        }catch(ModelNotFoundException){
+            return $this -> notFound();
+        }
+    }
     /**
      * Store a newly created resource in storage.
      */
