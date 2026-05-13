@@ -1,0 +1,16 @@
+meta {
+  name: ObtenerCapacity
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost/api/salons/2/capacity
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
