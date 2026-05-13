@@ -12,6 +12,12 @@ class Zone extends Model
         'name'
     ];
 
+    //Casting de tipos de datos
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
+    ];
+    
     //Relacion muchos a uno(salones-zonas)
     public function salon()
     {
