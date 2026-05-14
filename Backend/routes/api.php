@@ -1,20 +1,16 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SalonController;
 use App\Http\Controllers\ZoneController;
-
-
+use App\Http\Controllers\SeatMapController;
+use App\Http\Controllers\SeatController;
 
 // --- CometaX Default Tools ---
 Route::get('/health', function () {
     return response()->json(['status' => 'ok', 'app' => env('APP_NAME')]);
 });
 
-// --- Diagnóstico Sentry Full-Stack (CometaX Diagnostics) ---
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 
 Route::get('/test-sentry', function () {
     // 0. Forzar nombre de transacción para Discover y Metrics
@@ -48,4 +44,8 @@ Route::get('/test-sentry', function () {
 // --- Rutas de API ---
 Route::apiResource('salons', SalonController::class);
 Route::get('salons/{id}/capacity', [SalonController::class, 'capacity']);
+Route::get('salons/{id}/seat-map', [SeatMapController::class, 'show']);
 Route::apiResource('zones', ZoneController::class);
+Route::post('seats', [SeatController::class, 'store']);
+Route::put('seats/{id}', [SeatController::class, 'update']);
+Route::patch('seats/{id}/status', [SeatController::class, 'updateStatus']);
