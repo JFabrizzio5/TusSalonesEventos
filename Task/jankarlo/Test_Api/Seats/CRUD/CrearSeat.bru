@@ -1,0 +1,25 @@
+meta {
+  name: CrearSeat
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost/api/seats
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "zone_id": 2,
+    "row": "B",
+    "number": "0",
+    "status": "available"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

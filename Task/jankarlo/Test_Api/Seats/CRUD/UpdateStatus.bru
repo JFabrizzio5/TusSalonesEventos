@@ -1,0 +1,22 @@
+meta {
+  name: UpdateStatus
+  type: http
+  seq: 2
+}
+
+patch {
+  url: http://localhost/api/seats/1/status
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "status": "available"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

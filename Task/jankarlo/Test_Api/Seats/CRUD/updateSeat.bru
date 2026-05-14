@@ -1,0 +1,22 @@
+meta {
+  name: updateSeat
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost/api/seats/4
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "number": "3"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

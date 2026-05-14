@@ -1,0 +1,16 @@
+meta {
+  name: ObtenerZones
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost/api/zones/3
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
