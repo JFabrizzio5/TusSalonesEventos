@@ -13,9 +13,9 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
 ## Task 1 — $450 MXN (Entregable: Modelos, Migraciones y CRUD Base)
 
 ### Salones / asientos / tickets
-* [ ] **CRUD de salones**: Gestión de espacios físicos.
-* [ ] **Capacidad**: Control de aforo por salón.
-* [ ] **Zonas**: Configuración de áreas:
+* [x] **CRUD de salones**: Gestión de espacios físicos.
+* [x] **Capacidad**: Control de aforo por salón.
+* [x] **Zonas**: Configuración de áreas:
   * Piso alto
   * Piso bajo
   * Lateral
