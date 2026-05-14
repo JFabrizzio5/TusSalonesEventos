@@ -49,7 +49,7 @@ class SeatController extends Controller
     public function updateStatus(UpdateSeatStatusRequest $request, string $id)
     {
         try {
-            $seat = $this->seatService->updateSeatStatus($id,$request->validated());
+            $seat = $this->seatService->updateSeatStatus($id,$request->status);
             return $this->success($seat);
         } catch (ModelNotFoundException) {
             return $this->notFound();
