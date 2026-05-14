@@ -21,6 +21,11 @@ class Zone extends Model
     //Relacion muchos a uno(salones-zonas)
     public function salon()
     {
-        $this -> belongsTo(Salon::class);
+        return $this -> belongsTo(Salon::class);
     }
+    //Relacion uno a muchos(zonas-asientos)
+    public function seats()
+{
+    return $this->hasMany(Seat::class);
+}
 }

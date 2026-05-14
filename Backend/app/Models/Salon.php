@@ -22,4 +22,9 @@ class Salon extends Model
         'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
 
+    //Relacion uno a muchos(salones-zonas)
+    public function zones()
+    {
+        return $this->hasMany(Zone::class);
+    }
 }
