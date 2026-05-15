@@ -5,6 +5,7 @@ use App\Http\Controllers\SalonController;
 use App\Http\Controllers\ZoneController;
 use App\Http\Controllers\SeatMapController;
 use App\Http\Controllers\SeatController;
+use App\Http\Controllers\TicketController;
 
 // --- CometaX Default Tools ---
 Route::get('/health', function () {
@@ -49,3 +50,4 @@ Route::apiResource('zones', ZoneController::class);
 Route::post('seats', [SeatController::class, 'store']);
 Route::put('seats/{id}', [SeatController::class, 'update']);
 Route::patch('seats/{id}/status', [SeatController::class, 'updateStatus']);
+Route::apiResource('tickets', TicketController::class);
