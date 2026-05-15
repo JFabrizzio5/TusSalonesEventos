@@ -6,6 +6,8 @@ use App\Http\Controllers\ZoneController;
 use App\Http\Controllers\SeatMapController;
 use App\Http\Controllers\SeatController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\ImportExportController;
+
 
 // --- CometaX Default Tools ---
 Route::get('/health', function () {
@@ -51,3 +53,15 @@ Route::post('seats', [SeatController::class, 'store']);
 Route::put('seats/{id}', [SeatController::class, 'update']);
 Route::patch('seats/{id}/status', [SeatController::class, 'updateStatus']);
 Route::apiResource('tickets', TicketController::class);
+Route::prefix('import-export')->group(function () {
+
+    Route::post(
+        '/import/seats',
+        [ImportExportController::class, 'importFromCSV']
+    );
+
+    Route::get(
+        '/export/seats',
+        [ImportExportController::class, 'exportToCSV']
+    );
+});
