@@ -20,8 +20,8 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
   * Piso bajo
   * Lateral
   * Preferente
-* [ ] **Mapa de asientos**: Estructura de distribución de lugares.
-* [ ] **Estados de asiento**: Gestión de estados (Disponible, Reservado, Ocupado).
+* [x] **Mapa de asientos**: Estructura de distribución de lugares.
+* [x] **Estados de asiento**: Gestión de estados (Disponible, Reservado, Ocupado).
 * [ ] **Tickets básicos**: Generación de boletos base por evento.
 * [ ] **Importación/Exportación**: Soporte para layouts y disponibilidad en `.csv`.
 
