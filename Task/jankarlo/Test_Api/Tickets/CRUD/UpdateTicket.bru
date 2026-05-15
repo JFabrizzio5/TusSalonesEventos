@@ -1,0 +1,22 @@
+meta {
+  name: UpdateTicket
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost/api/tickets/2
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "price": 750
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
