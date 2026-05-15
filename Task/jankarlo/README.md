@@ -22,8 +22,8 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
   * Preferente
 * [x] **Mapa de asientos**: Estructura de distribución de lugares.
 * [x] **Estados de asiento**: Gestión de estados (Disponible, Reservado, Ocupado).
-* [ ] **Tickets básicos**: Generación de boletos base por evento.
-* [ ] **Importación/Exportación**: Soporte para layouts y disponibilidad en `.csv`.
+* [x] **Tickets básicos**: Generación de boletos base por evento.
+* [x] **Importación/Exportación**: Soporte para layouts y disponibilidad en `.csv`.
 
 > [!IMPORTANT]
 > Se otorgará carta de recomendación laboral una vez entregado satisfactoriamente el Task 1.
