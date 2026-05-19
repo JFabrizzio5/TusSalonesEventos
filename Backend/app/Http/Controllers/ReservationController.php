@@ -24,122 +24,67 @@ class ReservationController extends Controller
     {
         try {
             $reservations = $this->service->getAll();
-
-            return $this->success(
-                $reservations,
-                'Reservaciones obtenidas correctamente'
-            );
-
-        } catch (\Exception) {
+            return $this->success($reservations,'Reservaciones obtenidas correctamente');
+        } catch (ModelNotFoundException) {
             return $this->notFound();
         }
     }
-
     /**
      * Obtener reservación por id
      */
     public function show(int $id)
     {
         try {
-
             $reservation = $this->service->getById($id);
-
-            return $this->success(
-                $reservation,
-                'Reservación obtenida correctamente'
-            );
-
-        } catch (ModelNotFoundException $e) {
+            return $this->success($reservation,'Reservación obtenida correctamente');
+        } catch (ModelNotFoundException) {
             return $this->notFound();
         }
     }
-
     /**
      * Crear reservación
      */
     public function store(StoreReservationRequest $request)
     {
         try {
-
-            $reservation = $this->service->store(
-                $request->validated()
-            );
-
-            return $this->success(
-                $reservation,
-                'Reservación creada correctamente',
-                201
-            );
-
+            $reservation = $this->service->store($request->validated());
+            return $this->success($reservation,'Reservación creada correctamente',201);
         } catch (ModelNotFoundException) {
             return $this->notFound();
         }
     }
-
     /**
      * Actualizar reservación
      */
     public function update(UpdateReservationRequest $request, int $id)
     {
         try {
-
-            $reservation = $this->service->update(
-                $id,
-                $request->validated()
-            );
-
-            return $this->success(
-                $reservation,
-                'Reservación actualizada correctamente'
-            );
-
+            $reservation = $this->service->update($id,$request->validated());
+            return $this->success($reservation,'Reservación actualizada correctamente');
         } catch (ModelNotFoundException $e) {
-
             return $this->notFound();
         }
     }
-
     /**
      * Actualizar status
      */
-    public function updateStatus(
-        UpdateReservationStatusRequest $request,
-        int $id
-    ) {
+    public function updateStatus(UpdateReservationStatusRequest $request,int $id) {
         try {
-
-            $reservation = $this->service->updateStatus(
-                $id,
-                $request->validated()['status']
-            );
-
-            return $this->success(
-                $reservation,
-                'Estado actualizado correctamente'
-            );
-
+            $reservation = $this->service->updateStatus($id,$request->validated()['status']);
+            return $this->success($reservation,'Estado actualizado correctamente');
         } catch (ModelNotFoundException $e) {
-
             return $this->notFound();
         }
     }
-
     /**
      * Eliminar reservación
      */
     public function destroy(int $id)
     {
         try {
-
             $this->service->delete($id);
-
-            return $this->success(
-                null,
-                'Reservación eliminada correctamente'
-            );
-
+            return $this->success(null,'Reservación eliminada correctamente');
         } catch (ModelNotFoundException $e) {
-
             return $this->notFound();
         }
     }
