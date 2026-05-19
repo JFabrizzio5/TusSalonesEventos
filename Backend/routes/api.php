@@ -7,7 +7,7 @@ use App\Http\Controllers\SeatMapController;
 use App\Http\Controllers\SeatController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\ImportExportController;
-
+use App\Http\Controllers\ReservationController;
 
 // --- CometaX Default Tools ---
 Route::get('/health', function () {
@@ -65,3 +65,5 @@ Route::prefix('import-export')->group(function () {
         [ImportExportController::class, 'exportToCSV']
     );
 });
+Route::apiResource('reservations', ReservationController::class);
+Route::patch('reservations/{id}/status', [ReservationController::class, 'updateStatus']);
