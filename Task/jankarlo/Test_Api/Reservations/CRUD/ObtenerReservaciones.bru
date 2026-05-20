@@ -1,19 +1,18 @@
 meta {
-  name: ObtenerSalons
+  name: ObtenerReservaciones
   type: http
   seq: 1
 }
 
 get {
-  url: http://localhost/api/salons/
+  url: http://localhost/api/reservations/
   body: none
   auth: inherit
 }
 
 params:query {
-  ~capacity[gte]: 1000
-  ~name[eq]: SalonExample
-  ~app_id[eq]: APP001
+  ~userauth_id[eq]: USER001
+  ~status[eq]: active
 }
 
 settings {

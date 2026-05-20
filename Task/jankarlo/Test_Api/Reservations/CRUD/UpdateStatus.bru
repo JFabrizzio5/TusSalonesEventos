@@ -1,18 +1,18 @@
 meta {
-  name: UpdateTicket
+  name: UpdateStatus
   type: http
   seq: 3
 }
 
-put {
-  url: http://localhost/api/tickets/3
+patch {
+  url: http://localhost/api/reservations/2/status
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "price": 550
+    "status": "completed"
   }
 }
 
