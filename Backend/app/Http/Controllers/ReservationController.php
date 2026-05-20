@@ -7,7 +7,9 @@ use App\Http\Requests\Reservations\UpdateReservationRequest;
 use App\Http\Requests\Reservations\UpdateReservationStatusRequest;
 use App\Services\ReservationService;
 use App\Utils\ApiResponse;
+use App\Filters\ReservationFilter;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
@@ -20,10 +22,14 @@ class ReservationController extends Controller
     /**
      * Obtener todas las reservaciones
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $reservations = $this->service->getAll();
+            //Filter
+            $filter = new ReservationFilter();
+            $queryItems = $filter->transform($request); // [['column', 'operator', 'value']]
+
+            $reservations = $this->service->getAll($queryItems);
             return $this->success($reservations,'Reservaciones obtenidas correctamente');
         } catch (ModelNotFoundException) {
             return $this->notFound();
