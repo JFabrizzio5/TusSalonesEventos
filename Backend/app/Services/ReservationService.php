@@ -5,23 +5,26 @@ namespace App\Services;
 use App\Models\Reservation;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\DB;
-use App\validators\ReservationValidator;
+use App\Validators\ReservationValidator;
 
 class ReservationService
 {
-    protected ReservationValidator $validator;
 
-    public function __construct(ReservationValidator $validator)
+    public function __construct(protected ReservationValidator $validator)
     {
-        $this->validator = $validator;
     }
 
     /**
      * Obtener todas las reservaciones
      */
-    public function getAll()
+    public function getAll(array $filters = [])
     {
-        return Reservation::with('ticket')->get();
+        $query = Reservation::with('ticket');
+        //Validar si hay filtros
+        if(!empty($filters)){
+            $query -> where($filters);
+        }
+        return $query->get();
     }
 
     /**
@@ -103,9 +106,7 @@ class ReservationService
             $reservation->ticket->seat->update([
                     'status' => 'available'
                 ]);
-            
             $reservation->delete();
-
             return true;
         });
     }
