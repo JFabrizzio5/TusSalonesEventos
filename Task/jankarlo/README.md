@@ -33,10 +33,10 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
 ## Task 2 — $450 MXN (Entregable: Sistema de Reservas y Tickets)
 
 ### Reservas / tickets
-* [ ] **Reservar asiento**: Proceso de selección y bloqueo de lugar.
-* [ ] **Validar disponibilidad**: Verificación en tiempo real.
-* [ ] **Liberar reserva**: Gestión de cancelaciones o tiempos de expiración.
-* [ ] **Historial de reservas**: Registro de actividad por usuario.
-* [ ] **Tickets por evento**: Generación detallada de boletaje.
-* [ ] **Importación/Exportación**: Gestión de reservas en `.csv`.
+* [x] **Reservar asiento**: Proceso de selección y bloqueo de lugar.
+* [x] **Validar disponibilidad**: Verificación en tiempo real.
+* [x] **Liberar reserva**: Gestión de cancelaciones o tiempos de expiración.
+* [x] **Historial de reservas**: Registro de actividad por usuario.
+* [x] **Tickets por evento**: Generación detallada de boletaje.
+* [x] **Importación/Exportación**: Gestión de reservas en `.csv`.
 
