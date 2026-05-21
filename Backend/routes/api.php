@@ -55,15 +55,13 @@ Route::patch('seats/{id}/status', [SeatController::class, 'updateStatus']);
 Route::apiResource('tickets', TicketController::class);
 Route::prefix('import-export')->group(function () {
 
-    Route::post(
-        '/import/seats',
-        [ImportExportController::class, 'importFromCSV']
-    );
+    Route::post('/import/seats',[ImportExportController::class, 'importFromCSV']);
 
-    Route::get(
-        '/export/seats',
-        [ImportExportController::class, 'exportToCSV']
-    );
+    Route::get('/export/seats',[ImportExportController::class, 'exportToCSV']);
+
+    Route::post('/import/reservations',[ImportExportController::class, 'importReservations']);
+
+    Route::get('/export/reservations',[ImportExportController::class, 'exportReservations']);
 });
 Route::apiResource('reservations', ReservationController::class);
 Route::patch('reservations/{id}/status', [ReservationController::class, 'updateStatus']);
