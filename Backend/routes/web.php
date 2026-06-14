@@ -9,3 +9,7 @@ Route::get('/', function () {
 Route::get('/calendar', function (){
     return view('calendar');
 })->name('calendar');
+
+Route::get('/events-management', function(){
+    return view('event');
+})->name('events-management');
