@@ -13,3 +13,7 @@ Route::get('/calendar', function (){
 Route::get('/events-management', function(){
     return view('event');
 })->name('events-management');
+
+Route::get('/wallet', function(){
+    return view('wallet');
+})->name('wallet');
