@@ -33,7 +33,7 @@ Se requiere el desarrollo de módulos independientes que consuman y gestionen:
 ## Task 2 — $450 MXN (Entregable: Demo y Funcionalidad Avanzada)
 
 ### Demo + exportaciones
-* [ ] **Vista simple de calendario**: Interfaz funcional para visualización.
-* [ ] **Gestión de eventos**: Interfaz para crear, editar y ver detalles.
-* [ ] **Exportación .ics**: Generación de archivos para calendarios externos.
-* [ ] **Google Wallet**: Generación de pase básico tipo Google Wallet.
+* [X] **Vista simple de calendario**: Interfaz funcional para visualización.
+* [X] **Gestión de eventos**: Interfaz para crear, editar y ver detalles.
+* [X] **Exportación .ics**: Generación de archivos para calendarios externos.
+* [X] **Google Wallet**: Generación de pase básico tipo Google Wallet.
